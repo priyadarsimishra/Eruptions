@@ -47,7 +47,7 @@ public class Player extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.HEALTH-=2;
+					HUD.HEALTH-=1;
 				}
 			}
 		}

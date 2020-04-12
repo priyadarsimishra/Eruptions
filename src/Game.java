@@ -11,7 +11,7 @@ public class Game extends Canvas implements Runnable
 {
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 800;
-	private static final String TITLE = "Eruption";
+	private static final String TITLE = "ERUPTION";
 	private Thread thread;
 	private boolean run = false;
 	private BufferedImage spritesheet = null;

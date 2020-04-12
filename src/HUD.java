@@ -21,7 +21,7 @@ public class HUD
 	{
 		g.setColor(Color.GRAY);
 		g.fillRect(10,10,200+sector,50);
-		g.setColor(new Color(100,greenValue,0));
+		g.setColor(new Color(75,greenValue,0));
 		g.fillRect(10,10,HEALTH*2,50);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(Color.BLACK);

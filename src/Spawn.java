@@ -8,9 +8,10 @@ public class Spawn
 	private HUD hud;
 	private Random r = new Random();
 	private SpriteTextures texture;
-	private int timer = 200;
-	private int fireballTimer = 120;
+	private int timer = 100;
+	private int fireballTimer = 160;
 	private int wave = 500;
+	private int gap = r.nextInt(12);
 	public Spawn(ObjectHandler handler, HUD hud,Game game,SpriteTextures texture)
 	{
 		this.game = game;
@@ -23,31 +24,28 @@ public class Spawn
 		if(timer<=0)
 		{		
 			handler.addObject(new Coin(r.nextInt(768),-32,texture,handler,ID.Coin));
-			timer = 200;
+			timer = 100;
 		}
 		else
 			timer--;
 		if(fireballTimer<=0)
 		{		
-			handler.addObject(new Fireball(r.nextInt(740),-32,texture,handler,ID.Fireball));
+			handler.addObject(new Fireball(r.nextInt(740),-32,texture,handler,ID.Fireball,r.nextInt(13)+5));
 			fireballTimer = 60;
 		}
 		else
 			fireballTimer--;
 		if(wave<=0)
 		{
-			handler.addObject(new Fireball(0,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(60,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(120,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(180,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(240,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(300,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(360,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(480,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(540,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(600,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(660,-32,texture,handler,ID.Fireball));
-			handler.addObject(new Fireball(720,-32,texture,handler,ID.Fireball));
+			int count = 0;
+			while(count<12)
+			{
+				int gap = r.nextInt(12);
+				if(gap == count)
+					count++;
+				handler.addObject(new Fireball(count*60,-32,texture,handler,ID.Fireball,6));
+				count++;
+			}
 			wave = 500;
 		}
 		else 

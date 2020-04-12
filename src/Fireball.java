@@ -10,14 +10,15 @@ public class Fireball extends GameObject
 	private ObjectHandler handler;
 	private ID id;
 	private Random r = new Random();
-	private int yVel = r.nextInt(13)+5;
-	public Fireball(double x,double y,SpriteTextures texture,ObjectHandler handler,ID id)
+	private int yVel;
+	public Fireball(double x,double y,SpriteTextures texture,ObjectHandler handler,ID id,int yVel)
 	{
 		super(x,y,id);
 		this.x = x;
 		this.y = y;
 		this.handler = handler;
 		this.texture = texture;
+		this.yVel = yVel;
 	}
 	public Rectangle getRect()
 	{
