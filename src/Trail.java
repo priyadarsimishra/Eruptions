@@ -24,6 +24,9 @@ public class Trail extends GameObject
 		this.span = span;
 		this.handler = handler;
 	}
+	public Rectangle getRect() {
+		return new Rectangle((int)x,(int)y,width,height);
+	}
 	public void update()
 	{
 		if(flow>span)
@@ -53,8 +56,5 @@ public class Trail extends GameObject
 	public double getY() 
 	{
 		return 0;
-	}
-	public Rectangle getRect() {
-		return new Rectangle((int)x,(int)y,width,height);
 	}
 }

@@ -29,7 +29,7 @@ public class Fireball extends GameObject
 		y+=yVel;
 		if(y>800)
 			handler.removeObject(this);
-		handler.addObject(new Trail((int)x+5,(int)y-30,ID.Trail,Color.YELLOW,40,40,0.08f,handler));
+		handler.addObject(new Trail((int)x+7,(int)y-32,ID.FireballTrail,Color.YELLOW,35,35,0.08f,handler));
 	}
 	public void render(Graphics g) 
 	{
