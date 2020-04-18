@@ -10,14 +10,16 @@ public class Fireball extends GameObject
 	private ObjectHandler handler;
 	private ID id;
 	private Random r = new Random();
-	private int yVel = r.nextInt(13)+5;
-	public Fireball(double x,double y,SpriteTextures texture,ObjectHandler handler,ID id)
+	private int yVel;
+	private Color trailColor = new Color(240,50,20);
+	public Fireball(double x,double y,SpriteTextures texture,ObjectHandler handler,ID id,int yVel)
 	{
 		super(x,y,id);
 		this.x = x;
 		this.y = y;
 		this.handler = handler;
 		this.texture = texture;
+		this.yVel = yVel;
 	}
 	public Rectangle getRect()
 	{
@@ -28,7 +30,7 @@ public class Fireball extends GameObject
 		y+=yVel;
 		if(y>800)
 			handler.removeObject(this);
-		handler.addObject(new Trail((int)x+5,(int)y-30,ID.Trail,Color.YELLOW,40,40,0.08f,handler));
+		handler.addObject(new Trail((int)x+9,(int)y-30,ID.FireballTrail,trailColor,32,32,0.08f,handler));
 	}
 	public void render(Graphics g) 
 	{

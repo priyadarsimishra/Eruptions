@@ -1,22 +1,23 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class HUD 
 {	
 	public static int HEALTH = 100;
+	public static int SCORE = 0;
 	private int sector = 0;
 	private int level = 0;
-	private int score = 0;
 	private int greenValue = 255;
 	public void update()
 	{
 		HEALTH = (int)Game.restrict(HEALTH,0,HEALTH+(sector/2));
 		greenValue = HEALTH*2;
 		greenValue = (int)Game.restrict(greenValue, 0, 255);
-		//HEALTH-=1;
-	}
+		if(HEALTH<=0){}
+	}	
 	public void render(Graphics g)
 	{
 		g.setColor(Color.GRAY);

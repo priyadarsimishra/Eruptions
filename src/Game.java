@@ -11,7 +11,7 @@ public class Game extends Canvas implements Runnable
 {
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 800;
-	private static final String TITLE = "Eruption";
+	private static final String TITLE = "ERUPTION";
 	private Thread thread;
 	private boolean run = false;
 	private BufferedImage spritesheet = null;
@@ -22,7 +22,15 @@ public class Game extends Canvas implements Runnable
 	private ObjectHandler handler;
 	private SpriteTextures texture;
 	private Spawn spawner;
-	
+	boolean isShooting = false;
+	public static final STATE STATE = null;
+	public enum STATE
+	{
+		MENU,
+		LEVEL1,
+		LEVEL2,
+	};
+	public static STATE gameState = STATE.LEVEL1;
 	public Game()
 	{
 		window = new Window(WIDTH,HEIGHT,TITLE,this);
@@ -104,10 +112,18 @@ public class Game extends Canvas implements Runnable
 	}
 	private void update()
 	{
-		player.update();
-		handler.update();
-		hud.update();
-		spawner.update();
+		if(gameState == STATE.MENU)
+		{
+			handler.update();
+			hud.update();
+		}
+		if(gameState == STATE.LEVEL1)
+		{
+			player.update();
+			handler.update();
+			hud.update();
+			spawner.update();
+		}
 	}
 	private void render()
 	{
@@ -119,10 +135,18 @@ public class Game extends Canvas implements Runnable
 		}
 		Graphics g = bs.getDrawGraphics();
 		///////////////////////////////Everything under is drawing
-		g.drawImage(background,0,0,WIDTH,HEIGHT,null);
-		handler.render(g);
-		hud.render(g);
-		player.render(g);
+		if(gameState == STATE.MENU)
+		{
+			g.setColor(Color.ORANGE);
+			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
+		}
+		if(gameState == STATE.LEVEL1)
+		{
+			g.drawImage(background,0,0,WIDTH,HEIGHT,null);
+			handler.render(g);
+			hud.render(g);
+			player.render(g);
+		}
 		///////////////////////////////Everything above is drawing
 		g.dispose();
 		bs.show();
@@ -132,13 +156,16 @@ public class Game extends Canvas implements Runnable
 		int key = e.getKeyCode();
 		if(key == KeyEvent.VK_RIGHT)
 		{ 
-			player.setXVel(8);
+			player.setXVel(7);
 		}
 		if(key == KeyEvent.VK_LEFT)
 		{
-			player.setXVel(-8);
+			player.setXVel(-7);
 		}
-		if(key == KeyEvent.VK_SPACE){}//shoot bullets
+		if(key == KeyEvent.VK_SPACE && !isShooting)
+		{
+			isShooting = true;
+		}//shoot bullets
 	}
 	public void keyReleased(KeyEvent e)
 	{
@@ -151,7 +178,7 @@ public class Game extends Canvas implements Runnable
 		{
 			player.setXVel(0);
 		}
-		if(key == KeyEvent.VK_SPACE){}//shoot bullets
+		if(key == KeyEvent.VK_SPACE){isShooting = false;}//shoot bullets
 	}
 	public static double restrict(double loc,double min,double max)
 	{

@@ -2,7 +2,10 @@
 public enum ID 
 {
 	Player,
-	Coin,
+	BronzeCoin,
+	SilverCoin,
+	GoldCoin,
 	Fireball,
-	Trail,
+	Bullet,
+	FireballTrail,
 };

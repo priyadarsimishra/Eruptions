@@ -43,11 +43,35 @@ public class Player extends GameObject
 		for(int i=0;i<handler.object.size();i++)
 		{
 			GameObject obj = handler.object.get(i);
-			if(obj.id == ID.Fireball)
+			if(obj.id == ID.Fireball || obj.id == ID.FireballTrail)
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.HEALTH-=2;
+					HUD.HEALTH-=1;
+				}
+			}
+			if(obj.id == ID.BronzeCoin)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.SCORE+=100;
+				}
+			}
+			if(obj.id == ID.SilverCoin)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.SCORE+=250;
+				}
+			}
+			if(obj.id == ID.GoldCoin)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.SCORE+=500;
 				}
 			}
 		}
@@ -58,10 +82,10 @@ public class Player extends GameObject
 	}
 	public double getX() 
 	{
-		return 0;
+		return x;
 	}
 	public double getY() 
 	{
-		return 0;
+		return y;
 	}
 }
