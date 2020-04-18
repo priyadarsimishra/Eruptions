@@ -1,11 +1,14 @@
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
+
+import javax.swing.JFrame;
 
 public class Game extends Canvas implements Runnable
 {
@@ -19,10 +22,11 @@ public class Game extends Canvas implements Runnable
 	private Window window;
 	private Player player;
 	private HUD hud;
-	private ObjectHandler handler;
+	public ObjectHandler handler;
 	private SpriteTextures texture;
 	private Spawn spawner;
 	boolean isShooting = false;
+	private Menu menu = new Menu(this,handler);
 	public static final STATE STATE = null;
 	public enum STATE
 	{
@@ -30,10 +34,11 @@ public class Game extends Canvas implements Runnable
 		LEVEL1,
 		LEVEL2,
 	};
-	public static STATE gameState = STATE.LEVEL1;
+	public static STATE gameState = STATE.MENU;
 	public Game()
 	{
 		window = new Window(WIDTH,HEIGHT,TITLE,this);
+		this.addMouseListener(menu);
 	}
 	public void runImage()
 	{
@@ -49,6 +54,7 @@ public class Game extends Canvas implements Runnable
 			e.printStackTrace();
 		}
 		addKeyListener(new KeyMovement(this));
+		menu = new Menu(this,handler);
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
 		hud = new HUD();
@@ -114,6 +120,7 @@ public class Game extends Canvas implements Runnable
 	{
 		if(gameState == STATE.MENU)
 		{
+			menu.update();
 			handler.update();
 			hud.update();
 		}
@@ -139,6 +146,7 @@ public class Game extends Canvas implements Runnable
 		{
 			g.setColor(Color.ORANGE);
 			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
+			menu.render(g);
 		}
 		if(gameState == STATE.LEVEL1)
 		{
