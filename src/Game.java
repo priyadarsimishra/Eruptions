@@ -6,17 +6,20 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Random;
 
 import javax.swing.JFrame;
-
+/* This is the main class that runs the game contains the initializations
+of all of the other classes */
 public class Game extends Canvas implements Runnable
 {
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 800;
 	private static final String TITLE = "ERUPTION";
 	private Thread thread;
-	private boolean run = false;
+	private boolean running = false;
 	private BufferedImage spritesheet = null;
 	private BufferedImage background;
 	private Window window;
@@ -26,19 +29,22 @@ public class Game extends Canvas implements Runnable
 	private SpriteTextures texture;
 	private Spawn spawner;
 	boolean isShooting = false;
-	private Menu menu = new Menu(this,handler);
+	private Menu menu;
+	private LevelDisplay levelDisplay;
+	public int wait = 0;
 	public static final STATE STATE = null;
 	public enum STATE
 	{
 		MENU,
 		LEVEL1,
 		LEVEL2,
+		SHOP,
+		DEADSCREEN,
 	};
 	public static STATE gameState = STATE.MENU;
 	public Game()
 	{
 		window = new Window(WIDTH,HEIGHT,TITLE,this);
-		this.addMouseListener(menu);
 	}
 	public void runImage()
 	{
@@ -54,26 +60,28 @@ public class Game extends Canvas implements Runnable
 			e.printStackTrace();
 		}
 		addKeyListener(new KeyMovement(this));
-		menu = new Menu(this,handler);
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
-		hud = new HUD();
+		menu = new Menu(this,handler);
+		addMouseListener(menu);
 		spawner = new Spawn(handler,hud,this,texture);
-		player = new Player(385,735,this,texture,handler,ID.Player);
+		hud = new HUD(this,menu);
+		levelDisplay = new LevelDisplay(this);
+		player = new Player(385,738,this,texture,handler,ID.Player);
 	}
 	public synchronized void start()
 	{
-		if(run)
+		if(running)
 			return;
-		run = true;
+		running = true;
 		thread = new Thread(this);
 		thread.start();
 	}
 	public synchronized void stop()
 	{
-		if(!run)
+		if(!running)
 			return;
-		run = false;
+		running = false;
 		try
 		{
 			thread.join();
@@ -82,41 +90,43 @@ public class Game extends Canvas implements Runnable
 		{
 			e.printStackTrace();
 		}
+		System.exit(1);
 	}
 	public void run()
 	{
 		runImage();
-		long time = System.nanoTime();
-		double amountOfUpdates = 60.0;
-		double ns = 1000000000/amountOfUpdates;
-		double catchUp  = 0.0;
-		long timer = System.currentTimeMillis();
 		int updates = 0;
-		int frames = 0;
-		while(run)
+		int FPS = 0;
+		long lastTime = System.nanoTime();
+		final double amountOfUpdates = 60.0;
+		double ns = 1000000000/amountOfUpdates;
+		double catchUp  = 0;
+		long timerCheck = System.currentTimeMillis();
+		while(running)
 		{
 			long now = System.nanoTime();
-			catchUp += (now-time)/ns;
-			time = now;
-			while(catchUp>=1)
+			catchUp += (now-lastTime)/ns;
+			lastTime = now;
+			if(catchUp >=1)
 			{
 				update();
 				updates++;
 				catchUp--;
+				
 			}
 			render();
-			frames++;
-			if(System.currentTimeMillis()-timer>=1000)
+			FPS++;
+			if(System.currentTimeMillis() - timerCheck>1000)
 			{
-				timer+=1000;
-				System.out.println("Ticks: "+updates+", FPS: "+frames);
+				timerCheck+=1000;
+				System.out.println("Updates: "+updates+", FPS: "+FPS);			
+				FPS = 0;
 				updates = 0;
-				frames = 0;
 			}
 		}
 		stop();
 	}
-	private void update()
+	public void update()
 	{
 		if(gameState == STATE.MENU)
 		{
@@ -124,17 +134,37 @@ public class Game extends Canvas implements Runnable
 			handler.update();
 			hud.update();
 		}
-		if(gameState == STATE.LEVEL1)
+		else if(gameState == STATE.LEVEL1)
 		{
-			player.update();
-			handler.update();
-			hud.update();
-			spawner.update();
+			if(hud.HEALTH<=0)
+			{
+				gameState = STATE.DEADSCREEN;
+				wait = 0;
+				player.x = 385;
+			}
+			else
+			{
+				if(wait>=500)
+				{
+					player.update();
+					handler.update();
+					hud.update();
+					spawner.update();
+				}
+				else 
+				{
+					wait++;
+				}
+			}
+		}
+		else if(gameState == STATE.DEADSCREEN)
+		{
+			menu.update();
 		}
 	}
 	private void render()
 	{
-		BufferStrategy bs = this.getBufferStrategy();
+		BufferStrategy bs = this.getBufferStrategy();		
 		if(bs==null)
 		{
 			this.createBufferStrategy(3);
@@ -148,12 +178,26 @@ public class Game extends Canvas implements Runnable
 			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
 			menu.render(g);
 		}
-		if(gameState == STATE.LEVEL1)
+		else if(gameState == STATE.LEVEL1)
 		{
 			g.drawImage(background,0,0,WIDTH,HEIGHT,null);
-			handler.render(g);
-			hud.render(g);
 			player.render(g);
+			if(wait>=500)
+			{
+				handler.render(g);
+			}
+			else 
+			{
+				wait++;
+				levelDisplay.render(g);
+			}
+			hud.render(g);
+		}
+		else if(gameState == STATE.DEADSCREEN)
+		{
+			g.setColor(Color.RED);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			menu.render(g);
 		}
 		///////////////////////////////Everything above is drawing
 		g.dispose();
@@ -186,7 +230,10 @@ public class Game extends Canvas implements Runnable
 		{
 			player.setXVel(0);
 		}
-		if(key == KeyEvent.VK_SPACE){isShooting = false;}//shoot bullets
+		if(key == KeyEvent.VK_SPACE)
+		{
+			isShooting = false;
+		}//shoot bullets
 	}
 	public static double restrict(double loc,double min,double max)
 	{
@@ -203,7 +250,24 @@ public class Game extends Canvas implements Runnable
 	}
 	public static void main(String [] args)
 	{
+	
 		Game game = new Game();
+		game.setPreferredSize(new Dimension(WIDTH,HEIGHT));
+		game.setMaximumSize(new Dimension(WIDTH,HEIGHT));
+		game.setMinimumSize(new Dimension(WIDTH,HEIGHT));
+		game.setBackground(Color.ORANGE);
+		/*g.drawString("Hello", 20, 20);
+		
+		//game.setVisible(false);
+		JFrame frame = new JFrame(TITLE);
+		frame.add(game);
+		frame.pack();
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		game.start();*/
 	}
 	
 }

@@ -4,14 +4,15 @@ import java.awt.image.BufferedImage;
 
 public class Player extends GameObject
 {
-	private double x;
-	private double y;
+	public double x;
+	public double y;
 	private double xVel = 0;
 	private double yVel = 0;
 	private ID id;
 	private BufferedImage player;
 	private SpriteTextures texture;
 	private ObjectHandler handler;
+	private Game game;
 	public Player(double x,double y,Game game,SpriteTextures texture,ObjectHandler handler,ID id)
 	{
 		super(x,y,id);
@@ -19,10 +20,11 @@ public class Player extends GameObject
 		this.y = y;
 		this.texture = texture;
 		this.handler = handler;
+		this.game = game;
 	}
 	public Rectangle getRect()
 	{
-		return new Rectangle((int)x,(int)y,60,42);
+		return new Rectangle((int)x,(int)y,50,38);
 	}
 	public void update()
 	{
@@ -32,7 +34,10 @@ public class Player extends GameObject
 	}
 	public void render(Graphics g)
 	{
-		g.drawImage(texture.player,(int)x,(int)y,60,42,null);
+		if(game.gameState == game.STATE.LEVEL1)
+		{
+			g.drawImage(texture.player,(int)x,(int)y,50,38,null);
+		}
 	}
 	public void setXVel(double xVel)
 	{

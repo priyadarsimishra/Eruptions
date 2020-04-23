@@ -8,6 +8,7 @@ public class Menu extends MouseAdapter
 {
 	private Game game;
 	private ObjectHandler handler;
+	private Spawn spawner;
 	public Menu(Game game, ObjectHandler handler)
 	{
 		this.game = game;
@@ -20,10 +21,25 @@ public class Menu extends MouseAdapter
 	{
 		int mx = e.getX();
 		int my = e.getY();
-		if(contains(mx, my,game.WIDTH/2-115,game.HEIGHT/2-100,200,100))
+		if(contains(mx, my,285,300,200,100) && game.gameState == game.STATE.MENU)
 		{
 			game.gameState = game.STATE.LEVEL1;
 		}
+		else if(contains(mx,my,game.WIDTH/2-115,game.HEIGHT/2+200,200,100) && game.gameState == game.STATE.MENU)
+		{
+			System.exit(1);
+		}
+		else if(contains(mx,my,game.WIDTH/2-115,game.HEIGHT/2-100,200,100))
+		{
+			game.gameState = game.STATE.MENU;
+			handler.clearEnemys();
+		}
+		else if(contains(mx,my,game.WIDTH/2-115,game.HEIGHT/2+200,200,100))
+		{
+			game.gameState = game.STATE.LEVEL1;
+			handler.clearEnemys();
+		}
+		
 	}
 	public void mouseReleased(MouseEvent e)
 	{
@@ -31,9 +47,9 @@ public class Menu extends MouseAdapter
 	}
 	public boolean contains(int mx, int my,int x, int y,int width,int height)
 	{
-		if(mx>=x && mx <=mx+width)
+		if(mx >= x && mx <= x+width)
 		{
-			if(my>=y && my<=y+height)
+			if(my >= y && my <= y+height)
 			{
 				return true;
 			}
@@ -53,9 +69,30 @@ public class Menu extends MouseAdapter
 			g.setColor(Color.RED);
 			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2-100,200,100);
 			
-			Font f = new Font("TimesNewRoman",Font.BOLD,60);
-			g.setFont(f);
+			Font f1 = new Font("TimesNewRoman",Font.BOLD,60);
+			g.setFont(f1);
 			g.drawString("PLAY", game.WIDTH/2-93, game.HEIGHT/2-30);
+			
+			g.setColor(Color.RED);
+			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2+200,200,100);
+			
+			Font f2 = new Font("TimesNewRoman",Font.BOLD,60);
+			g.setFont(f2);
+			g.drawString("EXIT", game.WIDTH/2-85, game.HEIGHT/2+275);
+		}
+		else if(game.gameState == game.STATE.DEADSCREEN)
+		{
+			g.setColor(Color.YELLOW);
+			
+			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2-100,200,100);
+			Font f3 = new Font("TimesNewRoman",Font.BOLD,36);
+			g.setFont(f3);
+			g.drawString("Return To",game.WIDTH/2-108,game.HEIGHT/2-60);
+			Font f4 = new Font("TimesNewRoman",Font.BOLD,50);
+			g.setFont(f4);
+			g.drawString("MENU",game.WIDTH/2-88,game.HEIGHT/2-10);
+			
+			
 		}
 	}
 }

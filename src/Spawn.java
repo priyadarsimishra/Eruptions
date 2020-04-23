@@ -26,8 +26,7 @@ public class Spawn
 	public void update()
 	{
 		/* Level 1 */
-		
-		if(game.gameState == game.STATE.LEVEL1)
+		if(game.gameState == game.STATE.LEVEL1 && game.wait>=500)
 		{
 			//bronze coin
 			if(bronzeTimer<=0)
@@ -73,6 +72,7 @@ public class Spawn
 			}
 			while(isWave)
 			{
+				//wave
 				int total = 0;		
 				gap1 = r.nextInt(11)+1;
 				while(total<=12)
@@ -80,11 +80,11 @@ public class Spawn
 					if(total == gap1)
 					{
 						total++;
-						handler.addObject(new Fireball(total*60+20,-32,texture,handler,ID.Fireball,6));
+						handler.addObject(new Fireball(total*60+30,-32,texture,handler,ID.Fireball,6));
 					}
 					else
 					{
-						handler.addObject(new Fireball(total*60+20,-32,texture,handler,ID.Fireball,6));
+						handler.addObject(new Fireball(total*60+30,-32,texture,handler,ID.Fireball,6));
 					}
 					total++;
 				}
@@ -92,24 +92,6 @@ public class Spawn
 					isWave = false;
 				else 
 					isWave = true;
-					
-					/*while(count<13)
-					{
-						gap1 = r.nextInt(11)+1;
-						System.out.println("gap1:"+gap1);
-						if(gap1 == count && count != 11)
-						{
-							count++;
-						}	
-						handler.addObject(new Fireball(count*60+20,-32,texture,handler,ID.Fireball,6));
-						count++;
-					}
-					int gap2 = r.nextInt(1)+0;
-					if(gap2 == 1)
-					{
-						handler.addObject(new Fireball(750,-32,texture,handler,ID.Fireball,6));
-					}
-					handler.addObject(new Fireball(0,-32,texture,handler,ID.Fireball,r.nextInt(13)+9));*/
 			}
 		}
 	}

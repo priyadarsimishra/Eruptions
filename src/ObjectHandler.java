@@ -22,6 +22,14 @@ public class ObjectHandler
 			obj.render(g);
 		}
 	}
+	public void clearEnemys()
+	{
+		for(int i = 0;i<object.size();i++)
+		{
+			GameObject tempObject = object.get(i);
+			object.clear();
+		}
+	}
 	public void addObject(GameObject obj)
 	{
 		this.object.add(obj);

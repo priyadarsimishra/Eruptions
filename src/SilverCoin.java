@@ -28,7 +28,7 @@ public class SilverCoin extends GameObject
 	public void update() 
 	{
 		y+=yVel;
-		if(y>800)
+		if(y>=832)
 			handler.removeObject(this);	
 		handler.addObject(new Trail((int)x+10,(int)y-15,ID.SilverCoin,color,16,16,0.08f,handler));
 	}
