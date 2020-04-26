@@ -1,7 +1,7 @@
 import java.awt.Graphics;
 import java.util.Random;
-
-
+/* This class is used to spawn our game objects 
+ * at random times which adds to the game play */
 public class Spawn 
 {
 	private ObjectHandler handler;
@@ -14,8 +14,11 @@ public class Spawn
 	private int goldTimer = r.nextInt(600)+300;
 	private int fireballTimer = 100;
 	private int wave = 500;
-	int gap1;
 	private boolean isWave = false;
+	private int gap;
+	/* This constructor has many parameters
+	 * that are needed to control the adding of
+	 * certain Game Objects */
 	public Spawn(ObjectHandler handler, HUD hud,Game game,SpriteTextures texture)
 	{
 		this.game = game;
@@ -23,6 +26,9 @@ public class Spawn
 		this.hud = hud;
 		this.texture = texture;
 	}
+	/* This method updates 60 times per second 
+	 * and this method adds objects depending on the timing 
+	 * and the level */
 	public void update()
 	{
 		/* Level 1 */
@@ -55,7 +61,7 @@ public class Spawn
 			//fire ball
 			if(fireballTimer<=0)
 			{		
-				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(13)+5));
+				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(13)+7));
 				fireballTimer = 140;
 			}
 			else
@@ -74,10 +80,10 @@ public class Spawn
 			{
 				//wave
 				int total = 0;		
-				gap1 = r.nextInt(11)+1;
+				gap = r.nextInt(11)+1;
 				while(total<=12)
 				{
-					if(total == gap1)
+					if(total == gap)
 					{
 						total++;
 						handler.addObject(new Fireball(total*60+30,-32,texture,handler,ID.Fireball,6));

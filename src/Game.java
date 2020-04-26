@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 /* This is the main class that runs the game contains the initializations
 of all of the other classes */
 public class Game extends Canvas implements Runnable
@@ -22,30 +23,38 @@ public class Game extends Canvas implements Runnable
 	private boolean running = false;
 	private BufferedImage spritesheet = null;
 	private BufferedImage background;
+	public BufferedImage level1;
 	private Window window;
 	private Player player;
 	private HUD hud;
 	public ObjectHandler handler;
 	private SpriteTextures texture;
 	private Spawn spawner;
-	boolean isShooting = false;
+	private boolean isShooting = false;
 	private Menu menu;
 	private LevelDisplay levelDisplay;
 	public int wait = 0;
 	public static final STATE STATE = null;
+	/* This enumeration holds constants for the State of the game */
 	public enum STATE
 	{
 		MENU,
+		HELP,
+		SELECTLEVEL,
 		LEVEL1,
 		LEVEL2,
-		SHOP,
+		ITEMSTORE,
+		UPGRADES,
 		DEADSCREEN,
 	};
 	public static STATE gameState = STATE.MENU;
+	/* In the constructor we make our JFrame */ 
 	public Game()
 	{
 		window = new Window(WIDTH,HEIGHT,TITLE,this);
 	}
+	/* This method gets all our images that we need in the game
+	 * and its also initializes all of the class instances */
 	public void runImage()
 	{
 		requestFocus();
@@ -54,6 +63,7 @@ public class Game extends Canvas implements Runnable
 		{
 			spritesheet = loader.loadImage("/SpriteSheet.png");
 			background = loader.loadImage("/background.png");
+			level1 = loader.loadImage("/LEVEL1.png");
 		}
 		catch(IOException e)
 		{
@@ -62,13 +72,15 @@ public class Game extends Canvas implements Runnable
 		addKeyListener(new KeyMovement(this));
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
-		menu = new Menu(this,handler);
+		menu = new Menu(this,handler,texture);
 		addMouseListener(menu);
 		spawner = new Spawn(handler,hud,this,texture);
 		hud = new HUD(this,menu);
 		levelDisplay = new LevelDisplay(this);
 		player = new Player(385,738,this,texture,handler,ID.Player);
 	}
+	/* This method is run as the thread starts due to "synchronized" 
+	 * and it checks if the game is not running then it starts the thread */
 	public synchronized void start()
 	{
 		if(running)
@@ -77,6 +89,8 @@ public class Game extends Canvas implements Runnable
 		thread = new Thread(this);
 		thread.start();
 	}
+	/* This method is also checked as the thread is running and if
+	 * running is false then it stops the thread basically stopping the game */
 	public synchronized void stop()
 	{
 		if(!running)
@@ -92,6 +106,8 @@ public class Game extends Canvas implements Runnable
 		}
 		System.exit(1);
 	}
+	/* This method is the game loop and it is running always when the thread starts
+	 * and this always updates the contents in the game */
 	public void run()
 	{
 		runImage();
@@ -126,12 +142,14 @@ public class Game extends Canvas implements Runnable
 		}
 		stop();
 	}
+	/* This method updates 60 times per second
+	 * and depending on which State of the game it
+	 * calls the update method of certain classes */
 	public void update()
 	{
 		if(gameState == STATE.MENU)
 		{
 			menu.update();
-			handler.update();
 			hud.update();
 		}
 		else if(gameState == STATE.LEVEL1)
@@ -162,6 +180,10 @@ public class Game extends Canvas implements Runnable
 			menu.update();
 		}
 	}
+	/* This method renders all our images into the game 
+	 * and also depending on the game State is renders 
+	 * specific images using a BufferStrategy which makes
+	 * the image change smooth */
 	private void render()
 	{
 		BufferStrategy bs = this.getBufferStrategy();		
@@ -176,6 +198,18 @@ public class Game extends Canvas implements Runnable
 		{
 			g.setColor(Color.ORANGE);
 			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
+			menu.render(g);
+		}
+		else if(gameState == STATE.SELECTLEVEL)
+		{
+			g.setColor(Color.BLUE);
+			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
+			menu.render(g);
+		}
+		else if(gameState == STATE.HELP)
+		{
+			g.setColor(Color.YELLOW);
+			g.fillRect(0, 0,WIDTH,HEIGHT);
 			menu.render(g);
 		}
 		else if(gameState == STATE.LEVEL1)
@@ -203,6 +237,8 @@ public class Game extends Canvas implements Runnable
 		g.dispose();
 		bs.show();
 	}
+	/* This method is the key Pressed method for moving 
+	 * the character and shooting bullets(has not yet been applied) */
 	public void keyPressed(KeyEvent e)
 	{
 		int key = e.getKeyCode();
@@ -219,6 +255,8 @@ public class Game extends Canvas implements Runnable
 			isShooting = true;
 		}//shoot bullets
 	}
+	/* This method is the key Released method for stopping 
+	 * the character and stopping continuous bullets shooting(has not yet been applied)*/
 	public void keyReleased(KeyEvent e)
 	{
 		int key = e.getKeyCode();
@@ -230,11 +268,17 @@ public class Game extends Canvas implements Runnable
 		{
 			player.setXVel(0);
 		}
-		if(key == KeyEvent.VK_SPACE)
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2)
 		{
+			if(isShooting)
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
 			isShooting = false;
 		}//shoot bullets
 	}
+	/* This is the static restrict method which is used
+	 * to restrict the player from moving off the screen
+	 * and to restrict the Health display 
+	 * from dropping less than 0 */
 	public static double restrict(double loc,double min,double max)
 	{
 		if(loc >= max)
@@ -244,10 +288,13 @@ public class Game extends Canvas implements Runnable
 		else
 			return loc;
 	}
+	/* This method returns the sprite sheet image */
 	public BufferedImage getSpriteSheet()
 	{
 		return spritesheet;
 	}
+	/* This is the main method that calls the constructor
+	 * and starts the game */
 	public static void main(String [] args)
 	{
 	
@@ -269,5 +316,4 @@ public class Game extends Canvas implements Runnable
 		frame.setVisible(true);
 		game.start();*/
 	}
-	
 }
