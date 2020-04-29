@@ -1,17 +1,17 @@
+// Priyadarsi Mishra
+// 4/27/20
+// Period: 5
+// ERUPTION Game Project
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Random;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 /* This is the main class that runs the game contains the initializations
 of all of the other classes */
 public class Game extends Canvas implements Runnable
@@ -22,7 +22,8 @@ public class Game extends Canvas implements Runnable
 	private Thread thread;
 	private boolean running = false;
 	private BufferedImage spritesheet = null;
-	private BufferedImage background;
+	private Image background;
+	private ImageIcon icon;
 	public BufferedImage level1;
 	private Window window;
 	private Player player;
@@ -30,10 +31,18 @@ public class Game extends Canvas implements Runnable
 	public ObjectHandler handler;
 	private SpriteTextures texture;
 	private Spawn spawner;
-	private boolean isShooting = false;
 	private Menu menu;
 	private LevelDisplay levelDisplay;
 	public int wait = 0;
+	public int level1Complete = 0;
+	private int bossDisplay = 0;
+	private int bulletCount = 0;
+	public int bossFight = 1500;
+	public boolean isBossFight = false;
+	private boolean isShooting = false;
+	public boolean isLevel1Complete = false;
+	public boolean isLevel2Complete = false;
+	public boolean isLevel3Complete = false;
 	public static final STATE STATE = null;
 	/* This enumeration holds constants for the State of the game */
 	public enum STATE
@@ -62,13 +71,14 @@ public class Game extends Canvas implements Runnable
 		try
 		{
 			spritesheet = loader.loadImage("/SpriteSheet.png");
-			background = loader.loadImage("/background.png");
 			level1 = loader.loadImage("/LEVEL1.png");
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
+		icon = new ImageIcon(this.getClass().getResource("background.gif"));
+		background = icon.getImage();
 		addKeyListener(new KeyMovement(this));
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
@@ -135,7 +145,7 @@ public class Game extends Canvas implements Runnable
 			if(System.currentTimeMillis() - timerCheck>1000)
 			{
 				timerCheck+=1000;
-				System.out.println("Updates: "+updates+", FPS: "+FPS);			
+				//System.out.println("Updates: "+updates+", FPS: "+FPS);			
 				FPS = 0;
 				updates = 0;
 			}
@@ -151,29 +161,84 @@ public class Game extends Canvas implements Runnable
 		{
 			menu.update();
 			hud.update();
+			isBossFight = false;
+			spawner.bossMade = false;
 		}
 		else if(gameState == STATE.LEVEL1)
 		{
-			if(hud.HEALTH<=0)
+			if((level1Complete < bossFight) && !isBossFight)
 			{
-				gameState = STATE.DEADSCREEN;
-				wait = 0;
-				player.x = 385;
+				//isLevel1Complete = true;
+				if(hud.HEALTH<=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					wait = 0;
+					player.x = 385;
+					level1Complete = 0;
+					bossDisplay = 0;
+					HUD.LEVEL1BOSSHEALTH = 200;
+				}
+				else
+				{
+					if(wait>=500)
+					{
+						player.update();
+						handler.update();
+						hud.update();
+						spawner.update();
+					}
+					else 
+					{
+						wait++;
+					}
+				}
+				level1Complete++;
 			}
 			else
 			{
-				if(wait>=500)
+				if(!isBossFight)
 				{
-					player.update();
-					handler.update();
-					hud.update();
-					spawner.update();
+					isBossFight = true;
+					handler.clearAll();
+				}
+			}
+			if(isBossFight && bossDisplay>=1000)
+			{
+				if(HUD.LEVEL1BOSSHEALTH<=0)
+				{
+					handler.clearAll();
+				}
+				if(hud.HEALTH<=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					wait = 0;
+					player.x = 385;
+					level1Complete = 0;
+					HUD.LEVEL1BOSSHEALTH = 200;
 				}
 				else 
 				{
-					wait++;
+					if(wait>=500)
+					{
+						player.update();
+						handler.update();
+						hud.update();
+						spawner.update();
+					}
+					else 
+					{
+						wait++;
+					}
 				}
+				
 			}
+		}
+		else if(gameState == STATE.LEVEL2)
+		{
+			player.update();
+			handler.update();
+			hud.update();
+			hud.HEALTH = 100;
 		}
 		else if(gameState == STATE.DEADSCREEN)
 		{
@@ -225,6 +290,30 @@ public class Game extends Canvas implements Runnable
 				wait++;
 				levelDisplay.render(g);
 			}
+			if(bossDisplay>=1000 && isBossFight)
+			{
+				handler.render(g);
+				hud.render(g);
+			}
+			else if(isBossFight)
+			{
+				bossDisplay++;
+				levelDisplay.render(g);
+			}
+			hud.render(g);
+			handler.render(g);
+			if(HUD.LEVEL1BOSSHEALTH<=0)
+			{
+				levelDisplay.render(g);
+				menu.render(g);
+			}
+		}
+		else if(gameState == STATE.LEVEL2)
+		{	
+			g.setColor(Color.PINK);
+			g.fillRect(0,0,WIDTH,HEIGHT);
+			player.render(g);
+			handler.render(g);
 			hud.render(g);
 		}
 		else if(gameState == STATE.DEADSCREEN)
@@ -250,13 +339,21 @@ public class Game extends Canvas implements Runnable
 		{
 			player.setXVel(-7);
 		}
-		if(key == KeyEvent.VK_SPACE && !isShooting)
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL1 && isBossFight && bulletCount < player.bucketCount)
+		{
+			handler.addObject(new WaterBullet(player.getX()+9,player.getY()-25,ID.WaterBullet,handler,texture,-15));			
+			bulletCount++;
+			
+		}
+		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2)
 		{
 			isShooting = true;
+			handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
+
 		}//shoot bullets
 	}
 	/* This method is the key Released method for stopping 
-	 * the character and stopping continuous bullets shooting(has not yet been applied)*/
+	 * the character and stopping continuous bullets shooting(has not yet been applied) */
 	public void keyReleased(KeyEvent e)
 	{
 		int key = e.getKeyCode();
@@ -270,8 +367,6 @@ public class Game extends Canvas implements Runnable
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2)
 		{
-			if(isShooting)
-				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
 			isShooting = false;
 		}//shoot bullets
 	}

@@ -15,12 +15,30 @@ public class LevelDisplay
 	/* This method renders the text depending on the level of the game */
 	public void render(Graphics g)
 	{
-		if(game.gameState == game.STATE.LEVEL1)
+		if(game.gameState == game.STATE.LEVEL1 && game.wait<=500 && !game.isBossFight)
 		{
 			g.setColor(Color.WHITE);
 			Font levelFont = new Font("TimesNewRoman",Font.BOLD,160);
 			g.setFont(levelFont);
 			g.drawString("LEVEL 1", Game.WIDTH/2-325,Game.HEIGHT/2+20);
+		}
+		if(game.gameState == game.STATE.LEVEL1 && game.isBossFight && HUD.LEVEL1BOSSHEALTH>0)
+		{
+			g.setColor(Color.WHITE);
+			Font bossFont = new Font("TimesNewRoman",Font.BOLD,160);
+			g.setFont(bossFont);
+			g.drawString("BOSS!", Game.WIDTH/2-225,Game.HEIGHT/2+20);
+			Font help = new Font("TimesNewRoman",Font.BOLD,40);
+			g.setFont(help);
+			g.drawString("Collect Water buckets", Game.WIDTH/2-230,Game.HEIGHT/2+60);
+			g.drawString("Shoot Boss by pressing SPACE", Game.WIDTH/2-300,Game.HEIGHT/2+100);
+		}
+		if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		{
+			g.setColor(Color.WHITE);
+			g.drawRect(Game.WIDTH/2-200, Game.HEIGHT/2-200, 401, 401);
+			g.setColor(Color.BLACK);
+			g.fillRect(Game.WIDTH/2-200, Game.HEIGHT/2-200,400,400);
 		}
 	}
 }

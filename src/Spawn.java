@@ -14,8 +14,12 @@ public class Spawn
 	private int goldTimer = r.nextInt(600)+300;
 	private int fireballTimer = 100;
 	private int wave = 500;
+	private int enemyFireball = 40;
+	private int waterbucketTime = 100;
+	private int disappear = 20;
 	private boolean isWave = false;
 	private int gap;
+	public boolean bossMade = false;
 	/* This constructor has many parameters
 	 * that are needed to control the adding of
 	 * certain Game Objects */
@@ -31,8 +35,9 @@ public class Spawn
 	 * and the level */
 	public void update()
 	{
+		//game.isBossFight =false;
 		/* Level 1 */
-		if(game.gameState == game.STATE.LEVEL1 && game.wait>=500)
+		if(game.gameState == game.STATE.LEVEL1 && game.wait>=500 && !game.isBossFight)
 		{
 			//bronze coin
 			if(bronzeTimer<=0)
@@ -62,7 +67,7 @@ public class Spawn
 			if(fireballTimer<=0)
 			{		
 				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(13)+7));
-				fireballTimer = 140;
+				fireballTimer = 120;
 			}
 			else
 				fireballTimer--;
@@ -80,17 +85,17 @@ public class Spawn
 			{
 				//wave
 				int total = 0;		
-				gap = r.nextInt(11)+1;
+				gap = r.nextInt(12)+1;
 				while(total<=12)
 				{
 					if(total == gap)
 					{
 						total++;
-						handler.addObject(new Fireball(total*60+30,-32,texture,handler,ID.Fireball,6));
+						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,6));
 					}
 					else
 					{
-						handler.addObject(new Fireball(total*60+30,-32,texture,handler,ID.Fireball,6));
+						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,6));
 					}
 					total++;
 				}
@@ -99,6 +104,32 @@ public class Spawn
 				else 
 					isWave = true;
 			}
+		}
+		if(game.isBossFight && !bossMade)
+		{
+			bossMade = true;
+			handler.addObject(new Level1Boss(Game.WIDTH/2-100,-10,ID.Level1Boss,texture,game,6));
+			/*handler.addObject(new Fireball(l1b.getX()+10,l1b.getY()+150,texture,handler,ID.Fireball,8));
+			handler.addObject(new Fireball(l1b.getX()+80,l1b.getY()+150,texture,handler,ID.Fireball,8));
+			handler.addObject(new Fireball(l1b.getX()+150,l1b.getY()+150,texture,handler,ID.Fireball,8));*/
+		}
+		if(game.isBossFight)
+		{
+			if(enemyFireball <= 0)
+			{
+				handler.addObject(new Level1BossFireball((int)Level1Boss.x+10,(int)Level1Boss.y+150,texture,handler,ID.Level1BossFireball,5));
+				handler.addObject(new Level1BossFireball((int)Level1Boss.x+80,(int)Level1Boss.y+150,texture,handler,ID.Level1BossFireball,5));
+				handler.addObject(new Level1BossFireball((int)Level1Boss.x+150,(int)Level1Boss.y+150,texture,handler,ID.Level1BossFireball,5));
+				enemyFireball = 40;
+			}
+			else enemyFireball--;
+			if(waterbucketTime <= 0)
+			{
+				WaterBucket wb = new WaterBucket(r.nextInt(Game.WIDTH-36),730,texture,handler,ID.Waterbucket);
+				handler.addObject(wb);
+				waterbucketTime = 100;
+			}
+			else waterbucketTime--;
 		}
 	}
 

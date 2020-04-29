@@ -10,10 +10,10 @@ public class Player extends GameObject
 	private double xVel = 0;
 	private double yVel = 0;
 	private ID id;
-	private BufferedImage player;
-	private SpriteTextures texture;
+ 	private SpriteTextures texture;
 	private ObjectHandler handler;
 	private Game game;
+	public int bucketCount = 0;
 	/* This constructor has similar parameters to other game objects
 	 * and this is required to make the player work */
 	public Player(double x,double y,Game game,SpriteTextures texture,ObjectHandler handler,ID id)
@@ -38,17 +38,14 @@ public class Player extends GameObject
 	public void update()
 	{
 		x+=xVel;
-		x = Game.restrict(x, 0, Game.WIDTH-60);
+		x = Game.restrict(x, 0, Game.WIDTH-50);
 		checkCollision();
 	}
 	/* This method is called 60 times per second
 	 * Depending on the state it draws the player */
 	public void render(Graphics g)
 	{
-		if(game.gameState == game.STATE.LEVEL1)
-		{
-			g.drawImage(texture.player,(int)x,(int)y,50,38,null);
-		}
+		g.drawImage(texture.player,(int)x,(int)y,50,38,null);
 	}
 	/* This method checks Collision depending on the 
 	 * game Object which either adds to the score or 
@@ -63,6 +60,13 @@ public class Player extends GameObject
 				if(getRect().intersects(obj.getRect()))
 				{
 					HUD.HEALTH-=1;
+				}
+			}
+			if(obj.id == ID.Level1BossFireball)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=2;
 				}
 			}
 			if(obj.id == ID.BronzeCoin)
@@ -87,6 +91,14 @@ public class Player extends GameObject
 				{
 					handler.removeObject(obj);
 					HUD.SCORE+=500;
+				}
+			}
+			if(obj.id == ID.Waterbucket)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					bucketCount++;
 				}
 			}
 		}

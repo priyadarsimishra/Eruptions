@@ -63,12 +63,23 @@ public class Menu extends MouseAdapter
 			//LEVEL 1
 			game.gameState = game.STATE.LEVEL1;
 		}
+		else if(contains(mx,my,220,150,121,121) && game.isLevel1Complete)
+		{
+			// LEVEL 2
+			game.gameState = game.STATE.LEVEL2;
+		}
 		else if(contains(mx,my,game.WIDTH/2-370,game.HEIGHT/2+250,740,100) && game.gameState == game.STATE.DEADSCREEN)
 		{
 			//BACK TO MENU BUTTON
 			game.gameState = game.STATE.MENU;
 			handler.clearAll();
+			game.isBossFight = false;
 		}		
+		else if(contains(mx,my,300, 450, 200, 100) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		{
+			game.gameState = game.STATE.LEVEL2;
+			
+		}
 	}
 	/* This is the mouseReleased method which is not in use right now */
 	public void mouseReleased(MouseEvent e) {}
@@ -140,6 +151,8 @@ public class Menu extends MouseAdapter
 		}
 		else if(game.gameState == game.STATE.SELECTLEVEL)
 		{
+			g.setColor(Color.GRAY);
+			g.fillRect(50,150,120,120);
 			g.setColor(Color.WHITE);
 			Font lev = new Font("TimesNewRoman", Font.BOLD,120);
 			g.setFont(lev);
@@ -158,6 +171,13 @@ public class Menu extends MouseAdapter
 			g.setFont(difLevDisplay);
 			g.drawString("Level 1",55,300);
 			
+			g.setColor(Color.GRAY);
+			g.fillRect(220,150,120,120);
+			g.setColor(Color.CYAN);
+			g.setFont(difLevDisplay);
+			g.drawString("Level 2",225,300);
+			g.setColor(Color.WHITE);
+			g.drawRect(220,150,121,121);
 		}
 		else if(game.gameState == game.STATE.DEADSCREEN)
 		{
@@ -172,6 +192,14 @@ public class Menu extends MouseAdapter
 			g.setFont(returnTo);
 			g.drawString("Return To",game.WIDTH/2-370,game.HEIGHT/2+330);
 			g.drawString("MENU",game.WIDTH/2+100,game.HEIGHT/2+330);
+		}
+		else if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		{
+			g.setColor(Color.WHITE);
+			Font f = new Font("Arial",Font.BOLD,36);
+			g.setFont(f);
+			g.drawRect(300, 450, 200, 100);
+			g.drawString("Next Level", 310,505);
 		}
 	}
 }

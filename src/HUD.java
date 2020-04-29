@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 public class HUD 
 {	
 	public static int HEALTH = 100;
+	public static int LEVEL1BOSSHEALTH = 200;
 	public static int SCORE = 0;
 	private int sector = 0;
 	private int level = 0;
@@ -30,10 +31,16 @@ public class HUD
 		HEALTH = (int)Game.restrict(HEALTH,0,HEALTH+(sector/2));
 		greenValue = HEALTH*2;
 		greenValue = (int)Game.restrict(greenValue, 0, 255);
+		LEVEL1BOSSHEALTH = (int)Game.restrict(LEVEL1BOSSHEALTH,0,LEVEL1BOSSHEALTH+(sector));
 		if(game.gameState == game.STATE.MENU)
 		{
 			HEALTH = 100;
+			LEVEL1BOSSHEALTH = 200;
 		}
+		/*if(game.isBossFight)
+		{
+			LEVEL1BOSSHEALTH--;
+		}*/
 	}	
 	/* This method is also called 60 times per second
 	 * and it draws the the black outline around the health bar
@@ -48,5 +55,16 @@ public class HUD
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(Color.BLACK);
 		g.drawRect(10,10,200+sector,50);
+		
+		if(game.isBossFight && game.gameState == game.STATE.LEVEL1)
+		{
+			g.setColor(Color.GRAY);
+			g.fillRect(380,10,400+sector,50);
+			g.setColor(Color.RED);
+			g.fillRect(380,10,LEVEL1BOSSHEALTH*2,50);
+			((Graphics2D)g).setStroke(new BasicStroke(3));
+			g.setColor(Color.BLACK);
+			g.drawRect(380,10,400+sector,50);
+		}
 	}
 }

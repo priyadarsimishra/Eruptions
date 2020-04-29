@@ -7,6 +7,10 @@ public enum ID
 	SilverCoin,
 	GoldCoin,
 	Fireball,
+	Level1BossFireball,
+	Level1Boss,
+	Waterbucket,
+	WaterBullet,
 	Bullet,
 	FireballTrail,
 };
