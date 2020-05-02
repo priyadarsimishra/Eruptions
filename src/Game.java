@@ -26,14 +26,15 @@ public class Game extends Canvas implements Runnable
 	private ImageIcon icon;
 	public BufferedImage level1;
 	private Window window;
-	private Player player;
+	public Player player;
 	private HUD hud;
 	public ObjectHandler handler;
 	private SpriteTextures texture;
 	private Spawn spawner;
 	private Menu menu;
 	private LevelDisplay levelDisplay;
-	public int wait = 0;
+	public int level1pause = 0;
+	public int level2pause = 0;
 	public int level1Complete = 0;
 	private int bossDisplay = 0;
 	private int bulletCount = 0;
@@ -49,6 +50,8 @@ public class Game extends Canvas implements Runnable
 	{
 		MENU,
 		HELP,
+		HOWTOPLAY,
+		STORY,
 		SELECTLEVEL,
 		LEVEL1,
 		LEVEL2,
@@ -145,7 +148,7 @@ public class Game extends Canvas implements Runnable
 			if(System.currentTimeMillis() - timerCheck>1000)
 			{
 				timerCheck+=1000;
-				//System.out.println("Updates: "+updates+", FPS: "+FPS);			
+				System.out.println("Updates: "+updates+", FPS: "+FPS);			
 				FPS = 0;
 				updates = 0;
 			}
@@ -161,6 +164,23 @@ public class Game extends Canvas implements Runnable
 		{
 			menu.update();
 			hud.update();
+			player.x = 385;
+			level1Complete = 0;
+			bossDisplay = 0;
+			level1pause = 0;
+			level2pause = 0;
+			HUD.LEVEL1BOSSHEALTH = 200;
+			HUD.SCORE = 0;
+			HUD.COUNT= 0;
+			HUD.HIGHSCORE = 0;
+			hud.display = 150;
+			hud.display2 = 150;
+			hud.stopScore = false;
+			hud.stopScore2 = false;
+			hud.stoptotalScore = false;
+			menu.stopScoreChange1 = false;
+			menu.stopScoreChange2 = false;
+			levelDisplay.scoreTime = 300;
 			isBossFight = false;
 			spawner.bossMade = false;
 		}
@@ -168,11 +188,12 @@ public class Game extends Canvas implements Runnable
 		{
 			if((level1Complete < bossFight) && !isBossFight)
 			{
-				//isLevel1Complete = true;
+				//Level1Complete = true;
 				if(hud.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
-					wait = 0;
+					hud.update();
+					level1pause = 0;
 					player.x = 385;
 					level1Complete = 0;
 					bossDisplay = 0;
@@ -180,16 +201,16 @@ public class Game extends Canvas implements Runnable
 				}
 				else
 				{
-					if(wait>=500)
+					if(level1pause>=500)
 					{
 						player.update();
-						handler.update();
 						hud.update();
+						handler.update();
 						spawner.update();
 					}
 					else 
 					{
-						wait++;
+						level1pause++;
 					}
 				}
 				level1Complete++;
@@ -202,23 +223,21 @@ public class Game extends Canvas implements Runnable
 					handler.clearAll();
 				}
 			}
-			if(isBossFight && bossDisplay>=1000)
+			if(isBossFight && bossDisplay>=900)
 			{
-				if(HUD.LEVEL1BOSSHEALTH<=0)
-				{
-					handler.clearAll();
-				}
 				if(hud.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
-					wait = 0;
+					hud.update();
+					level1pause = 0;
 					player.x = 385;
 					level1Complete = 0;
 					HUD.LEVEL1BOSSHEALTH = 200;
+					bossDisplay = 0;
 				}
 				else 
 				{
-					if(wait>=500)
+					if(level1pause>=500)
 					{
 						player.update();
 						handler.update();
@@ -227,21 +246,37 @@ public class Game extends Canvas implements Runnable
 					}
 					else 
 					{
-						wait++;
+						level1pause++;
 					}
+				}
+				if(HUD.LEVEL1BOSSHEALTH<=0)
+				{
+					handler.clearAll();
+					hud.update();
+					menu.update();
+					handler.update();
 				}
 				
 			}
 		}
 		else if(gameState == STATE.LEVEL2)
 		{
-			player.update();
-			handler.update();
-			hud.update();
-			hud.HEALTH = 100;
+			if(level2pause>=500)
+			{
+				hud.HEALTH = 100;
+				player.update();
+				handler.update();
+				hud.update();
+			}
+			else
+			{
+				hud.update();
+				level2pause++;
+			}
 		}
 		else if(gameState == STATE.DEADSCREEN)
 		{
+			hud.update();
 			menu.update();
 		}
 	}
@@ -273,35 +308,46 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.HELP)
 		{
-			g.setColor(Color.YELLOW);
-			g.fillRect(0, 0,WIDTH,HEIGHT);
+				g.setColor(Color.YELLOW);
+				g.fillRect(0, 0,WIDTH,HEIGHT);
+				menu.render(g);
+		}
+		else if(gameState == STATE.STORY)
+		{
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			menu.render(g);
+		}
+		else if(gameState == STATE.HOWTOPLAY)
+		{
+			g.setColor(Color.CYAN);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
 			menu.render(g);
 		}
 		else if(gameState == STATE.LEVEL1)
 		{
 			g.drawImage(background,0,0,WIDTH,HEIGHT,null);
 			player.render(g);
-			if(wait>=500)
+			if(level1pause>=500)
 			{
 				handler.render(g);
 			}
 			else 
 			{
-				wait++;
+				level1pause++;
 				levelDisplay.render(g);
 			}
-			if(bossDisplay>=1000 && isBossFight)
+			hud.render(g);
+			if(bossDisplay>=900 && isBossFight)
 			{
-				handler.render(g);
 				hud.render(g);
+				handler.render(g);
 			}
 			else if(isBossFight)
 			{
 				bossDisplay++;
 				levelDisplay.render(g);
 			}
-			hud.render(g);
-			handler.render(g);
 			if(HUD.LEVEL1BOSSHEALTH<=0)
 			{
 				levelDisplay.render(g);
@@ -313,8 +359,17 @@ public class Game extends Canvas implements Runnable
 			g.setColor(Color.PINK);
 			g.fillRect(0,0,WIDTH,HEIGHT);
 			player.render(g);
-			handler.render(g);
 			hud.render(g);
+			if(level2pause>=500)
+			{
+				handler.render(g);
+			}
+			else 
+			{
+				hud.render(g);
+				levelDisplay.render(g);
+				level2pause++;
+			}
 		}
 		else if(gameState == STATE.DEADSCREEN)
 		{

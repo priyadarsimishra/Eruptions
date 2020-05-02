@@ -14,6 +14,8 @@ public class Menu extends MouseAdapter
 	private ObjectHandler handler;
 	private Spawn spawner;
 	private SpriteTextures texture;
+	public boolean stopScoreChange1 = false;
+	public boolean stopScoreChange2 = false;
 	/* This constructor has a game instance and handler instance
 	 * for this class so we can check the game State or
 	 * to clear all the objects in the handler and 
@@ -75,10 +77,49 @@ public class Menu extends MouseAdapter
 			handler.clearAll();
 			game.isBossFight = false;
 		}		
-		else if(contains(mx,my,300, 450, 200, 100) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		else if(contains(mx,my,220, 530, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
+			// END OF LEVEL 1 
 			game.gameState = game.STATE.LEVEL2;
-			
+			game.player.x = 385;
+			HUD.HEALTH = 100;
+			HUD.SCORE = 0;
+		}
+		else if(contains(mx,my,430, 530, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		{
+			// BACK TO MENU FROM END OF LEVEL 1
+			game.gameState = game.STATE.MENU;
+			HUD.SCORE =0;
+			game.isLevel1Complete = true;
+		}
+		else if(contains(mx,my,264, 180, 260, 120) && game.gameState == game.STATE.HELP)
+		{
+			// STORY BUTTON 
+			game.gameState = game.STATE.STORY;
+		}
+		else if(contains(mx,my,264, 330, 260, 120) && game.gameState == game.STATE.HELP)
+		{
+			// HOW TO PLAY BUTTON
+			game.gameState = game.STATE.HOWTOPLAY;
+		}
+		else if(contains(mx,my,game.WIDTH/2-300,game.HEIGHT/2+250,250,100) && (game.gameState == game.STATE.STORY || game.gameState == game.STATE.HOWTOPLAY))
+		{
+			// BACK TO HELP BUTTON
+			game.gameState = game.STATE.HELP;
+		}
+		else if(contains(mx,my,game.WIDTH/2+50,game.HEIGHT/2+250,270,100) && (game.gameState == game.STATE.STORY || game.gameState == game.STATE.HOWTOPLAY))
+		{
+			game.gameState = game.STATE.MENU;
+		}
+		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange1)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange1 = true;
+		}
+		else if(game.gameState == game.STATE.LEVEL1 && !stopScoreChange2 && HUD.LEVEL1BOSSHEALTH<=0)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange2 = true;
 		}
 	}
 	/* This is the mouseReleased method which is not in use right now */
@@ -131,15 +172,44 @@ public class Menu extends MouseAdapter
 			Font f2 = new Font("TimesNewRoman",Font.BOLD,60);
 			g.setFont(f2);
 			g.drawString("EXIT", game.WIDTH/2-85, game.HEIGHT/2+275);
+			
+			Font f = new Font("Arial",Font.BOLD,18);
+			g.setFont(f);
+			g.drawString("Money: "+HUD.TOTALSCORE,3,Game.HEIGHT-30);
+			g.drawString("Version 0.2",700,20);
 		}
 		else if(game.gameState == game.STATE.HELP)
 		{
 			g.setColor(Color.BLACK);
-			g.drawRect(game.WIDTH/2-120,game.HEIGHT/2+250,250,100);
 			Font f5 = new Font("TimesNewRoman",Font.BOLD,88);
 			g.setFont(f5);
+			g.drawRect(game.WIDTH/2-120,game.HEIGHT/2+250,250,100);
 			g.drawString("BACK",game.WIDTH/2-118,game.HEIGHT/2+330);
+			g.drawString("HELP",game.WIDTH/2-118,75);
 			
+			g.setColor(Color.RED);
+			g.fillRect(264, 180, 260, 120);
+			g.setColor(Color.WHITE);
+			Font f4 = new Font("TimesNewRoman",Font.BOLD,70);
+			g.setFont(f4);
+			g.drawString("STORY", 275, 260);
+			
+			g.setColor(Color.BLACK);
+			g.fillRect(264, 330, 260, 120);
+			g.setColor(Color.WHITE);
+			Font f6 = new Font("TimesNewRoman",Font.BOLD,50);
+			g.setFont(f6);
+			g.drawString("HOW TO", 285, 380);
+			g.drawString("PLAY", 325, 440);
+			
+			/*g.setColor(Color.BLACK);
+			Font f7 = new Font("Arial",Font.BOLD,48);
+			g.setFont(f7);
+			g.drawString("Story", 25, 100);
+			g.drawRect(25, 120, Game.WIDTH-50, 200);
+			g.drawString("How to Play", 25, 380);
+			
+			g.drawString("HELP",275,75);
 			Font helpFont = new Font("TimesNewRoman",Font.BOLD,60);
 			g.setFont(helpFont);
 			g.drawImage(texture.rightArrow,50,200,100,100,null);
@@ -147,7 +217,64 @@ public class Menu extends MouseAdapter
 			g.drawImage(texture.leftArrow,50,350,100,100,null);
 			g.drawString("Move Left ",150,420);
 			g.drawImage(texture.space,50,500,100,100,null);
-			g.drawString("Shoot Bullets ",160,570);
+			g.drawString("Shoot Bullets ",160,570);*/
+		}
+		else if(game.gameState == game.STATE.STORY)
+		{
+			g.setColor(Color.BLACK);
+			Font f5 = new Font("TimesNewRoman",Font.BOLD,88);
+			g.setFont(f5);
+			g.drawRect(game.WIDTH/2-300,game.HEIGHT/2+250,250,100);
+			g.drawString("BACK",game.WIDTH/2-297,game.HEIGHT/2+330);
+			g.drawString("STORY",game.WIDTH/2-160,75);
+			
+			g.drawRect(game.WIDTH/2+50,game.HEIGHT/2+250,270,100);
+			g.drawString("MENU",game.WIDTH/2+53,game.HEIGHT/2+330);
+		}
+		else if(game.gameState == game.STATE.HOWTOPLAY)
+		{
+			g.setColor(Color.BLACK);
+			Font f5 = new Font("TimesNewRoman",Font.BOLD,88);
+			g.setFont(f5);
+			g.drawRect(game.WIDTH/2-300,game.HEIGHT/2+250,250,100);
+			g.drawString("BACK",game.WIDTH/2-297,game.HEIGHT/2+330);
+			g.drawString("HOW TO PLAY",game.WIDTH/2-320,75);
+			
+			g.drawRect(game.WIDTH/2+50,game.HEIGHT/2+250,270,100);
+			g.drawString("MENU",game.WIDTH/2+53,game.HEIGHT/2+330);
+			
+			Font instructionFont = new Font("Arial",Font.BOLD,24);
+			g.setFont(instructionFont);
+			g.drawImage(texture.rightArrow,25,125,50,50,null);
+			g.drawString("Move Right ",80,155);
+			g.drawImage(texture.leftArrow,25,175,50,50,null);
+			g.drawString("Move Left ",80,209);
+			g.drawImage(texture.space,25,230,50,50,null);
+			g.drawString("Shoot Bullets ",80,265);
+			g.drawImage(texture.waterbucket,25,280,50,50,null);
+			g.drawString("Collect Water", 80, 300);
+			g.drawString("To get Bullets", 80, 325);
+			g.drawImage(texture.fireball, 25,340,50,50,null);
+			g.drawString("Avoid Fireballs", 80, 375);
+			g.drawImage(texture.bomb,25,400,50,50,null);
+			g.drawString("These will blow", 80, 420);
+			g.drawString("you up", 115, 440);
+			g.drawImage(texture.bronzeCoin,25,460,50,50,null);
+			g.drawString("Increases score", 80,480);
+			g.drawString("by 100", 115, 500);
+			g.drawImage(texture.silverCoin,25,520,50,50,null);
+			g.drawString("Increases score", 80,540);
+			g.drawString("by 250", 115, 560);
+			g.drawImage(texture.goldCoin,25,580,50,50,null);
+			g.drawString("Increases score", 80,600);
+			g.drawString("by 500", 115, 620);
+			g.drawImage(texture.rightMagmaRock,250,125,50,50,null);
+			g.drawString("Avoid these",298,145);
+			g.drawString("Rocks",328,165);
+			g.drawImage(texture.undergroundEnemy,250,175,50,50,null);
+			g.drawString("Can you",298,195);
+			g.drawString("See him?", 298,215);
+
 		}
 		else if(game.gameState == game.STATE.SELECTLEVEL)
 		{
@@ -192,14 +319,48 @@ public class Menu extends MouseAdapter
 			g.setFont(returnTo);
 			g.drawString("Return To",game.WIDTH/2-370,game.HEIGHT/2+330);
 			g.drawString("MENU",game.WIDTH/2+100,game.HEIGHT/2+330);
+			
+			g.drawRect(200, 200, 400,400);
+			Font count = new Font("TimesNewRoman",Font.BOLD,40);
+			g.setFont(count);
+			if(HUD.SCORE == 0)
+			{
+				g.drawString("SCORE: 0",200,235);
+				g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,275);
+			}
+			else
+			{
+				g.drawString("SCORE: "+(HUD.COUNT-2),200,235);
+				g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,275);
+			}
 		}
 		else if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
-			g.setColor(Color.WHITE);
-			Font f = new Font("Arial",Font.BOLD,36);
-			g.setFont(f);
-			g.drawRect(300, 450, 200, 100);
-			g.drawString("Next Level", 310,505);
+			if(LevelDisplay.scoreTime<=0)
+			{
+				g.setColor(Color.WHITE);
+				Font f = new Font("Arial",Font.BOLD,28);
+				g.setFont(f);
+				g.drawRect(220, 530, 150, 50);
+				g.drawString("Next Level", 223,565);
+				g.drawRect(430, 530, 150, 50);
+				g.drawString("Menu",470,565);
+				Font f2 = new Font("Arial",Font.BOLD,40);
+				g.setFont(f2);
+				g.drawString("LEVEL COMPLETED",Game.WIDTH/2-197, Game.HEIGHT/2-160);
+				g.drawLine(200, 250, 600, 250);
+				if(HUD.COUNT == 0 && HUD.SCORE == 0)
+				{
+					g.drawString("SCORE: 0",200, 300);
+					g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,340);
+				}
+				else
+				{
+					g.drawString("SCORE: "+(HUD.COUNT-2),200, 300);
+					g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,340);
+				}
+				g.drawLine(200, 250, 600, 250);
+			}
 		}
 	}
 }

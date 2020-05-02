@@ -4,7 +4,8 @@ import java.awt.image.BufferedImage;
 public class SpriteTextures 
 {
 	public BufferedImage player,bronzeCoin,silverCoin,goldCoin,fireball,bullet;
-	public BufferedImage rightArrow, leftArrow, space, BossLevel1, waterbucket;
+	public BufferedImage rightArrow, leftArrow, space, BossLevel1, waterbucket, bomb;
+	public BufferedImage rightMagmaRock,leftMagmaRock, undergroundEnemy;
 	private SpriteSheet spriteSheet = null;
 	/* This is the constructor that requires the game instance 
 	 * to get the sprite sheet and calls the getTexture */
@@ -29,6 +30,9 @@ public class SpriteTextures
 		fireball = spriteSheet.getImage(3, 1, 32, 32);
 		bullet = spriteSheet.getImage(4, 1, 32, 32);
 		waterbucket = spriteSheet.getImage(4, 2, 32, 32);
-
+		bomb = spriteSheet.getImage(6, 2, 32, 32);
+		rightMagmaRock = spriteSheet.getImage(7, 2, 32, 32);
+		leftMagmaRock = spriteSheet.getImage(8, 2, 32, 32);
+		undergroundEnemy = spriteSheet.getImage(1, 3, 32, 32);
 	}
 }

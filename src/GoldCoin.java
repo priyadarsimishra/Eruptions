@@ -39,7 +39,7 @@ public class GoldCoin extends GameObject
 		y+=yVel;
 		if(y>=832)
 			handler.removeObject(this);	
-		handler.addObject(new Trail((int)x+10,(int)y-15,ID.GoldCoin,Color.ORANGE,16,16,0.05f,handler));
+		handler.addObject(new Trail((int)x+10,(int)y-15,ID.Trail,Color.ORANGE,16,16,0.05f,handler));
 	}
 	/* This method is also called 60 times per second 
 	 * and it takes the values and draws the gold coin into the game

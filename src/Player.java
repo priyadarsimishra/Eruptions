@@ -62,11 +62,20 @@ public class Player extends GameObject
 					HUD.HEALTH-=1;
 				}
 			}
-			if(obj.id == ID.Level1BossFireball)
+			if(obj.id == ID.Level1BossBomb)
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.HEALTH-=2;
+					handler.removeObject(obj);
+					HUD.HEALTH-=15;
+				}
+			}
+			if(obj.id == ID.MagmaRock)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.HEALTH-=10;
 				}
 			}
 			if(obj.id == ID.BronzeCoin)

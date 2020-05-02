@@ -10,11 +10,21 @@ public class HUD
 	public static int HEALTH = 100;
 	public static int LEVEL1BOSSHEALTH = 200;
 	public static int SCORE = 0;
+	public static int HIGHSCORE = 0;
+	public static int COUNT = 0;
+	public static int TOTALSCORE;
 	private int sector = 0;
 	private int level = 0;
+	public int display = 150;
+	public int display2 = 150;
 	private int greenValue = 255;
 	private Game game;
 	private Menu menu;
+	boolean stopScore = false;
+	boolean stopScore2 = false;
+	boolean stoptotalScore = false;
+	boolean addScore = false;
+	boolean highScoreStop = false;
 	/* This class needs game instance and a menu instance
 	 * which is done through this constructor */
 	public HUD(Game game,Menu menu)
@@ -41,6 +51,48 @@ public class HUD
 		{
 			LEVEL1BOSSHEALTH--;
 		}*/
+		if(SCORE>=HIGHSCORE)
+		{
+			HIGHSCORE = SCORE;
+			/*if(HIGHSCORECOUNT == SCORE && !highScoreStop)
+			{
+				HIGHSCORECOUNT++;
+			}
+			else highScoreStop = true;*/
+		}
+		if(LEVEL1BOSSHEALTH<=0 && !addScore)
+		{
+			SCORE+=1000;
+			addScore = true;
+		}
+		if(!stoptotalScore && LEVEL1BOSSHEALTH<=0)
+		{
+			TOTALSCORE+=SCORE;
+			stoptotalScore = true;
+		}
+		if(LEVEL1BOSSHEALTH<=0 && !stopScore && LevelDisplay.scoreTime<=0 && game.gameState == Game.STATE.LEVEL1 && display<=0)
+		{
+			if(COUNT>SCORE) stopScore = true;
+			else stopScore = false;
+			COUNT++;
+			//System.out.println("Count: "+COUNT);
+		}
+		else
+		{
+			display--;
+		}
+		
+		if(!stopScore2 && game.gameState == Game.STATE.DEADSCREEN && display2<=0)
+		{
+			if(COUNT>SCORE) stopScore2 = true;
+			else stopScore2 = false;
+			COUNT++;
+		}
+		else
+		{
+			display2--;
+		}
+		//System.out.println("totalCount: "+TOTALSCORE);
 	}	
 	/* This method is also called 60 times per second
 	 * and it draws the the black outline around the health bar
@@ -55,6 +107,15 @@ public class HUD
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(Color.BLACK);
 		g.drawRect(10,10,200+sector,50);
+		g.setColor(Color.WHITE);
+		Font newFont = new Font("Arial",Font.BOLD,24);
+		g.setFont(newFont);
+		if(HEALTH == 100)
+			g.drawString(HEALTH+"%",148,43);
+		else
+			g.drawString(HEALTH+"%",160,43);
+		//g.drawString("HEALTH", , y);
+
 		
 		if(game.isBossFight && game.gameState == game.STATE.LEVEL1)
 		{

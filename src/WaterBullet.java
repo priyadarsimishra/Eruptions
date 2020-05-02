@@ -58,7 +58,7 @@ public class WaterBullet extends GameObject
 					HUD.LEVEL1BOSSHEALTH-=20;
 				}
 			}
-			if(obj.id == ID.Level1BossFireball)
+			if(obj.id == ID.Level1BossBomb)
 			{
 				if(getRect().intersects(obj.getRect()))
 				{

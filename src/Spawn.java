@@ -12,7 +12,8 @@ public class Spawn
 	private int bronzeTimer = r.nextInt(150)+70;
 	private int silverTimer = r.nextInt(200)+120;
 	private int goldTimer = r.nextInt(600)+300;
-	private int fireballTimer = 100;
+	private int fireballTimer = 120;
+	private int magmaRockTimer = 100;
 	private int wave = 500;
 	private int enemyFireball = 40;
 	private int waterbucketTime = 100;
@@ -35,9 +36,8 @@ public class Spawn
 	 * and the level */
 	public void update()
 	{
-		//game.isBossFight =false;
 		/* Level 1 */
-		if(game.gameState == game.STATE.LEVEL1 && game.wait>=500 && !game.isBossFight)
+		if(game.gameState == game.STATE.LEVEL1 && game.level1pause>=500 && !game.isBossFight)
 		{
 			//bronze coin
 			if(bronzeTimer<=0)
@@ -66,11 +66,19 @@ public class Spawn
 			//fire ball
 			if(fireballTimer<=0)
 			{		
-				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(13)+7));
+				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(16)+7));
+				
 				fireballTimer = 120;
 			}
 			else
 				fireballTimer--;
+			if(magmaRockTimer<=0)
+			{
+				handler.addObject(new MagmaRock(r.nextInt(10)+0,r.nextInt(200)+0,texture,handler,ID.MagmaRock,r.nextInt(10)+5,r.nextInt(8)+3,true));
+				handler.addObject(new MagmaRock(r.nextInt(800)+600,r.nextInt(100)+0,texture,handler,ID.MagmaRock,r.nextInt(10)+5,-(r.nextInt(8)+3),false));
+				magmaRockTimer = 100;
+			}
+			else magmaRockTimer--;
 			if(wave<=0)
 			{
 				isWave = true;
@@ -91,11 +99,11 @@ public class Spawn
 					if(total == gap)
 					{
 						total++;
-						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,6));
+						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,7));
 					}
 					else
 					{
-						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,6));
+						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,7));
 					}
 					total++;
 				}
@@ -109,17 +117,15 @@ public class Spawn
 		{
 			bossMade = true;
 			handler.addObject(new Level1Boss(Game.WIDTH/2-100,-10,ID.Level1Boss,texture,game,6));
-			/*handler.addObject(new Fireball(l1b.getX()+10,l1b.getY()+150,texture,handler,ID.Fireball,8));
-			handler.addObject(new Fireball(l1b.getX()+80,l1b.getY()+150,texture,handler,ID.Fireball,8));
-			handler.addObject(new Fireball(l1b.getX()+150,l1b.getY()+150,texture,handler,ID.Fireball,8));*/
 		}
 		if(game.isBossFight)
 		{
 			if(enemyFireball <= 0)
 			{
-				handler.addObject(new Level1BossFireball((int)Level1Boss.x+10,(int)Level1Boss.y+150,texture,handler,ID.Level1BossFireball,5));
-				handler.addObject(new Level1BossFireball((int)Level1Boss.x+80,(int)Level1Boss.y+150,texture,handler,ID.Level1BossFireball,5));
-				handler.addObject(new Level1BossFireball((int)Level1Boss.x+150,(int)Level1Boss.y+150,texture,handler,ID.Level1BossFireball,5));
+				int randomSpeed = r.nextInt(9)+7;
+				handler.addObject(new Level1BossBomb((int)Level1Boss.x+10,(int)Level1Boss.y+150,texture,handler,ID.Level1BossBomb,randomSpeed));
+				handler.addObject(new Level1BossBomb((int)Level1Boss.x+80,(int)Level1Boss.y+150,texture,handler,ID.Level1BossBomb,randomSpeed));
+				handler.addObject(new Level1BossBomb((int)Level1Boss.x+150,(int)Level1Boss.y+150,texture,handler,ID.Level1BossBomb,randomSpeed));
 				enemyFireball = 40;
 			}
 			else enemyFireball--;
@@ -131,6 +137,7 @@ public class Spawn
 			}
 			else waterbucketTime--;
 		}
+		/* Level 2 */
 	}
 
 }

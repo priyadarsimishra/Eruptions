@@ -5,6 +5,7 @@ import java.awt.Font;
 public class LevelDisplay 
 {
 	private Game game;
+	public static int scoreTime = 300;
 	/* This constructor has a game instance parameter 
 	 * so the class can use get the State of the game
 	 * and display the appropriate level text */
@@ -15,7 +16,7 @@ public class LevelDisplay
 	/* This method renders the text depending on the level of the game */
 	public void render(Graphics g)
 	{
-		if(game.gameState == game.STATE.LEVEL1 && game.wait<=500 && !game.isBossFight)
+		if(game.gameState == game.STATE.LEVEL1 && game.level1pause<=500 && !game.isBossFight)
 		{
 			g.setColor(Color.WHITE);
 			Font levelFont = new Font("TimesNewRoman",Font.BOLD,160);
@@ -35,10 +36,28 @@ public class LevelDisplay
 		}
 		if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
+			if(scoreTime <= 0)
+			{
+				g.setColor(Color.BLACK);
+				g.fillRect(Game.WIDTH/2-200, Game.HEIGHT/2-200,400,400);
+				g.setColor(Color.WHITE);
+				g.drawRect(Game.WIDTH/2-200, Game.HEIGHT/2-200, 401, 401);
+			}
+			else
+			{
+				Font newFont = new Font("Arial",Font.BOLD,64);
+				g.setFont(newFont);
+				g.setColor(Color.PINK);
+				g.drawString("+1000",(int)Level1Boss.x+80,(int)Level1Boss.y+200);
+				scoreTime--;
+			}
+		}
+		if(game.gameState == game.STATE.LEVEL2 && game.level2pause<=500)
+		{
 			g.setColor(Color.WHITE);
-			g.drawRect(Game.WIDTH/2-200, Game.HEIGHT/2-200, 401, 401);
-			g.setColor(Color.BLACK);
-			g.fillRect(Game.WIDTH/2-200, Game.HEIGHT/2-200,400,400);
+			Font levelFont = new Font("TimesNewRoman",Font.BOLD,160);
+			g.setFont(levelFont);
+			g.drawString("LEVEL 2", Game.WIDTH/2-325,Game.HEIGHT/2+20);
 		}
 	}
 }
