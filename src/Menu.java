@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JTextField;
 /* This class is responsible for displaying the Menu 
  * and it handles the Death Screen and it also 
  * has a MouseAdapter to add mouse input for mouse input */
@@ -35,7 +37,12 @@ public class Menu extends MouseAdapter
 	{
 		int mx = e.getX();
 		int my = e.getY();
-		if(contains(mx, my,285,300,200,100) && game.gameState == game.STATE.MENU)
+		if(contains(mx,my,Game.WIDTH/2-60,Game.HEIGHT/2,101,51) && game.gameState == game.STATE.NAMEPANEL)
+		{
+			// OK BUTTON
+			game.gameState = game.STATE.MENU;
+		}
+		else if(contains(mx, my,285,300,200,100) && game.gameState == game.STATE.MENU)
 		{
 			// PLAY BUTTON
 			game.gameState = game.STATE.SELECTLEVEL;
@@ -148,20 +155,20 @@ public class Menu extends MouseAdapter
 		if(game.gameState == game.STATE.MENU)
 		{
 			g.setColor(Color.RED);
-			Font font = new Font("TimesNewRoman",Font.BOLD,120);
+			Font font = new Font("Superpower Synonym",Font.BOLD,120);
 			g.setFont(font);
-			g.drawString("Eruptions",90,120);
+			g.drawString(Game.TITLE,162,120);
 			
 			g.setColor(Color.RED);
 			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2-100,200,100);
 			
-			Font f1 = new Font("TimesNewRoman",Font.BOLD,60);
+			Font f1 = new Font("Arial",Font.BOLD,60);
 			g.setFont(f1);
 			g.drawString("PLAY", game.WIDTH/2-93, game.HEIGHT/2-30);
 			
 			g.setColor(Color.RED);
 			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2+50,200,100);
-			Font helpfont = new Font("TimesNewRoman",Font.BOLD,60);
+			Font helpfont = new Font("Arial",Font.BOLD,60);
 			g.setFont(helpfont);
 			g.drawString("HELP", game.WIDTH/2-93, game.HEIGHT/2+120);
 			
@@ -169,14 +176,15 @@ public class Menu extends MouseAdapter
 			g.setColor(Color.RED);
 			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2+200,200,100);
 			
-			Font f2 = new Font("TimesNewRoman",Font.BOLD,60);
+			Font f2 = new Font("Arial",Font.BOLD,60);
 			g.setFont(f2);
 			g.drawString("EXIT", game.WIDTH/2-85, game.HEIGHT/2+275);
 			
 			Font f = new Font("Arial",Font.BOLD,18);
 			g.setFont(f);
 			g.drawString("Money: "+HUD.TOTALSCORE,3,Game.HEIGHT-30);
-			g.drawString("Version 0.2",700,20);
+			g.drawString("Version 0.3",700,20);
+			g.drawString("Welcome "+Game.NAME+"!",5,20);
 		}
 		else if(game.gameState == game.STATE.HELP)
 		{
@@ -273,7 +281,7 @@ public class Menu extends MouseAdapter
 			g.drawString("Rocks",328,165);
 			g.drawImage(texture.undergroundEnemy,250,175,50,50,null);
 			g.drawString("Can you",298,195);
-			g.drawString("See him?", 298,215);
+			g.drawString("See him?", 298,218);
 
 		}
 		else if(game.gameState == game.STATE.SELECTLEVEL)

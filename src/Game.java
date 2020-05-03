@@ -18,7 +18,8 @@ public class Game extends Canvas implements Runnable
 {
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 800;
-	private static final String TITLE = "ERUPTION";
+	public static final String TITLE = "ERUPTION";
+	public static String NAME;
 	private Thread thread;
 	private boolean running = false;
 	private BufferedImage spritesheet = null;
@@ -48,6 +49,7 @@ public class Game extends Canvas implements Runnable
 	/* This enumeration holds constants for the State of the game */
 	public enum STATE
 	{
+		NAMEPANEL,
 		MENU,
 		HELP,
 		HOWTOPLAY,
@@ -59,11 +61,13 @@ public class Game extends Canvas implements Runnable
 		UPGRADES,
 		DEADSCREEN,
 	};
-	public static STATE gameState = STATE.MENU;
+	public static STATE gameState = STATE.NAMEPANEL;
 	/* In the constructor we make our JFrame */ 
 	public Game()
 	{
-		window = new Window(WIDTH,HEIGHT,TITLE,this);
+		//gameState = STATE.NAMEPANEL;
+		NamePanel np = new NamePanel(this);
+		//window = new Window(WIDTH,HEIGHT,TITLE,this);
 	}
 	/* This method gets all our images that we need in the game
 	 * and its also initializes all of the class instances */
@@ -162,6 +166,7 @@ public class Game extends Canvas implements Runnable
 	{
 		if(gameState == STATE.MENU)
 		{
+			NAME = NamePanel.field.getText();
 			menu.update();
 			hud.update();
 			player.x = 385;
