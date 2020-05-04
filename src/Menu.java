@@ -18,15 +18,19 @@ public class Menu extends MouseAdapter
 	private SpriteTextures texture;
 	public boolean stopScoreChange1 = false;
 	public boolean stopScoreChange2 = false;
+	private PlayerInfo playerInfo;
+	FileUtils fileUtils = new FileUtils();
+	public boolean storeScoreStop = false;
 	/* This constructor has a game instance and handler instance
 	 * for this class so we can check the game State or
 	 * to clear all the objects in the handler and 
 	 * so we can display images */
-	public Menu(Game game, ObjectHandler handler,SpriteTextures texture)
+	public Menu(Game game, ObjectHandler handler,SpriteTextures texture,PlayerInfo playerInfo)
 	{
 		this.game = game;
 		this.handler = handler;
 		this.texture = texture;
+		this.playerInfo = playerInfo;
 	}
 	/* This method is used to update but is not in use yet */
 	public void update(){}
@@ -57,7 +61,7 @@ public class Menu extends MouseAdapter
 			// BACK BUTTON
 			game.gameState = game.STATE.MENU;
 		}
-		else if(contains(mx,my,game.WIDTH/2-120,game.HEIGHT/2+250,250,100) && game.gameState == game.STATE.SELECTLEVEL)
+		else if(contains(mx,my,game.WIDTH/2-120,game.HEIGHT/2+230,250,100) && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// BACK BUTTON IN LEVEL CHOOSE
 			game.gameState = game.STATE.MENU;
@@ -128,6 +132,10 @@ public class Menu extends MouseAdapter
 			HUD.COUNT = HUD.SCORE;
 			stopScoreChange2 = true;
 		}
+//		if(stopScoreChange1 || stopScoreChange2)
+//		{
+//			storeScoreStop = false;
+//		}
 	}
 	/* This is the mouseReleased method which is not in use right now */
 	public void mouseReleased(MouseEvent e) {}
@@ -155,9 +163,9 @@ public class Menu extends MouseAdapter
 		if(game.gameState == game.STATE.MENU)
 		{
 			g.setColor(Color.RED);
-			Font font = new Font("Superpower Synonym",Font.BOLD,120);
+			Font font = new Font("Superpower Synonym",Font.BOLD,180);
 			g.setFont(font);
-			g.drawString(Game.TITLE,162,120);
+			g.drawString(Game.TITLE,42,160);
 			
 			g.setColor(Color.RED);
 			g.drawRect(game.WIDTH/2-115,game.HEIGHT/2-100,200,100);
@@ -182,7 +190,8 @@ public class Menu extends MouseAdapter
 			
 			Font f = new Font("Arial",Font.BOLD,18);
 			g.setFont(f);
-			g.drawString("Money: "+HUD.TOTALSCORE,3,Game.HEIGHT-30);
+			
+			g.drawString("Money: "+fileUtils.getTotalScoreForAPlayer(Game.NAME),3,Game.HEIGHT-30);
 			g.drawString("Version 0.3",700,20);
 			g.drawString("Welcome "+Game.NAME+"!",5,20);
 		}
@@ -209,23 +218,6 @@ public class Menu extends MouseAdapter
 			g.setFont(f6);
 			g.drawString("HOW TO", 285, 380);
 			g.drawString("PLAY", 325, 440);
-			
-			/*g.setColor(Color.BLACK);
-			Font f7 = new Font("Arial",Font.BOLD,48);
-			g.setFont(f7);
-			g.drawString("Story", 25, 100);
-			g.drawRect(25, 120, Game.WIDTH-50, 200);
-			g.drawString("How to Play", 25, 380);
-			
-			g.drawString("HELP",275,75);
-			Font helpFont = new Font("TimesNewRoman",Font.BOLD,60);
-			g.setFont(helpFont);
-			g.drawImage(texture.rightArrow,50,200,100,100,null);
-			g.drawString("Move Right ",150,270);
-			g.drawImage(texture.leftArrow,50,350,100,100,null);
-			g.drawString("Move Left ",150,420);
-			g.drawImage(texture.space,50,500,100,100,null);
-			g.drawString("Shoot Bullets ",160,570);*/
 		}
 		else if(game.gameState == game.STATE.STORY)
 		{
@@ -298,8 +290,8 @@ public class Menu extends MouseAdapter
 			
 			Font levChoose = new Font("TimesNewRoman",Font.BOLD,88);
 			g.setFont(levChoose);
-			g.drawString("BACK",game.WIDTH/2-118,game.HEIGHT/2+330);
-			g.drawRect(game.WIDTH/2-120,game.HEIGHT/2+250,250,100);
+			g.drawString("BACK",game.WIDTH/2-118,game.HEIGHT/2+310);
+			g.drawRect(game.WIDTH/2-120,game.HEIGHT/2+230,250,100);
 			
 			g.setColor(Color.CYAN);
 			Font difLevDisplay = new Font("TimesNewRoman",Font.BOLD,30);
@@ -313,6 +305,9 @@ public class Menu extends MouseAdapter
 			g.drawString("Level 2",225,300);
 			g.setColor(Color.WHITE);
 			g.drawRect(220,150,121,121);
+			Font name = new Font("Arial",Font.BOLD,18);
+			g.setFont(name);
+			g.drawString("Player: "+Game.NAME,5,770);
 		}
 		else if(game.gameState == game.STATE.DEADSCREEN)
 		{
@@ -331,16 +326,29 @@ public class Menu extends MouseAdapter
 			g.drawRect(200, 200, 400,400);
 			Font count = new Font("TimesNewRoman",Font.BOLD,40);
 			g.setFont(count);
+			if(playerInfo != null && !storeScoreStop)
+			{
+				System.out.println("Storing the Player Details:");
+				playerInfo.setPlayerName(Game.NAME);
+				playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
+				playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+				fileUtils.store(playerInfo);
+				storeScoreStop = true;
+			}
+			//playerInfo = 
 			if(HUD.SCORE == 0)
 			{
-				g.drawString("SCORE: 0",200,235);
-				g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,275);
+				g.drawString("SCORE: 0",203,235);
+				if(playerInfo != null)
+					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),203,275);
 			}
 			else
 			{
-				g.drawString("SCORE: "+(HUD.COUNT-2),200,235);
-				g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,275);
+				g.drawString("SCORE: "+(HUD.COUNT-2),203,235);
+				if(playerInfo != null)
+					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),203,275);
 			}
+			g.drawString("Player: "+Game.NAME, 203, 310);
 		}
 		else if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
@@ -356,18 +364,28 @@ public class Menu extends MouseAdapter
 				Font f2 = new Font("Arial",Font.BOLD,40);
 				g.setFont(f2);
 				g.drawString("LEVEL COMPLETED",Game.WIDTH/2-197, Game.HEIGHT/2-160);
-				g.drawLine(200, 250, 600, 250);
+				g.drawLine(2, 250, Game.WIDTH-2, 250);
+				if(playerInfo != null && !storeScoreStop)
+				{
+					System.out.println("Storing the Player Details:");
+					playerInfo.setPlayerName(Game.NAME);
+					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
+					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					fileUtils.store(playerInfo);
+					storeScoreStop = true;
+				}
 				if(HUD.COUNT == 0 && HUD.SCORE == 0)
 				{
-					g.drawString("SCORE: 0",200, 300);
-					g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,340);
+					g.drawString("SCORE: 0",5, 300);
+					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,340);
 				}
 				else
 				{
-					g.drawString("SCORE: "+(HUD.COUNT-2),200, 300);
-					g.drawString("HIGHSCORE: "+HUD.HIGHSCORE,200,340);
+					g.drawString("SCORE: "+(HUD.COUNT-2),5, 300);
+					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,340);
 				}
 				g.drawLine(200, 250, 600, 250);
+				g.drawString("Player: "+Game.NAME, 5, 380);
 			}
 		}
 	}

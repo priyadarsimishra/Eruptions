@@ -12,7 +12,7 @@ public class HUD
 	public static int SCORE = 0;
 	public static int HIGHSCORE = 0;
 	public static int COUNT = 0;
-	public static int TOTALSCORE;
+	public static int TOTALSCORE =0;
 	private int sector = 0;
 	private int level = 0;
 	public int display = 150;
@@ -20,6 +20,7 @@ public class HUD
 	private int greenValue = 255;
 	private Game game;
 	private Menu menu;
+	private FileUtils fileUtils = new FileUtils();
 	boolean stopScore = false;
 	boolean stopScore2 = false;
 	boolean stoptotalScore = false;
@@ -31,6 +32,7 @@ public class HUD
 	{
 		this.game = game;
 		this.menu = menu;
+		
 	}
 	/* This method is also called 60 times per second 
 	 * and it changes greenValue which is the color of the health bar and 
@@ -49,7 +51,7 @@ public class HUD
 		}
 		/*if(game.isBossFight)
 		{
-			LEVEL1BOSSHEALTH--;
+			LEVEL1BOSSHEALTH-=1.2;
 		}*/
 		if(SCORE>=HIGHSCORE)
 		{
@@ -67,6 +69,7 @@ public class HUD
 		}
 		if(!stoptotalScore && LEVEL1BOSSHEALTH<=0)
 		{
+			TOTALSCORE = fileUtils.getTotalScoreForAPlayer(game.NAME);
 			TOTALSCORE+=SCORE;
 			stoptotalScore = true;
 		}
@@ -126,6 +129,14 @@ public class HUD
 			((Graphics2D)g).setStroke(new BasicStroke(3));
 			g.setColor(Color.BLACK);
 			g.drawRect(380,10,400+sector,50);
+			g.setColor(Color.WHITE);
+			if(!(LEVEL1BOSSHEALTH<0))
+			{
+				if(LEVEL1BOSSHEALTH == 200)
+					g.drawString((LEVEL1BOSSHEALTH/2)+"%",716,43);
+				else
+					g.drawString((LEVEL1BOSSHEALTH/2)+"%",728,43);
+			}
 		}
 	}
 }

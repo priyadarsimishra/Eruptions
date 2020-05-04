@@ -19,9 +19,9 @@ public class LevelDisplay
 		if(game.gameState == game.STATE.LEVEL1 && game.level1pause<=500 && !game.isBossFight)
 		{
 			g.setColor(Color.WHITE);
-			Font levelFont = new Font("TimesNewRoman",Font.BOLD,160);
+			Font levelFont = new Font("Superpower Synonym",Font.BOLD,220);
 			g.setFont(levelFont);
-			g.drawString("LEVEL 1", Game.WIDTH/2-325,Game.HEIGHT/2+20);
+			g.drawString("LEVEL 1", Game.WIDTH/2-355,Game.HEIGHT/2+30);
 		}
 		if(game.gameState == game.STATE.LEVEL1 && game.isBossFight && HUD.LEVEL1BOSSHEALTH>0)
 		{
@@ -39,16 +39,22 @@ public class LevelDisplay
 			if(scoreTime <= 0)
 			{
 				g.setColor(Color.BLACK);
-				g.fillRect(Game.WIDTH/2-200, Game.HEIGHT/2-200,400,400);
+				g.fillRect(0, Game.HEIGHT/2-200,800,400);
 				g.setColor(Color.WHITE);
-				g.drawRect(Game.WIDTH/2-200, Game.HEIGHT/2-200, 401, 401);
+				g.drawRect(2, Game.HEIGHT/2-200, 797, 398);
 			}
 			else
 			{
 				Font newFont = new Font("Arial",Font.BOLD,64);
 				g.setFont(newFont);
 				g.setColor(Color.PINK);
-				g.drawString("+1000",(int)Level1Boss.x+80,(int)Level1Boss.y+200);
+				if((int)Level1Boss.x+80+200>=Game.WIDTH)
+				{
+					System.out.println("Here");
+					g.drawString("+1000",(int)Level1Boss.x-20,Game.HEIGHT/2+20);
+				}
+				else				
+					g.drawString("+1000",(int)Level1Boss.x+80,(int)Level1Boss.y+200);
 				scoreTime--;
 			}
 		}

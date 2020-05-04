@@ -90,6 +90,7 @@ public class NamePanel extends JFrame
 			if(command.equals("OK") && !field.getText().isEmpty())
 			{
 				Game.gameState = Game.STATE.MENU;
+				frame.setVisible(false);
 				Window window = new Window(Game.WIDTH, Game.HEIGHT,Game.TITLE, game);
 			}
 		}

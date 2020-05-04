@@ -46,6 +46,7 @@ public class Game extends Canvas implements Runnable
 	public boolean isLevel2Complete = false;
 	public boolean isLevel3Complete = false;
 	public static final STATE STATE = null;
+	private PlayerInfo playerInfo = null;
 	/* This enumeration holds constants for the State of the game */
 	public enum STATE
 	{
@@ -87,9 +88,10 @@ public class Game extends Canvas implements Runnable
 		icon = new ImageIcon(this.getClass().getResource("background.gif"));
 		background = icon.getImage();
 		addKeyListener(new KeyMovement(this));
+		playerInfo = new PlayerInfo();
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
-		menu = new Menu(this,handler,texture);
+		menu = new Menu(this,handler,texture,playerInfo);
 		addMouseListener(menu);
 		spawner = new Spawn(handler,hud,this,texture);
 		hud = new HUD(this,menu);
@@ -180,6 +182,8 @@ public class Game extends Canvas implements Runnable
 			HUD.HIGHSCORE = 0;
 			hud.display = 150;
 			hud.display2 = 150;
+			hud.addScore = false;
+			menu.storeScoreStop = false;
 			hud.stopScore = false;
 			hud.stopScore2 = false;
 			hud.stoptotalScore = false;
