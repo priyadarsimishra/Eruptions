@@ -39,7 +39,7 @@ public class WaterBullet extends GameObject
 		if(y<=-32)
 			handler.removeObject(this);
 		checkCollision();
-		handler.addObject(new Trail((int)x+10,(int)y-15,ID.WaterBullet,Color.CYAN,16,16,0.08f,handler));
+		handler.addObject(new Trail((int)x+8,(int)y+8,ID.WaterBullet,Color.CYAN,16,16,0.08f,handler));
 		
 	}
 	/* This method checks Collision depending on the 
@@ -73,7 +73,7 @@ public class WaterBullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.bullet,(int)x,(int)y,null);
+		g.drawImage(texture.waterBullet,(int)x,(int)y,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

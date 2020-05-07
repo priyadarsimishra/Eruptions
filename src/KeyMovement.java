@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
  * to add 3 key methods */
 public class KeyMovement extends KeyAdapter
 {
-	Game game;
+	private Game game;
 	/* This is the constructor which needs a game instance */
 	public KeyMovement(Game game)
 	{

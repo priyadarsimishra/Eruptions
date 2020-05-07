@@ -38,7 +38,24 @@ public class Bullet extends GameObject
 		y+=yVel;
 		if(y<=-36)
 			handler.removeObject(this);
+		//checkCollision();
 	}
+//	/* This method checks collision with enemies*/
+//	public void checkCollision()
+//	{
+//		for(int i = 0;i<handler.object.size();i++)
+//		{
+//			GameObject obj = handler.object.get(i);
+//			if(obj.id == ID.UnderGroundEnemy)
+//			{
+//				if(getRect().intersects(obj.getRect()))
+//				{
+//					HUD.UNDERGROUNDHEALTH-=5;
+//					handler.removeObject(this);
+//				}
+//			}
+//		}
+//	}
 	/* This method is also called 60 times per second 
 	 * and it takes the values and draws the bullet into the game
 	 * with it's updated locations(x and y) */

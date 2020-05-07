@@ -8,11 +8,13 @@ import java.awt.Graphics2D;
 public class HUD 
 {	
 	public static int HEALTH = 100;
+	public static int LEVEL = 0;
 	public static int LEVEL1BOSSHEALTH = 200;
 	public static int SCORE = 0;
 	public static int HIGHSCORE = 0;
 	public static int COUNT = 0;
 	public static int TOTALSCORE =0;
+	public static int UNDERGROUNDHEALTH = 25;
 	private int sector = 0;
 	private int level = 0;
 	public int display = 150;
@@ -44,6 +46,7 @@ public class HUD
 		greenValue = HEALTH*2;
 		greenValue = (int)Game.restrict(greenValue, 0, 255);
 		LEVEL1BOSSHEALTH = (int)Game.restrict(LEVEL1BOSSHEALTH,0,LEVEL1BOSSHEALTH+(sector));
+		UNDERGROUNDHEALTH = (int)Game.restrict(UNDERGROUNDHEALTH, 0, LEVEL1BOSSHEALTH+(sector/4));
 		if(game.gameState == game.STATE.MENU)
 		{
 			HEALTH = 100;
@@ -51,7 +54,7 @@ public class HUD
 		}
 		/*if(game.isBossFight)
 		{
-			LEVEL1BOSSHEALTH-=1.2;
+			LEVEL1BOSSHEALTH-=2;
 		}*/
 		if(SCORE>=HIGHSCORE)
 		{
@@ -103,20 +106,33 @@ public class HUD
 	 * of the health bar */
 	public void render(Graphics g)
 	{
+		if(LEVEL1BOSSHEALTH > 0)
+		{
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, 220, 120);
+			g.setColor(Color.WHITE);
+			Font scoreFont = new Font("Superpower Synonym",Font.BOLD,24);
+			g.setFont(scoreFont);
+			g.drawString("Score: "+SCORE,5,85);
+			g.drawString("Level: "+LEVEL,5,110);
+		}
 		g.setColor(Color.GRAY);
 		g.fillRect(10,10,200+sector,50);
 		g.setColor(new Color(120,greenValue,60));
 		g.fillRect(10,10,HEALTH*2,50);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
-		g.setColor(Color.BLACK);
-		g.drawRect(10,10,200+sector,50);
 		g.setColor(Color.WHITE);
+		g.drawRect(10,10,200+sector,50);
 		Font newFont = new Font("Arial",Font.BOLD,24);
 		g.setFont(newFont);
-		if(HEALTH == 100)
-			g.drawString(HEALTH+"%",148,43);
-		else
-			g.drawString(HEALTH+"%",160,43);
+		g.setColor(Color.BLACK);
+		if(HEALTH>0)
+		{
+			if(HEALTH == 100)
+				g.drawString(HEALTH+"%",148,43);
+			else
+				g.drawString(HEALTH+"%",160,43);	
+		}
 		//g.drawString("HEALTH", , y);
 
 		
@@ -137,6 +153,13 @@ public class HUD
 				else
 					g.drawString((LEVEL1BOSSHEALTH/2)+"%",728,43);
 			}
+		}
+		if(game.gameState == game.STATE.LEVEL2 && UnderGroundEnemy.show)
+		{
+			g.setColor(Color.GRAY);
+			g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
+			g.setColor(Color.RED);
+			g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
 		}
 	}
 }

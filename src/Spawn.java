@@ -18,9 +18,15 @@ public class Spawn
 	private int enemyFireball = 40;
 	private int waterbucketTime = 100;
 	private int disappear = 20;
+	private int enemyBulletSpeed = 60;
+	public static int undergroundenemyShow = 300;
+	private int diamondTime = 1200;
+	private int rubyTime = 600;
 	private boolean isWave = false;
 	private int gap;
 	public boolean bossMade = false;
+	public boolean dead = false;
+	public int showIt = 200;
 	/* This constructor has many parameters
 	 * that are needed to control the adding of
 	 * certain Game Objects */
@@ -113,6 +119,7 @@ public class Spawn
 					isWave = true;
 			}
 		}
+		/* Boss Fight Level 1*/
 		if(game.isBossFight && !bossMade)
 		{
 			bossMade = true;
@@ -138,6 +145,40 @@ public class Spawn
 			else waterbucketTime--;
 		}
 		/* Level 2 */
+		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500)
+		{
+			/* Underground Enemy */
+			if(undergroundenemyShow == 300)
+			{
+				HUD.UNDERGROUNDHEALTH = 25;
+				handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
+				undergroundenemyShow = 500;
+			}
+			if(HUD.UNDERGROUNDHEALTH<=0)
+			{		
+				if(showIt<=0)
+				{
+					UnderGroundEnemy.show = false;
+					handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
+					HUD.UNDERGROUNDHEALTH = 25;	
+					showIt = 200;
+				}
+				else
+					showIt--;
+			}
+			if(diamondTime<=0)
+			{
+				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(8)+4,r.nextInt(8)+4));
+				diamondTime = 1200;
+			}
+			else diamondTime--;
+			if(rubyTime<=0)
+			{
+				handler.addObject(new RubyGem(r.nextInt(768)+0,r.nextInt(100)-32,ID.RubyGem,handler,texture,r.nextInt(12)+7));
+				handler.addObject(new RubyGem(r.nextInt(7688)+0,r.nextInt(100)-32,ID.RubyGem,handler,texture,r.nextInt(12)+7));
+				rubyTime = 600;
+			}
+			else rubyTime--;
+		}
 	}
-
 }

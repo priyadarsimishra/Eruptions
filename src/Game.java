@@ -19,13 +19,14 @@ public class Game extends Canvas implements Runnable
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 800;
 	public static final String TITLE = "ERUPTION";
-	public static String NAME;
+	public static String NAME = "";
 	private Thread thread;
 	private boolean running = false;
 	private BufferedImage spritesheet = null;
 	private Image background;
 	private ImageIcon icon;
 	public BufferedImage level1;
+	public BufferedImage story;
 	private Window window;
 	public Player player;
 	private HUD hud;
@@ -37,9 +38,11 @@ public class Game extends Canvas implements Runnable
 	public int level1pause = 0;
 	public int level2pause = 0;
 	public int level1Complete = 0;
+	public int level2Complete = 0;
 	private int bossDisplay = 0;
 	private int bulletCount = 0;
 	public int bossFight = 1500;
+	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
 	private boolean isShooting = false;
 	public boolean isLevel1Complete = false;
@@ -80,14 +83,15 @@ public class Game extends Canvas implements Runnable
 		{
 			spritesheet = loader.loadImage("/SpriteSheet.png");
 			level1 = loader.loadImage("/LEVEL1.png");
+			story = loader.loadImage("/Story.png");
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 		icon = new ImageIcon(this.getClass().getResource("background.gif"));
-		background = icon.getImage();
 		addKeyListener(new KeyMovement(this));
+		background = icon.getImage();
 		playerInfo = new PlayerInfo();
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
@@ -179,9 +183,11 @@ public class Game extends Canvas implements Runnable
 			HUD.LEVEL1BOSSHEALTH = 200;
 			HUD.SCORE = 0;
 			HUD.COUNT= 0;
+			HUD.LEVEL = 0;
 			HUD.HIGHSCORE = 0;
 			hud.display = 150;
 			hud.display2 = 150;
+			isLevel1Complete = true;
 			hud.addScore = false;
 			menu.storeScoreStop = false;
 			hud.stopScore = false;
@@ -195,9 +201,9 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.LEVEL1)
 		{
+			HUD.LEVEL = 1;
 			if((level1Complete < bossFight) && !isBossFight)
 			{
-				//Level1Complete = true;
 				if(hud.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
@@ -264,23 +270,42 @@ public class Game extends Canvas implements Runnable
 					hud.update();
 					menu.update();
 					handler.update();
+					isLevel1Complete = true;
 				}
 				
 			}
 		}
 		else if(gameState == STATE.LEVEL2)
 		{
-			if(level2pause>=500)
+			HUD.LEVEL = 2;
+			if(HUD.HEALTH<=0)
 			{
-				hud.HEALTH = 100;
-				player.update();
-				handler.update();
+				
+				gameState = STATE.DEADSCREEN;
 				hud.update();
+				handler.clearAll();
+				level2pause = 0;
+				player.x = 385;
+				HUD.UNDERGROUNDHEALTH = 25;
+				UnderGroundEnemy.show = false;
+				Spawn.undergroundenemyShow = 300;
+				//level2Complete = 0;
 			}
 			else
 			{
-				hud.update();
-				level2pause++;
+				if(level2pause>=500)
+				{
+					menu.update();			
+					player.update();
+					handler.update();
+					hud.update();
+					spawner.update();
+				}
+				else
+				{
+					hud.update();
+					level2pause++;
+				}
 			}
 		}
 		else if(gameState == STATE.DEADSCREEN)
@@ -323,8 +348,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.STORY)
 		{
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
+			g.drawImage(story,0,0,Game.WIDTH,Game.HEIGHT,null);
 			menu.render(g);
 		}
 		else if(gameState == STATE.HOWTOPLAY)
@@ -397,10 +421,12 @@ public class Game extends Canvas implements Runnable
 		int key = e.getKeyCode();
 		if(key == KeyEvent.VK_RIGHT)
 		{ 
+			keyDown[0] = true;
 			player.setXVel(7);
 		}
 		if(key == KeyEvent.VK_LEFT)
 		{
+			keyDown[1] = true;
 			player.setXVel(-7);
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL1 && isBossFight && bulletCount < player.bucketCount)
@@ -423,16 +449,21 @@ public class Game extends Canvas implements Runnable
 		int key = e.getKeyCode();
 		if(key == KeyEvent.VK_RIGHT)
 		{
-			player.setXVel(0);
+			keyDown[0] = false;
 		}
 		if(key == KeyEvent.VK_LEFT)
 		{
-			player.setXVel(0);
+			keyDown[1] = false;
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2)
 		{
 			isShooting = false;
 		}//shoot bullets
+		//movement(fixes the sticky key problem)
+		if(!keyDown[0] && !keyDown[1])
+		{
+			player.setXVel(0);
+		}
 	}
 	/* This is the static restrict method which is used
 	 * to restrict the player from moving off the screen

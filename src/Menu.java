@@ -79,7 +79,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,220,150,121,121) && game.isLevel1Complete)
 		{
 			// LEVEL 2
-			game.gameState = game.STATE.LEVEL2;
+			game.gameState = game.STATE.LEVEL2;	
 		}
 		else if(contains(mx,my,game.WIDTH/2-370,game.HEIGHT/2+250,740,100) && game.gameState == game.STATE.DEADSCREEN)
 		{
@@ -88,20 +88,20 @@ public class Menu extends MouseAdapter
 			handler.clearAll();
 			game.isBossFight = false;
 		}		
-		else if(contains(mx,my,220, 530, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 1 
 			game.gameState = game.STATE.LEVEL2;
+			game.isBossFight = false;
 			game.player.x = 385;
 			HUD.HEALTH = 100;
 			HUD.SCORE = 0;
+			HUD.LEVEL1BOSSHEALTH = 200;
 		}
-		else if(contains(mx,my,430, 530, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
+		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
 			// BACK TO MENU FROM END OF LEVEL 1
 			game.gameState = game.STATE.MENU;
-			HUD.SCORE =0;
-			game.isLevel1Complete = true;
 		}
 		else if(contains(mx,my,264, 180, 260, 120) && game.gameState == game.STATE.HELP)
 		{
@@ -113,14 +113,25 @@ public class Menu extends MouseAdapter
 			// HOW TO PLAY BUTTON
 			game.gameState = game.STATE.HOWTOPLAY;
 		}
-		else if(contains(mx,my,game.WIDTH/2-300,game.HEIGHT/2+250,250,100) && (game.gameState == game.STATE.STORY || game.gameState == game.STATE.HOWTOPLAY))
+		else if(contains(mx,my,20,120,50,120) && game.gameState == game.STATE.STORY)
 		{
 			// BACK TO HELP BUTTON
 			game.gameState = game.STATE.HELP;
 		}
-		else if(contains(mx,my,game.WIDTH/2+50,game.HEIGHT/2+250,270,100) && (game.gameState == game.STATE.STORY || game.gameState == game.STATE.HOWTOPLAY))
+		else if(contains(mx,my,20+680,120,50,120) && game.gameState == game.STATE.STORY)
 		{
+			// MENU BUTTON FROM STORY
 			game.gameState = game.STATE.MENU;
+		}
+		else if(contains(mx,my,game.WIDTH/2+50,game.HEIGHT/2+250,270,100) && game.gameState == Game.STATE.HOWTOPLAY)
+		{
+			// BACK BUTTON FOR HOW TO PLAY
+			game.gameState = game.STATE.MENU;
+		}
+		else if(contains(mx,my,game.WIDTH/2-300,game.HEIGHT/2+250,250,100) && game.gameState == Game.STATE.HOWTOPLAY)
+		{
+			// BACK BUTTON FOR HOW TO PLAY
+			game.gameState = game.STATE.HELP;
 		}
 		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange1)
 		{
@@ -190,7 +201,6 @@ public class Menu extends MouseAdapter
 			
 			Font f = new Font("Arial",Font.BOLD,18);
 			g.setFont(f);
-			
 			g.drawString("Money: "+fileUtils.getTotalScoreForAPlayer(Game.NAME),3,Game.HEIGHT-30);
 			g.drawString("Version 0.3",700,20);
 			g.drawString("Welcome "+Game.NAME+"!",5,20);
@@ -222,14 +232,39 @@ public class Menu extends MouseAdapter
 		else if(game.gameState == game.STATE.STORY)
 		{
 			g.setColor(Color.BLACK);
-			Font f5 = new Font("TimesNewRoman",Font.BOLD,88);
-			g.setFont(f5);
-			g.drawRect(game.WIDTH/2-300,game.HEIGHT/2+250,250,100);
-			g.drawString("BACK",game.WIDTH/2-297,game.HEIGHT/2+330);
+			Font f9 = new Font("TimesNewRoman",Font.BOLD,88);
+			g.setFont(f9);
 			g.drawString("STORY",game.WIDTH/2-160,75);
-			
-			g.drawRect(game.WIDTH/2+50,game.HEIGHT/2+250,270,100);
-			g.drawString("MENU",game.WIDTH/2+53,game.HEIGHT/2+330);
+			Font f5 = new Font("TimesNewRoman",Font.BOLD,24);
+			g.setFont(f5);
+			g.setColor(Color.WHITE);
+			g.drawRect(20,120,50,120);
+			g.drawString("B",36,143);
+			g.drawString("A",36,173);
+			g.drawString("C",36,203);
+			g.drawString("K",36,233);
+			g.drawRect(20+680,120,50,120);
+			g.drawString("M",36+680,143);
+			g.drawString("E",36+682,173);
+			g.drawString("N",36+680,203);
+			g.drawString("U",36+680,233);
+
+			Color back = new Color(220,220,220,160);
+			g.setColor(back);
+			Font f6 = new Font("Superpower Synonym",Font.BOLD,24);
+			g.setFont(f6);
+			g.fillRect(0, 560, 800, 220);
+			g.setColor(Color.BLACK);
+			g.drawString("Hello "+Game.NAME+", you have been trapped in a volcano, and you have to get",5,105+475);
+			g.drawString("out. I am the king of this volcano and you should know that you will",5,140+475);
+			g.drawString("not escape. You will encounter so many enemies and along the way", 5, 175+475);
+			g.drawString("you can pick up coins, but you will burn to death because of fireballs", 5, 210+475);
+			g.drawString("magma rocks, from this ravaging volcano. Along the way you might", 5, 245+475);
+			g.drawString("encounter items that might help but ultimately forget about escape", 5, 275+475);
+			g.drawString("Or will you escape", Game.WIDTH/2-110, 310+465);
+			Font f7 = new Font("Arial",Font.BOLD,24);
+			g.setFont(f7);
+			g.drawString("?", Game.WIDTH/2+110, 310+465);
 		}
 		else if(game.gameState == game.STATE.HOWTOPLAY)
 		{
@@ -312,18 +347,18 @@ public class Menu extends MouseAdapter
 		else if(game.gameState == game.STATE.DEADSCREEN)
 		{
 			g.setColor(Color.YELLOW);
-			Font f3 = new Font("TimesNewRoman", Font.BOLD,120);
+			Font f3 = new Font("Superpower Synonym", Font.BOLD,200);
 			g.setFont(f3);
-			g.drawString("YOU LOST!",Game.WIDTH/2-335,120);
-			
+			g.drawString("YOU LOST!",Game.WIDTH/2-382,170);
 			
 			g.drawRect(game.WIDTH/2-370,game.HEIGHT/2+250,740,100);
-			Font returnTo = new Font("TimesNewRoman",Font.BOLD,88);
+			Font returnTo = new Font("Superpower Synonym",Font.BOLD,88);
 			g.setFont(returnTo);
-			g.drawString("Return To",game.WIDTH/2-370,game.HEIGHT/2+330);
-			g.drawString("MENU",game.WIDTH/2+100,game.HEIGHT/2+330);
+			g.drawString("Return To",game.WIDTH/2-322,game.HEIGHT/2+330);
+			g.drawString("MENU",game.WIDTH/2+115,game.HEIGHT/2+330);
 			
-			g.drawRect(200, 200, 400,400);
+			((Graphics2D)g).setStroke(new BasicStroke(6));
+			g.drawRect(0, 200, Game.WIDTH,400);
 			Font count = new Font("TimesNewRoman",Font.BOLD,40);
 			g.setFont(count);
 			if(playerInfo != null && !storeScoreStop)
@@ -332,35 +367,38 @@ public class Menu extends MouseAdapter
 				playerInfo.setPlayerName(Game.NAME);
 				playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
 				playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+				playerInfo.setPlayerLevel(HUD.LEVEL);
 				fileUtils.store(playerInfo);
 				storeScoreStop = true;
 			}
-			//playerInfo = 
 			if(HUD.SCORE == 0)
 			{
-				g.drawString("SCORE: 0",203,235);
+				g.drawString("SCORE: 0",5,255);
 				if(playerInfo != null)
-					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),203,275);
+					g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,295);
 			}
 			else
 			{
-				g.drawString("SCORE: "+(HUD.COUNT-2),203,235);
+				g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
 				if(playerInfo != null)
-					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),203,275);
+					g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,295);
 			}
-			g.drawString("Player: "+Game.NAME, 203, 310);
+			g.drawString("Player: "+Game.NAME, 5, 330);
+			((Graphics2D)g).setStroke(new BasicStroke(6));
+			g.drawRect(1,1,Game.WIDTH-2,Game.HEIGHT-25);
+			g.drawString("Level: "+HUD.LEVEL,5,372);
 		}
 		else if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
 			if(LevelDisplay.scoreTime<=0)
 			{
 				g.setColor(Color.WHITE);
-				Font f = new Font("Arial",Font.BOLD,28);
+				Font f = new Font("Superpower Synonym",Font.BOLD,28);
 				g.setFont(f);
-				g.drawRect(220, 530, 150, 50);
-				g.drawString("Next Level", 223,565);
-				g.drawRect(430, 530, 150, 50);
-				g.drawString("Menu",470,565);
+				g.drawRect(620, 290, 150, 50);
+				g.drawString("Next Level", 624,325);
+				g.drawRect(620, 490, 150, 50);
+				g.drawString("MENU",665,525);
 				Font f2 = new Font("Arial",Font.BOLD,40);
 				g.setFont(f2);
 				g.drawString("LEVEL COMPLETED",Game.WIDTH/2-197, Game.HEIGHT/2-160);
@@ -371,21 +409,23 @@ public class Menu extends MouseAdapter
 					playerInfo.setPlayerName(Game.NAME);
 					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
 					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setPlayerLevel(HUD.LEVEL);
 					fileUtils.store(playerInfo);
 					storeScoreStop = true;
 				}
 				if(HUD.COUNT == 0 && HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5, 300);
-					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,340);
+					g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,340);
 				}
 				else
 				{
 					g.drawString("SCORE: "+(HUD.COUNT-2),5, 300);
-					g.drawString("HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,340);
+					g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME),5,340);
 				}
 				g.drawLine(200, 250, 600, 250);
 				g.drawString("Player: "+Game.NAME, 5, 380);
+				g.drawString("Level: "+HUD.LEVEL,5,420);
 			}
 		}
 	}

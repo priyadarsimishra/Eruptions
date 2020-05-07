@@ -15,5 +15,9 @@ public enum ID
 	Bullet,
 	FireballTrail,
 	MagmaRockTrail,
+	UnderGroundEnemy,
+	EnemyBullet,
+	RubyGem,
+	DiamondGem,
 	Trail,
 };
