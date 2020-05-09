@@ -39,6 +39,10 @@ public class RubyGem extends GameObject
 	public void update() 
 	{
 		y+=yVel;
+		if(y>=800)
+		{
+			handler.removeObject(this);
+		}
 	}
 	/* This method is also called 60 times per second 
 	 * and it takes the values and draws the ruby into the game

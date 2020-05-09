@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 /* This is the class for the player bullet
@@ -26,7 +27,7 @@ public class Bullet extends GameObject
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
-		return new Rectangle((int)x,(int)y,32,32);
+		return new Rectangle((int)x+4,(int)y,12,20);
 	}
 	/* This method is called 60 times per second and 
 	 * it makes the bullet go up and it also adds
@@ -61,7 +62,7 @@ public class Bullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.bullet,(int)x,(int)y,null);
+		g.drawImage(texture.bullet,(int)x,(int)y,20,20,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

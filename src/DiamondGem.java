@@ -41,6 +41,10 @@ public class DiamondGem extends GameObject
 		x+=xVel;
 		y+=yVel;
 		if(x<=0 || x>=752) xVel*=-1;
+		if(y>=800)
+		{
+			handler.removeObject(this);
+		}
 	}
 	/* This method is also called 60 times per second 
 	 * and it takes the values and draws the diamonds into the game

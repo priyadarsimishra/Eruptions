@@ -35,10 +35,13 @@ public class Game extends Canvas implements Runnable
 	private Spawn spawner;
 	private Menu menu;
 	private LevelDisplay levelDisplay;
-	public int level1pause = 0;
-	public int level2pause = 0;
+	private Upgrades upgrades;
+	private int gunStop = 0;
+	public static int level1pause = 0;
+	public static int level2pause = 0;
 	public int level1Complete = 0;
 	public int level2Complete = 0;
+	private int xVel = 7;
 	private int bossDisplay = 0;
 	private int bulletCount = 0;
 	public int bossFight = 1500;
@@ -49,6 +52,7 @@ public class Game extends Canvas implements Runnable
 	public boolean isLevel2Complete = false;
 	public boolean isLevel3Complete = false;
 	public static final STATE STATE = null;
+	public static String stateholder = "";
 	private PlayerInfo playerInfo = null;
 	/* This enumeration holds constants for the State of the game */
 	public enum STATE
@@ -61,8 +65,10 @@ public class Game extends Canvas implements Runnable
 		SELECTLEVEL,
 		LEVEL1,
 		LEVEL2,
-		ITEMSTORE,
+		LEVEL3,
+		LEVEL4,
 		UPGRADES,
+		CUSTOMIZE,
 		DEADSCREEN,
 	};
 	public static STATE gameState = STATE.NAMEPANEL;
@@ -97,10 +103,15 @@ public class Game extends Canvas implements Runnable
 		handler = new ObjectHandler();
 		menu = new Menu(this,handler,texture,playerInfo);
 		addMouseListener(menu);
+		addMouseMotionListener(menu);
+		upgrades = new Upgrades(handler,texture);
+		addMouseListener(upgrades);
+		addMouseMotionListener(upgrades);
 		spawner = new Spawn(handler,hud,this,texture);
 		hud = new HUD(this,menu);
 		levelDisplay = new LevelDisplay(this);
-		player = new Player(385,738,this,texture,handler,ID.Player);
+		player = new Player(385,695,this,texture,handler,ID.Player);
+		NAME = NamePanel.field.getText();
 	}
 	/* This method is run as the thread starts due to "synchronized" 
 	 * and it checks if the game is not running then it starts the thread */
@@ -134,12 +145,12 @@ public class Game extends Canvas implements Runnable
 	public void run()
 	{
 		runImage();
-		int updates = 0;
-		int FPS = 0;
 		long lastTime = System.nanoTime();
-		final double amountOfUpdates = 60.0;
+		double amountOfUpdates = 60.0;
 		double ns = 1000000000/amountOfUpdates;
 		double catchUp  = 0;
+		int updates = 0;
+		int FPS = 0;
 		long timerCheck = System.currentTimeMillis();
 		while(running)
 		{
@@ -172,7 +183,7 @@ public class Game extends Canvas implements Runnable
 	{
 		if(gameState == STATE.MENU)
 		{
-			NAME = NamePanel.field.getText();
+			handler.clearAll();
 			menu.update();
 			hud.update();
 			player.x = 385;
@@ -184,10 +195,16 @@ public class Game extends Canvas implements Runnable
 			HUD.SCORE = 0;
 			HUD.COUNT= 0;
 			HUD.LEVEL = 0;
-			HUD.HIGHSCORE = 0;
+			HUD.WIZARDHEALTH = 1;
+			HUD.THROWERHEALTH = 0;
+			HUD.SPLITHEALTH1 = 0;
+			HUD.SPLITHEALTH2 = 0;
 			hud.display = 150;
 			hud.display2 = 150;
 			isLevel1Complete = true;
+			player.changeSpeed = false;
+			player.changeBack = 20;
+			player.shoot = false;
 			hud.addScore = false;
 			menu.storeScoreStop = false;
 			hud.stopScore = false;
@@ -196,8 +213,14 @@ public class Game extends Canvas implements Runnable
 			menu.stopScoreChange1 = false;
 			menu.stopScoreChange2 = false;
 			levelDisplay.scoreTime = 300;
+			levelDisplay.wizardTime= 100;
+			levelDisplay.underTime = 100;
+			levelDisplay.split1Time = 200;
+			levelDisplay.split2Time = 200;
 			isBossFight = false;
 			spawner.bossMade = false;
+			spawner.wizardspawn = true;
+			spawner.throwerspawn = true;
 		}
 		else if(gameState == STATE.LEVEL1)
 		{
@@ -258,6 +281,12 @@ public class Game extends Canvas implements Runnable
 						handler.update();
 						hud.update();
 						spawner.update();
+						if(gunStop>=100 && !isShooting)
+						{
+							player.shoot = false;
+							gunStop = 0;
+						}
+						else gunStop++;	
 					}
 					else 
 					{
@@ -287,9 +316,13 @@ public class Game extends Canvas implements Runnable
 				level2pause = 0;
 				player.x = 385;
 				HUD.UNDERGROUNDHEALTH = 25;
+				HUD.WIZARDHEALTH = 25;
+				HUD.THROWERHEALTH = 50;
+				HUD.SPLITHEALTH1 = 25;
+				HUD.SPLITHEALTH2 = 25;
 				UnderGroundEnemy.show = false;
-				Spawn.undergroundenemyShow = 300;
-				//level2Complete = 0;
+				Spawn.undergroundenemyShow = true;
+				Spawn.wizardspawn = false;
 			}
 			else
 			{
@@ -300,6 +333,12 @@ public class Game extends Canvas implements Runnable
 					handler.update();
 					hud.update();
 					spawner.update();
+					if(gunStop>=30 && !isShooting)
+					{
+						player.shoot = false;
+						gunStop = 0;
+					}
+					else gunStop++;	
 				}
 				else
 				{
@@ -308,6 +347,8 @@ public class Game extends Canvas implements Runnable
 				}
 			}
 		}
+		else if(gameState == STATE.LEVEL3) {}
+		else if(gameState == STATE.LEVEL4) {}
 		else if(gameState == STATE.DEADSCREEN)
 		{
 			hud.update();
@@ -340,6 +381,12 @@ public class Game extends Canvas implements Runnable
 			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
 			menu.render(g);
 		}
+		else if(gameState == STATE.CUSTOMIZE)
+		{
+			g.setColor(Color.PINK);
+			g.fillRect(0,0, WIDTH,HEIGHT);
+			menu.render(g);
+		}
 		else if(gameState == STATE.HELP)
 		{
 				g.setColor(Color.YELLOW);
@@ -356,7 +403,7 @@ public class Game extends Canvas implements Runnable
 			g.setColor(Color.CYAN);
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			menu.render(g);
-		}
+		}  
 		else if(gameState == STATE.LEVEL1)
 		{
 			g.drawImage(background,0,0,WIDTH,HEIGHT,null);
@@ -392,10 +439,11 @@ public class Game extends Canvas implements Runnable
 			g.setColor(Color.PINK);
 			g.fillRect(0,0,WIDTH,HEIGHT);
 			player.render(g);
-			hud.render(g);
 			if(level2pause>=500)
 			{
+				hud.render(g);
 				handler.render(g);
+				levelDisplay.render(g);
 			}
 			else 
 			{
@@ -403,7 +451,16 @@ public class Game extends Canvas implements Runnable
 				levelDisplay.render(g);
 				level2pause++;
 			}
+			hud.render(g);
 		}
+		else if(gameState == STATE.UPGRADES)
+		{
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			upgrades.render(g);
+		}
+		else if(gameState == STATE.LEVEL3) {}
+		else if(gameState == STATE.LEVEL4) {}
 		else if(gameState == STATE.DEADSCREEN)
 		{
 			g.setColor(Color.RED);
@@ -422,25 +479,78 @@ public class Game extends Canvas implements Runnable
 		if(key == KeyEvent.VK_RIGHT)
 		{ 
 			keyDown[0] = true;
-			player.setXVel(7);
+			if(player.changeSpeed)
+			{
+				if(xVel>=0)
+				{
+					if(player.changeBack<=0)
+					{
+						player.changeBack = 20;
+						player.changeSpeed = false;
+					}
+					else
+					{
+						player.changeBack--;
+						player.setXVel(3);
+					}		
+				}
+			}
+			else
+			{
+				player.setXVel(7);
+			}
 		}
 		if(key == KeyEvent.VK_LEFT)
 		{
 			keyDown[1] = true;
-			player.setXVel(-7);
+			if(player.changeSpeed)
+			{
+				if(xVel>=0)
+				{
+					if(player.changeBack<=0)
+					{
+						player.changeSpeed = false;
+						player.changeBack = 20;
+					}
+					else
+					{
+						player.changeBack--;
+						player.setXVel(-3);
+					}
+						
+				}
+			}
+			else
+			{
+				player.setXVel(-7);
+			}
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL1 && isBossFight && bulletCount < player.bucketCount)
 		{
+			player.shoot = true;
 			handler.addObject(new WaterBullet(player.getX()+9,player.getY()-25,ID.WaterBullet,handler,texture,-15));			
 			bulletCount++;
 			
 		}
 		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2)
 		{
+			player.shoot = true;
 			isShooting = true;
 			handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
 
 		}//shoot bullets
+		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500))
+		{
+			if(gameState == STATE.LEVEL1)
+				stateholder = "LEVEL1";
+			else if(gameState == STATE.LEVEL2)
+				stateholder = "LEVEL2";
+			else if(gameState == STATE.LEVEL3)
+				stateholder = "LEVEL3";
+			else if(gameState == STATE.LEVEL4)
+				stateholder = "LEVEL4";
+			gameState = STATE.UPGRADES;
+		}
 	}
 	/* This method is the key Released method for stopping 
 	 * the character and stopping continuous bullets shooting(has not yet been applied) */
@@ -456,9 +566,10 @@ public class Game extends Canvas implements Runnable
 			keyDown[1] = false;
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2)
-		{
+		{		
 			isShooting = false;
 		}//shoot bullets
+		
 		//movement(fixes the sticky key problem)
 		if(!keyDown[0] && !keyDown[1])
 		{

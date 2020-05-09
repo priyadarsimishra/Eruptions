@@ -16,7 +16,7 @@ public class FileUtils
 	 * the specific players stats used for testing purposes*/
 	public static void main(String[] args) 
 	{
-		FileUtils fileUtils = new FileUtils();
+//		FileUtils fileUtils = new FileUtils();
 		//PlayerInfo player1 = new PlayerInfo("priya",100,1500,1);
 //		PlayerInfo player2 = new PlayerInfo("Baba1",300,1600);
 //		
@@ -32,8 +32,8 @@ public class FileUtils
 //		System.out.println("Total Score for biswa: "+fileUtils.getTotalScoreForAPlayer("biswa"));
 //		System.out.println("Highest Score for baba1: "+fileUtils.getHighestScore("baba1"));
 //		System.out.println("Total Score for baba1: "+fileUtils.getTotalScoreForAPlayer("baba1"));
-		System.out.println("Highscore for player: "+fileUtils.getHighestScore("priya"));
-		System.out.println("Level for player: "+fileUtils.getThePlayerLevel("priya"));
+//		System.out.println("Highscore for player: "+fileUtils.getHighestScore("priya"));
+//		System.out.println("Level for player: "+fileUtils.getThePlayerLevel("priya"));
 		
 
 	}

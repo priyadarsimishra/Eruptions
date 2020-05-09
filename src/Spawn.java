@@ -19,14 +19,18 @@ public class Spawn
 	private int waterbucketTime = 100;
 	private int disappear = 20;
 	private int enemyBulletSpeed = 60;
-	public static int undergroundenemyShow = 300;
+	public static boolean undergroundenemyShow = true;
+	public static boolean wizardspawn = true;
+	public static boolean throwerspawn = true;
+	private int throwerTime = 300;
 	private int diamondTime = 1200;
 	private int rubyTime = 600;
+	private int wizardTime = 200;
 	private boolean isWave = false;
 	private int gap;
 	public boolean bossMade = false;
 	public boolean dead = false;
-	public int showIt = 200;
+	public static int showIt = 400;
 	/* This constructor has many parameters
 	 * that are needed to control the adding of
 	 * certain Game Objects */
@@ -148,27 +152,28 @@ public class Spawn
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500)
 		{
 			/* Underground Enemy */
-			if(undergroundenemyShow == 300)
+			if(undergroundenemyShow)
 			{
 				HUD.UNDERGROUNDHEALTH = 25;
 				handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
-				undergroundenemyShow = 500;
+				undergroundenemyShow = false;
 			}
 			if(HUD.UNDERGROUNDHEALTH<=0)
 			{		
 				if(showIt<=0)
 				{
+					LevelDisplay.underTime = 100;
 					UnderGroundEnemy.show = false;
 					handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
 					HUD.UNDERGROUNDHEALTH = 25;	
-					showIt = 200;
+					showIt = 400;
 				}
 				else
 					showIt--;
 			}
 			if(diamondTime<=0)
 			{
-				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(8)+4,r.nextInt(8)+4));
+				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(14)+5,r.nextInt(14)+5));
 				diamondTime = 1200;
 			}
 			else diamondTime--;
@@ -179,6 +184,69 @@ public class Spawn
 				rubyTime = 600;
 			}
 			else rubyTime--;
+			if(wizardspawn)
+			{
+				HUD.WIZARDHEALTH = 50;
+				LevelDisplay.wizardTime = 100;
+				HUD.WIZARDHEALTH = 50;
+				handler.addObject(new Wizard(r.nextInt(760)+0,-5,ID.Wizard,r.nextInt(6)+3,r.nextInt(6)+3,handler,texture));
+				wizardspawn = false;
+			}
+			if(HUD.WIZARDHEALTH<=0)
+			{
+				if(wizardTime<=0)
+				{
+					LevelDisplay.wizardTime = 100;
+					handler.addObject(new Wizard(r.nextInt(768)+1,-5,ID.Wizard,r.nextInt(3)+2,r.nextInt(2)+1,handler,texture));
+					HUD.WIZARDHEALTH = 50;
+					wizardTime = 200;
+				}
+				else wizardTime--;
+			}
+			if(throwerspawn)
+			{
+				ThrowerEnemy.split = false;
+				HUD.THROWERHEALTH = 50;
+				handler.addObject(new ThrowerEnemy(r.nextInt(768)+0,-32,ID.ThrowerEnemy,handler,texture,48,48));
+				throwerspawn = false;
+			}
+			if(ThrowerEnemy.giveInfo)
+			{
+				LevelDisplay.split1Time = 200;
+				LevelDisplay.split2Time = 200;
+				ThrowerEnemy.giveInfo = true;
+				HUD.SPLITHEALTH1 = 25;
+				HUD.SPLITHEALTH2 = 25;
+				handler.addObject(new SplitEnemy1(ThrowerEnemy.giveX+10,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
+				handler.addObject(new SplitEnemy2(ThrowerEnemy.giveX-10,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
+
+				ThrowerEnemy.giveInfo = false;
+			}
+			if(!ThrowerEnemy.giveInfo && HUD.SPLITHEALTH1<=0 && HUD.SPLITHEALTH2<=0)
+			{
+				SplitEnemy1.show = false;
+				SplitEnemy2.show = false;
+			}
+			if(HUD.THROWERHEALTH<=0 && !SplitEnemy1.show && !SplitEnemy2.show)
+			{
+				if(throwerTime<=0)
+				{
+					ThrowerEnemy.split = false;
+					
+					handler.addObject(new ThrowerEnemy(r.nextInt(730)+50,r.nextInt(200)+32,ID.ThrowerEnemy,handler,texture,48,48));
+					HUD.THROWERHEALTH = 50;
+					throwerTime =300;
+				}
+				else throwerTime--;
+			}
+			if(fireballTimer<=0)
+			{		
+				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(16)+7));
+				
+				fireballTimer = 120;
+			}
+			else
+				fireballTimer--;
 		}
 	}
 }

@@ -15,6 +15,10 @@ public class HUD
 	public static int COUNT = 0;
 	public static int TOTALSCORE =0;
 	public static int UNDERGROUNDHEALTH = 25;
+	public static int WIZARDHEALTH = 50;
+	public static int THROWERHEALTH = 50;
+	public static int SPLITHEALTH1 = 25;
+	public static int SPLITHEALTH2 = 25;
 	private int sector = 0;
 	private int level = 0;
 	public int display = 150;
@@ -46,7 +50,11 @@ public class HUD
 		greenValue = HEALTH*2;
 		greenValue = (int)Game.restrict(greenValue, 0, 255);
 		LEVEL1BOSSHEALTH = (int)Game.restrict(LEVEL1BOSSHEALTH,0,LEVEL1BOSSHEALTH+(sector));
-		UNDERGROUNDHEALTH = (int)Game.restrict(UNDERGROUNDHEALTH, 0, LEVEL1BOSSHEALTH+(sector/4));
+		UNDERGROUNDHEALTH = (int)Game.restrict(UNDERGROUNDHEALTH, 0, UNDERGROUNDHEALTH+(sector/4));
+		WIZARDHEALTH = (int)Game.restrict(WIZARDHEALTH,0,WIZARDHEALTH+(sector/4));
+		THROWERHEALTH = (int)Game.restrict(THROWERHEALTH, 0, THROWERHEALTH+(sector/4));
+		SPLITHEALTH1 = (int)Game.restrict(SPLITHEALTH1, 0, SPLITHEALTH1+(sector/4));
+		SPLITHEALTH2 = (int)Game.restrict(SPLITHEALTH2, 0, SPLITHEALTH2+(sector/4));
 		if(game.gameState == game.STATE.MENU)
 		{
 			HEALTH = 100;
@@ -106,6 +114,42 @@ public class HUD
 	 * of the health bar */
 	public void render(Graphics g)
 	{
+		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500)
+		{
+			if(UnderGroundEnemy.show)
+			{
+				g.setColor(Color.GRAY);
+				g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
+				g.setColor(Color.RED);
+				g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
+			}
+			
+			g.setColor(Color.GRAY);
+			g.fillRect((int)Wizard.x-10, (int)Wizard.y-15, WIZARDHEALTH, 10);
+			g.setColor(Color.ORANGE);
+			g.fillRect((int)Wizard.x-10, (int)Wizard.y-15, WIZARDHEALTH, 10);
+			if(!(ThrowerEnemy.giveInfo))
+			{
+				g.setColor(Color.GRAY);
+				g.fillRect((int)ThrowerEnemy.x-4, (int)ThrowerEnemy.y-15, THROWERHEALTH, 10);
+				g.setColor(Color.BLUE);
+				g.fillRect((int)ThrowerEnemy.x-4, (int)ThrowerEnemy.y-15, THROWERHEALTH, 10);
+			}			
+			if(SplitEnemy1.show)
+			{
+				g.setColor(Color.GRAY);
+				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, SPLITHEALTH1, 10);
+				g.setColor(Color.YELLOW);
+				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, SPLITHEALTH1, 10);
+			}
+			if(SplitEnemy2.show)
+			{
+				g.setColor(Color.GRAY);
+				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, SPLITHEALTH2, 10);
+				g.setColor(Color.YELLOW);
+				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, SPLITHEALTH2, 10);
+			}
+		}
 		if(LEVEL1BOSSHEALTH > 0)
 		{
 			g.setColor(Color.BLACK);
@@ -153,13 +197,6 @@ public class HUD
 				else
 					g.drawString((LEVEL1BOSSHEALTH/2)+"%",728,43);
 			}
-		}
-		if(game.gameState == game.STATE.LEVEL2 && UnderGroundEnemy.show)
-		{
-			g.setColor(Color.GRAY);
-			g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
-			g.setColor(Color.RED);
-			g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
 		}
 	}
 }

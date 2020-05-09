@@ -3,10 +3,10 @@ import java.awt.image.BufferedImage;
  * and puts it into the specific Buffered Image  */
 public class SpriteTextures 
 {
-	public BufferedImage player,bronzeCoin,silverCoin,goldCoin,fireball,bullet,waterBullet;
+	public BufferedImage player,playerShooting,bronzeCoin,silverCoin,goldCoin,fireball,bullet,waterBullet;
 	public BufferedImage rightArrow, leftArrow, space, BossLevel1, waterbucket, bomb;
 	public BufferedImage rightMagmaRock,leftMagmaRock, undergroundEnemy, ruby,diamond;
-	public BufferedImage enemyBullet;
+	public BufferedImage enemyBullet,rightWizard,leftWizard,freezePotion,throwerEnemy;
 	private SpriteSheet spriteSheet = null;
 	/* This is the constructor that requires the game instance 
 	 * to get the sprite sheet and calls the getTexture */
@@ -20,7 +20,8 @@ public class SpriteTextures
 	public void getTextures()
 	{
 		//rows and columns
-		player = spriteSheet.getImage(1, 1, 32, 32);
+		player = playerShooting = spriteSheet.getImage(4, 3, 32, 32);
+		playerShooting = spriteSheet.getImage(1, 1, 32, 32);
 		ruby = spriteSheet.getImage(2, 1, 32, 32);
 		fireball = spriteSheet.getImage(3, 1, 32, 32);
 		bullet = spriteSheet.getImage(4, 1, 32, 32);
@@ -39,7 +40,10 @@ public class SpriteTextures
 		undergroundEnemy = spriteSheet.getImage(1, 3, 32, 32);
 		diamond = spriteSheet.getImage(2, 3, 32, 32);
 		enemyBullet = spriteSheet.getImage(3, 3, 32, 32);
+		leftWizard = spriteSheet.getImage(5, 3, 32, 32);
+		rightWizard = spriteSheet.getImage(6, 3, 32, 32);
+		freezePotion = spriteSheet.getImage(7, 3, 32, 32);
+		throwerEnemy = spriteSheet.getImage(8, 3, 32, 32);
 
-		
 	}
 }

@@ -19,7 +19,7 @@ public class UnderGroundEnemy extends GameObject
 	private double differenceY = 0;
 	private double distance = 0;
 	public static boolean show = false;
-	public int fireRate = 180;
+	public int fireRate = 200;
 	private Random r = new Random();
 	/* This is the constructor for the Under Ground Enemy
 	 * and it requires the same parameter as other game objects */
@@ -85,6 +85,7 @@ public class UnderGroundEnemy extends GameObject
 					if(HUD.UNDERGROUNDHEALTH<=0)
 					{
 						handler.removeObject(this);
+						HUD.SCORE+=500;
 					}
 				}
 			}
@@ -101,7 +102,7 @@ public class UnderGroundEnemy extends GameObject
 			if(fireRate<=0)
 			{
 				handler.addObject(new EnemyBullet(this.x+10,this.y+14,r.nextInt(8)+5,ID.EnemyBullet,handler,texture));
-				fireRate = 180;
+				fireRate = 200;
 			}
 			else fireRate--;
 		}

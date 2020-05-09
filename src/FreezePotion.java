@@ -1,8 +1,8 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
-/* This is the class for the enemy bullet 
- * released by the underground enemy */
-public class EnemyBullet extends GameObject
+/* This is the class for the FreezePotion 
+ * released by the Wizard */
+public class FreezePotion extends GameObject
 {
 	private double x;
 	private double y;
@@ -12,7 +12,7 @@ public class EnemyBullet extends GameObject
 	private ObjectHandler handler;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public EnemyBullet(double x, double y,double yVel, ID id, ObjectHandler handler,SpriteTextures texture) 
+	public FreezePotion(double x, double y,double yVel, ID id, ObjectHandler handler,SpriteTextures texture) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -22,17 +22,14 @@ public class EnemyBullet extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 	}
-	/* This creates a rectangle around the enemy bullet 
+	/* This creates a rectangle around the FreezePotion 
 	 * which is used to check collision with the player */
 	public Rectangle getRect() 
 	{
 		return new Rectangle((int)x,(int)y,32,32);
 	}
 	/* This method is called 60 times per second and 
-	 * it makes the enemy bullet fall down(this one is faster + rare) 
-	 * and it also adds a trail using the Trail class and it removes 
-	 * the object when it is passed the y value of
-	 * the game screen */
+	 * it makes the FreezePotion fall down */
 	public void update() 
 	{
 		y+=yVel;
@@ -40,11 +37,11 @@ public class EnemyBullet extends GameObject
 			handler.removeObject(this);
 	}
 	/* This method is also called 60 times per second 
-	 * and it takes the values and draws the enemy bullet into the game
+	 * and it takes the values and draws the FreezePotion into the game
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.enemyBullet,(int)x,(int)y,null);
+		g.drawImage(texture.freezePotion,(int)x,(int)y,null);
 	}
 
 }

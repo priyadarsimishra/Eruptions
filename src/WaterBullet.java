@@ -27,7 +27,7 @@ public class WaterBullet extends GameObject
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
-		return new Rectangle((int)x,(int)y,32,32);
+		return new Rectangle((int)x,(int)y,20,20);
 	}
 	/* This method is called 60 times per second and 
 	 * it makes the WaterBullet go up and it also adds
@@ -39,7 +39,7 @@ public class WaterBullet extends GameObject
 		if(y<=-32)
 			handler.removeObject(this);
 		checkCollision();
-		handler.addObject(new Trail((int)x+8,(int)y+8,ID.WaterBullet,Color.CYAN,16,16,0.08f,handler));
+		handler.addObject(new Trail((int)x+3,(int)y+10,ID.WaterBullet,Color.CYAN,10,10,0.08f,handler));
 		
 	}
 	/* This method checks Collision depending on the 
@@ -73,7 +73,7 @@ public class WaterBullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.waterBullet,(int)x,(int)y,null);
+		g.drawImage(texture.waterBullet,(int)x-2,(int)y,20,20,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 
