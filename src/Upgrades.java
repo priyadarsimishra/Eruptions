@@ -45,6 +45,11 @@ public class Upgrades extends MouseAdapter
 		else g.setColor(Color.BLACK);
 		g.drawString("BACK", 335, 760);
 		
+		g.setColor(Color.BLACK);
+		Font upgradeName = new Font("HEALTH",Font.BOLD,48);
+		g.setFont(upgradeName);
+		g.drawString("HEALTH", 10, 180);
+		
 	}
 	/* This method is part of MouseListener and this
 	 * is required to make sure you buy items in the shop */

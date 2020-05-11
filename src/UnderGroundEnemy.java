@@ -57,8 +57,8 @@ public class UnderGroundEnemy extends GameObject
 			differenceY = y - Player.y - 19;
 			distance = Math.sqrt(Math.pow(x-Player.x, 2) + Math.pow(y - Player.y, 2));
 			
-			xVel = (-2.0/distance)*differenceX;
-			yVel = (-2.0/distance)*differenceY;
+			xVel = (-3.5/distance)*differenceX;
+			yVel = (-3.5 /distance)*differenceY;
 			x+=xVel;
 			y+=yVel;
 		}

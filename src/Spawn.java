@@ -12,25 +12,31 @@ public class Spawn
 	private int bronzeTimer = r.nextInt(150)+70;
 	private int silverTimer = r.nextInt(200)+120;
 	private int goldTimer = r.nextInt(600)+300;
+	private int emeraldTime = 200;
+	private int rubyTime = 600;
+	private int diamondTime = 1200;
 	private int fireballTimer = 120;
 	private int magmaRockTimer = 100;
 	private int wave = 500;
 	private int enemyFireball = 40;
 	private int waterbucketTime = 100;
+	private int keyTime = 100;
 	private int disappear = 20;
 	private int enemyBulletSpeed = 60;
+	private int enemyArrow = 80;
+	private int icePotion = 140;
 	public static boolean undergroundenemyShow = true;
 	public static boolean wizardspawn = true;
 	public static boolean throwerspawn = true;
-	private int throwerTime = 300;
-	private int diamondTime = 1200;
-	private int rubyTime = 600;
-	private int wizardTime = 200;
+	private int throwerTime = 650;
+	private int wizardTime = 300;
 	private boolean isWave = false;
 	private int gap;
 	public boolean bossMade = false;
+	public boolean bossMade2 = false;
 	public boolean dead = false;
-	public static int showIt = 400;
+	public boolean stopSplit = false;
+	public static int showIt = 500;
 	/* This constructor has many parameters
 	 * that are needed to control the adding of
 	 * certain Game Objects */
@@ -149,7 +155,7 @@ public class Spawn
 			else waterbucketTime--;
 		}
 		/* Level 2 */
-		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500)
+		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && !game.isBossFight2)
 		{
 			/* Underground Enemy */
 			if(undergroundenemyShow)
@@ -166,7 +172,7 @@ public class Spawn
 					UnderGroundEnemy.show = false;
 					handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
 					HUD.UNDERGROUNDHEALTH = 25;	
-					showIt = 400;
+					showIt = 500;
 				}
 				else
 					showIt--;
@@ -199,7 +205,7 @@ public class Spawn
 					LevelDisplay.wizardTime = 100;
 					handler.addObject(new Wizard(r.nextInt(768)+1,-5,ID.Wizard,r.nextInt(3)+2,r.nextInt(2)+1,handler,texture));
 					HUD.WIZARDHEALTH = 50;
-					wizardTime = 200;
+					wizardTime = 300;
 				}
 				else wizardTime--;
 			}
@@ -207,18 +213,18 @@ public class Spawn
 			{
 				ThrowerEnemy.split = false;
 				HUD.THROWERHEALTH = 50;
-				handler.addObject(new ThrowerEnemy(r.nextInt(768)+0,-32,ID.ThrowerEnemy,handler,texture,48,48));
+				handler.addObject(new ThrowerEnemy(r.nextInt(700)+80,-32,ID.ThrowerEnemy,handler,texture,48,48));
 				throwerspawn = false;
 			}
-			if(ThrowerEnemy.giveInfo)
+			if(ThrowerEnemy.giveInfo && HUD.THROWERHEALTH<=25)
 			{
 				LevelDisplay.split1Time = 200;
 				LevelDisplay.split2Time = 200;
 				ThrowerEnemy.giveInfo = true;
 				HUD.SPLITHEALTH1 = 25;
 				HUD.SPLITHEALTH2 = 25;
-				handler.addObject(new SplitEnemy1(ThrowerEnemy.giveX+10,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
-				handler.addObject(new SplitEnemy2(ThrowerEnemy.giveX-10,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
+				handler.addObject(new SplitEnemy1(ThrowerEnemy.giveX,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
+				handler.addObject(new SplitEnemy2(ThrowerEnemy.giveX,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
 
 				ThrowerEnemy.giveInfo = false;
 			}
@@ -233,9 +239,9 @@ public class Spawn
 				{
 					ThrowerEnemy.split = false;
 					
-					handler.addObject(new ThrowerEnemy(r.nextInt(730)+50,r.nextInt(200)+32,ID.ThrowerEnemy,handler,texture,48,48));
+					handler.addObject(new ThrowerEnemy(r.nextInt(700)+80,r.nextInt(200)+0,ID.ThrowerEnemy,handler,texture,48,48));
 					HUD.THROWERHEALTH = 50;
-					throwerTime =300;
+					throwerTime = 650;
 				}
 				else throwerTime--;
 			}
@@ -247,6 +253,42 @@ public class Spawn
 			}
 			else
 				fireballTimer--;
+			if(emeraldTime<= 0)
+			{
+				handler.addObject(new Emerald(r.nextInt(768)+0,-32,ID.Emerald,handler,texture,r.nextInt(10)+4));
+				emeraldTime = 200;
+			}
+			else emeraldTime--;
+			
+		}
+		/* Boss Fight in level 2*/
+		if(game.isBossFight2 && !bossMade2)
+		{
+			bossMade2 = true;
+			handler.addObject(new Level2Boss(Game.WIDTH/2-100,-40,ID.Level2Boss,texture,handler,6));
+		}
+		if(game.isBossFight2)
+		{
+			if(enemyArrow<=0)
+			{
+				handler.addObject(new BossArrow(Level2Boss.x+50,Level2Boss.y+150,ID.BossArrow,handler,texture,10));
+				handler.addObject(new BossArrow(Level2Boss.x+120,Level2Boss.y+150,ID.BossArrow,handler,texture,10));
+				enemyArrow = 60;
+			}
+			else enemyArrow--;
+			if(icePotion<=0)
+			{
+				handler.addObject(new FreezePotion(Level2Boss.x+95,Level2Boss.y+150,r.nextInt(8)+2,ID.FreezePotion,handler,texture));
+				icePotion = 140;
+			}
+			else icePotion--;
+			if(keyTime<=0)
+			{
+				Key key = new Key(r.nextInt(764)+0,730,ID.Key,handler,texture);
+				handler.addObject(key);
+				keyTime = 140;
+			}
+			else keyTime--;
 		}
 	}
 }

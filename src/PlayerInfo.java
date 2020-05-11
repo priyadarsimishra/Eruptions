@@ -66,7 +66,7 @@ implements Serializable
 	{
 		this.playerLevel = playerLevel;
 	}
-	@Override
+	/* This returns all the player details used in FileUtils */
 	public String toString() {
 		return "PlayerInfo [playerName=" + playerName + ", highestIndividualScore=" + highestIndividualScore
 				+ ", totalIndividualScore=" + totalIndividualScore + ", playerLevel=" + playerLevel + "]";

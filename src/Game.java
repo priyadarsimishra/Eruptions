@@ -25,6 +25,8 @@ public class Game extends Canvas implements Runnable
 	private BufferedImage spritesheet = null;
 	private Image background;
 	private ImageIcon icon;
+	private Image menuImage;
+	private ImageIcon menuIcon;
 	public BufferedImage level1;
 	public BufferedImage story;
 	private Window window;
@@ -43,10 +45,14 @@ public class Game extends Canvas implements Runnable
 	public int level2Complete = 0;
 	private int xVel = 7;
 	private int bossDisplay = 0;
+	public int bossDisplay2 = 0;
 	private int bulletCount = 0;
+	private int doubleBulletCount = 0;
 	public int bossFight = 1500;
+	public int bossFight2 = 1500;
 	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
+	public boolean isBossFight2 = false;
 	private boolean isShooting = false;
 	public boolean isLevel1Complete = false;
 	public boolean isLevel2Complete = false;
@@ -95,9 +101,11 @@ public class Game extends Canvas implements Runnable
 		{
 			e.printStackTrace();
 		}
-		icon = new ImageIcon(this.getClass().getResource("background.gif"));
+		icon = new ImageIcon(this.getClass().getResource("/background.gif"));
+		menuIcon = new ImageIcon(this.getClass().getResource("/Menu.gif"));
 		addKeyListener(new KeyMovement(this));
 		background = icon.getImage();
+		menuImage = menuIcon.getImage();
 		playerInfo = new PlayerInfo();
 		texture = new SpriteTextures(this);
 		handler = new ObjectHandler();
@@ -157,9 +165,15 @@ public class Game extends Canvas implements Runnable
 			long now = System.nanoTime();
 			catchUp += (now-lastTime)/ns;
 			lastTime = now;
-			if(catchUp >=1)
+			while(catchUp >=1)
 			{
 				update();
+//				try {
+//					Thread.sleep(1);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				updates++;
 				catchUp--;
 				
@@ -174,6 +188,12 @@ public class Game extends Canvas implements Runnable
 				updates = 0;
 			}
 		}
+//		try {
+//			Thread.sleep(1);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		stop();
 	}
 	/* This method updates 60 times per second
@@ -188,15 +208,19 @@ public class Game extends Canvas implements Runnable
 			hud.update();
 			player.x = 385;
 			level1Complete = 0;
+			level2Complete = 0;
 			bossDisplay = 0;
+			bossDisplay2 = 0;
 			level1pause = 0;
 			level2pause = 0;
 			HUD.LEVEL1BOSSHEALTH = 200;
+			HUD.LEVEL2BOSSHEALTH = 500;
 			HUD.SCORE = 0;
 			HUD.COUNT= 0;
 			HUD.LEVEL = 0;
+			HUD.UNDERGROUNDHEALTH = 1;
 			HUD.WIZARDHEALTH = 1;
-			HUD.THROWERHEALTH = 0;
+			HUD.THROWERHEALTH = 1;
 			HUD.SPLITHEALTH1 = 0;
 			HUD.SPLITHEALTH2 = 0;
 			hud.display = 150;
@@ -213,15 +237,20 @@ public class Game extends Canvas implements Runnable
 			menu.stopScoreChange1 = false;
 			menu.stopScoreChange2 = false;
 			levelDisplay.scoreTime = 300;
+			levelDisplay.scoreTime2 = 300;
 			levelDisplay.wizardTime= 100;
 			levelDisplay.underTime = 100;
 			levelDisplay.split1Time = 200;
 			levelDisplay.split2Time = 200;
 			isBossFight = false;
+			isBossFight2 = false;
 			spawner.bossMade = false;
+			spawner.bossMade2 = false;
 			spawner.wizardspawn = true;
 			spawner.throwerspawn = true;
-		}
+			spawner.undergroundenemyShow = true;
+			ThrowerEnemy.giveInfo = true;
+		}		
 		else if(gameState == STATE.LEVEL1)
 		{
 			HUD.LEVEL = 1;
@@ -261,7 +290,7 @@ public class Game extends Canvas implements Runnable
 					handler.clearAll();
 				}
 			}
-			if(isBossFight && bossDisplay>=900)
+			if(isBossFight && bossDisplay>=500)
 			{
 				if(hud.HEALTH<=0)
 				{
@@ -307,47 +336,122 @@ public class Game extends Canvas implements Runnable
 		else if(gameState == STATE.LEVEL2)
 		{
 			HUD.LEVEL = 2;
-			if(HUD.HEALTH<=0)
+			if((level2Complete<bossFight2) && !(isBossFight2))
 			{
-				
-				gameState = STATE.DEADSCREEN;
-				hud.update();
-				handler.clearAll();
-				level2pause = 0;
-				player.x = 385;
-				HUD.UNDERGROUNDHEALTH = 25;
-				HUD.WIZARDHEALTH = 25;
-				HUD.THROWERHEALTH = 50;
-				HUD.SPLITHEALTH1 = 25;
-				HUD.SPLITHEALTH2 = 25;
-				UnderGroundEnemy.show = false;
-				Spawn.undergroundenemyShow = true;
-				Spawn.wizardspawn = false;
-			}
-			else
-			{
-				if(level2pause>=500)
+				if(HUD.HEALTH<=0)
 				{
-					menu.update();			
-					player.update();
-					handler.update();
+					gameState = STATE.DEADSCREEN;
 					hud.update();
-					spawner.update();
-					if(gunStop>=30 && !isShooting)
-					{
-						player.shoot = false;
-						gunStop = 0;
-					}
-					else gunStop++;	
+					handler.clearAll();
+					level2pause = 0;
+					isBossFight2 = false;
+					player.x = 385;
+					HUD.UNDERGROUNDHEALTH = 25;
+					HUD.WIZARDHEALTH = 25;
+					HUD.THROWERHEALTH = 50;
+					HUD.SPLITHEALTH1 = 25;
+					HUD.SPLITHEALTH2 = 25;
+					UnderGroundEnemy.show = false;
+					Spawn.undergroundenemyShow = true;
+					Spawn.wizardspawn = false;
 				}
 				else
 				{
-					hud.update();
-					level2pause++;
+					if(level2pause>=500)
+					{
+						hud.update();
+						menu.update();			
+						player.update();
+						handler.update();
+						spawner.update();
+						if(gunStop>=50 && !isShooting)
+						{
+							player.shoot = false;
+							gunStop = 0;
+						}
+						else gunStop++;	
+					}
+					else
+					{
+						hud.update();
+						level2pause++;
+					}
+				}
+				level2Complete++;
+			}
+			else
+			{
+				if(!isBossFight2)
+				{
+					isBossFight2 = true;
+					handler.clearAll();
 				}
 			}
+			if(isBossFight2 && bossDisplay2>=200)
+			{
+				if(HUD.HEALTH<=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					hud.update();
+					handler.clearAll();
+					level2pause = 0;
+					isBossFight2 = false;
+					player.x = 385;
+					HUD.UNDERGROUNDHEALTH = 25;
+					HUD.WIZARDHEALTH = 25;
+					HUD.THROWERHEALTH = 50;
+					HUD.SPLITHEALTH1 = 25;
+					HUD.SPLITHEALTH2 = 25;
+					UnderGroundEnemy.show = false;
+					Spawn.undergroundenemyShow = true;
+					Spawn.wizardspawn = false;
+				}
+				else
+				{
+					if(level2pause>=500)
+					{
+						handler.update();
+						player.update();
+						hud.update();
+						spawner.update();
+						if(gunStop>=100 && !isShooting)
+						{
+							player.shoot = false;
+							gunStop = 0;
+						}
+						else gunStop++;	
+					}
+					else 
+					{
+						level2pause++;
+					}
+					if(HUD.LEVEL2BOSSHEALTH<=0)
+					{
+						handler.clearAll();
+						hud.update();
+						menu.update();
+						handler.update();
+						isLevel2Complete = true;
+					}
+				}
+			}
+		}		
+		else if(gameState == STATE.LEVEL3) 
+		{
+			HUD.LEVEL = 3;
+			if(HUD.HEALTH<=0)
+			{
+				gameState = STATE.DEADSCREEN;
+				handler.clearAll();
+				hud.update();
+			}
+			else
+			{
+				hud.update();
+				handler.update();
+				player.update();
+			}
 		}
-		else if(gameState == STATE.LEVEL3) {}
 		else if(gameState == STATE.LEVEL4) {}
 		else if(gameState == STATE.DEADSCREEN)
 		{
@@ -371,8 +475,9 @@ public class Game extends Canvas implements Runnable
 		///////////////////////////////Everything under is drawing
 		if(gameState == STATE.MENU)
 		{
-			g.setColor(Color.ORANGE);
-			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
+//			g.setColor(Color.ORANGE);
+//			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
+			g.drawImage(menuImage,0,0,WIDTH,HEIGHT,null);
 			menu.render(g);
 		}
 		else if(gameState == STATE.SELECTLEVEL)
@@ -418,7 +523,7 @@ public class Game extends Canvas implements Runnable
 				levelDisplay.render(g);
 			}
 			hud.render(g);
-			if(bossDisplay>=900 && isBossFight)
+			if(bossDisplay>=500 && isBossFight)
 			{
 				hud.render(g);
 				handler.render(g);
@@ -447,11 +552,26 @@ public class Game extends Canvas implements Runnable
 			}
 			else 
 			{
-				hud.render(g);
 				levelDisplay.render(g);
 				level2pause++;
+				hud.render(g);
 			}
 			hud.render(g);
+			if(bossDisplay2>=200 && isBossFight2)
+			{
+				hud.render(g);
+				handler.render(g);
+			}
+			else if(isBossFight2)
+			{
+				bossDisplay2++;
+				levelDisplay.render(g);
+			}
+			if(HUD.LEVEL2BOSSHEALTH<=0)
+			{
+				levelDisplay.render(g);
+				menu.render(g);
+			}
 		}
 		else if(gameState == STATE.UPGRADES)
 		{
@@ -459,7 +579,14 @@ public class Game extends Canvas implements Runnable
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			upgrades.render(g);
 		}
-		else if(gameState == STATE.LEVEL3) {}
+		else if(gameState == STATE.LEVEL3) 
+		{
+			g.setColor(Color.ORANGE);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			hud.render(g);
+			handler.render(g);
+			player.render(g);
+		}
 		else if(gameState == STATE.LEVEL4) {}
 		else if(gameState == STATE.DEADSCREEN)
 		{
@@ -532,13 +659,19 @@ public class Game extends Canvas implements Runnable
 			bulletCount++;
 			
 		}
-		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2)
+		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2 && !isBossFight2)
 		{
 			player.shoot = true;
 			isShooting = true;
 			handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
 
 		}//shoot bullets
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2 && isBossFight2 && doubleBulletCount < player.keyCount)
+		{
+			player.shoot = true;
+			handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+			doubleBulletCount++;
+		}
 		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500))
 		{
 			if(gameState == STATE.LEVEL1)
@@ -569,7 +702,6 @@ public class Game extends Canvas implements Runnable
 		{		
 			isShooting = false;
 		}//shoot bullets
-		
 		//movement(fixes the sticky key problem)
 		if(!keyDown[0] && !keyDown[1])
 		{

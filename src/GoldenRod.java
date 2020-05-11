@@ -45,7 +45,7 @@ public class GoldenRod extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		icon = new ImageIcon(getClass().getResource("Spin.gif"));
+		icon = new ImageIcon(getClass().getResource("/Spin.gif"));
 		rod = icon.getImage();
 		g.drawImage(rod,(int)x,(int)y,null);
 	}

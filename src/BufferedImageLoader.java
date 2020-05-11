@@ -1,10 +1,13 @@
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
 //This is class loads in our spritesheet and background
 public class BufferedImageLoader 
 {
@@ -18,15 +21,6 @@ public class BufferedImageLoader
 	public BufferedImage loadImage(String path) throws IOException
 	{
 		image = ImageIO.read(getClass().getResource(path));
-		return image;
-	}
-	
-	public Image loadGifImage(String path) throws IOException{
-		
-		Image image;
-		{
-			image = Toolkit.getDefaultToolkit().createImage(path);
-		}
 		return image;
 	}
 }

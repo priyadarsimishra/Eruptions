@@ -44,19 +44,7 @@ public class SplitEnemy2 extends GameObject
 	 * has to shoot it and then it splits in half */
 	public void update() 
 	{	
-		//xVel = 5;
 		x+=xVel;
-//		y+=yVel;
-//		if(ytimer<=0)
-//		{
-//			yVel = 0;
-//		}
-//		else ytimer--;
-//		if(ytimer<=0) xTimer--;
-//		if(xTimer<=0)
-//		{
-//			if(xVel == 0) xVel = 5;
-//		}
 		if(x<=0 || x>=(Game.WIDTH-width)) xVel *= -1;
 		checkCollision();
 	}

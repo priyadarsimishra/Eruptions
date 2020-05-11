@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 /* This class displays the name JFrame at the start of the game
- * tp store progress for that name */
+ * to store progress for that name */
 public class NamePanel extends JFrame
 {
 	/**

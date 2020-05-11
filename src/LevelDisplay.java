@@ -6,6 +6,7 @@ public class LevelDisplay
 {
 	private Game game;
 	public static int scoreTime = 300;
+	public static int scoreTime2 = 300;
 	public static int wizardTime = 100;
 	public static int underTime = 100;
 	public static int split1Time = 200;
@@ -31,13 +32,13 @@ public class LevelDisplay
 		if(game.gameState == game.STATE.LEVEL1 && game.isBossFight && HUD.LEVEL1BOSSHEALTH>0)
 		{
 			g.setColor(Color.WHITE);
-			Font bossFont = new Font("TimesNewRoman",Font.BOLD,160);
+			Font bossFont = new Font("Superpower Synonym",Font.BOLD,160);
 			g.setFont(bossFont);
-			g.drawString("BOSS!", Game.WIDTH/2-225,Game.HEIGHT/2+20);
-			Font help = new Font("TimesNewRoman",Font.BOLD,40);
+			g.drawString("LAVA MAN", Game.WIDTH/2-354,Game.HEIGHT/2+20);
+			Font help = new Font("Superpower Synonym",Font.BOLD,40);
 			g.setFont(help);
 			g.drawString("Collect Water buckets", Game.WIDTH/2-230,Game.HEIGHT/2+60);
-			g.drawString("Shoot Boss by pressing SPACE", Game.WIDTH/2-300,Game.HEIGHT/2+100);
+			g.drawString("Shoot them by pressing SPACE", Game.WIDTH/2-260,Game.HEIGHT/2+100);
 		}
 		if(game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
@@ -55,7 +56,6 @@ public class LevelDisplay
 				g.setColor(springGreen);
 				if((int)Level1Boss.x+80+200>=Game.WIDTH)
 				{
-					System.out.println("Here");
 					g.drawString("+1000",(int)Level1Boss.x-20,Game.HEIGHT/2+20);
 				}
 				else				
@@ -72,7 +72,6 @@ public class LevelDisplay
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && HUD.WIZARDHEALTH<=0)
 		{
-			System.out.println(game.level2pause);
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
 			if(wizardTime>0)
@@ -95,7 +94,6 @@ public class LevelDisplay
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && HUD.SPLITHEALTH1<=0 && HUD.THROWERHEALTH<=25)
 		{
-			System.out.println("Hello");
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
 			if(split1Time>0)
@@ -107,7 +105,6 @@ public class LevelDisplay
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && HUD.SPLITHEALTH2<=0 && HUD.THROWERHEALTH<=25)
 		{
-			System.out.println("Hello");
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
 			if(split2Time>0)
@@ -115,6 +112,44 @@ public class LevelDisplay
 				g.setColor(springGreen);
 				g.drawString("+200", (int)SplitEnemy2.x, (int)SplitEnemy2.y);
 				split2Time--;
+			}
+		}
+		if(game.gameState == game.STATE.LEVEL2 && game.isBossFight2 && HUD.LEVEL2BOSSHEALTH>0 && game.bossDisplay2<200)
+		{
+			g.setColor(Color.WHITE);
+			Font bossFont = new Font("Superpower Synonym",Font.BOLD,220);
+			g.setFont(bossFont);
+			g.drawString("ARMY", Game.WIDTH/2-225,Game.HEIGHT/2-130);
+			g.drawString("SOLDIER", Game.WIDTH/2-370,Game.HEIGHT/2+20);
+			Font help = new Font("Superpower Synonym",Font.BOLD,40);
+			g.setFont(help);
+			g.drawString("Collect The Keys", Game.WIDTH/2-155,Game.HEIGHT/2+60);
+			g.drawString("Shoot them by pressing SPACE", Game.WIDTH/2-260,Game.HEIGHT/2+100);
+		}
+		if(game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
+		{
+			if(scoreTime2 <= 0)
+			{
+				g.setColor(Color.BLACK);
+				g.fillRect(0, Game.HEIGHT/2-200,800,400);
+				g.setColor(Color.WHITE);
+				g.drawRect(2, Game.HEIGHT/2-200, 797, 398);
+//				g.setColor(Color.BLUE);
+//				g.drawString("Hello",300,300);
+			}
+			else
+			{
+				Font newFont = new Font("Arial",Font.BOLD,64);
+				g.setFont(newFont);
+				g.setColor(springGreen);
+				if((int)Level2Boss.x+80+200>=Game.WIDTH)
+				{
+					g.drawString("+1000",(int)Level2Boss.x-20,Game.HEIGHT/2+20);
+				}
+				else				
+					g.drawString("+1000",(int)Level2Boss.x+80,(int)Level2Boss.y+200);
+				scoreTime2--;
+				System.out.println(scoreTime2);
 			}
 		}
 	}

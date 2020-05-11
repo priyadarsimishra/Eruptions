@@ -9,9 +9,6 @@ public class WaterBucket extends GameObject
 	private double x,y;
 	private SpriteTextures texture;
 	private ObjectHandler handler;
-	private Random r = new Random();
-	private int timer = 60;
-	private double yVel = 11;
 	private ID id;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
@@ -24,7 +21,7 @@ public class WaterBucket extends GameObject
 		this.handler = handler;
 	}
 	/* This creates a rectangle around the WaterBucket
-	 * which is used to check collision with the enemy */
+	 * which is used to check collision with the player */
 	public Rectangle getRect()
 	{
 		return new Rectangle((int)x,(int)y,36,36);
@@ -33,10 +30,7 @@ public class WaterBucket extends GameObject
 	 * it makes the WaterBucket goes up 
 	 * the object is removed when it is passed the y value of
 	 * the game screen */
-	public void update() 
-	{
-		
-	}
+	public void update() {}
 	/* This method is also called 60 times per second 
 	 * and it takes the values and draws the WaterBucket into the game
 	 * with it's updated locations(x and y) */

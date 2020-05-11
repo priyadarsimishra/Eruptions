@@ -19,6 +19,7 @@ public class Player extends GameObject
 	private ObjectHandler handler;
 	private Game game;
 	public int bucketCount = 0;
+	public int keyCount = 0;
 	private Image explosion;
 	private Image freeze;
 	private Image bomb;
@@ -62,11 +63,11 @@ public class Player extends GameObject
 	 * Depending on the state it draws the player */
 	public void render(Graphics g)
 	{
-		icon1 = new ImageIcon(getClass().getResource("Explosion.gif"));
+		icon1 = new ImageIcon(getClass().getResource("/Explosion.gif"));
 		explosion = icon1.getImage();
-		icon2 = new ImageIcon(getClass().getResource("Bomb.gif"));
+		icon2 = new ImageIcon(getClass().getResource("/Bomb.gif"));
 		bomb = icon2.getImage();
-		icon3 = new ImageIcon(getClass().getResource("Freeze.gif"));
+		icon3 = new ImageIcon(getClass().getResource("/Freeze.gif"));
 		freeze = icon3.getImage();
 		if(shoot) g.drawImage(texture.playerShooting,(int)x,(int)y,50,80,null);
 		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
@@ -118,6 +119,13 @@ public class Player extends GameObject
 					handler.removeObject(obj);
 				}
 			}
+			if(obj.id == ID.Level2Boss)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=2;
+				}
+			}
 			if(obj.id == ID.MagmaRock)
 			{
 				if(getRect().intersects(obj.getRect()))
@@ -156,6 +164,14 @@ public class Player extends GameObject
 				{
 					handler.removeObject(obj);
 					bucketCount++;
+				}
+			}
+			if(obj.id == ID.Key)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					keyCount++;
 				}
 			}
 			if(obj.id == ID.UnderGroundEnemy)
@@ -212,6 +228,22 @@ public class Player extends GameObject
 				}
 			}
 			if(obj.id == ID.GoldenRod)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.HEALTH-=5;
+				}
+			}
+			if(obj.id == ID.Emerald)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.SCORE+=200;
+				}
+			}
+			if(obj.id == ID.BossArrow)
 			{
 				if(getRect().intersects(obj.getRect()))
 				{

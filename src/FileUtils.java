@@ -16,11 +16,12 @@ public class FileUtils
 	 * the specific players stats used for testing purposes*/
 	public static void main(String[] args) 
 	{
-//		FileUtils fileUtils = new FileUtils();
-		//PlayerInfo player1 = new PlayerInfo("priya",100,1500,1);
+		FileUtils fileUtils = new FileUtils();
+//		PlayerInfo player1 = new PlayerInfo("priya",1500,1500,1);
+//		PlayerInfo player2 = new PlayerInfo("priya",200,2500,2);
 //		PlayerInfo player2 = new PlayerInfo("Baba1",300,1600);
 //		
-		//fileUtils.store(player1);
+//		fileUtils.store(player1);
 //		fileUtils.store(player2);
 //		PlayerInfo player3 = new PlayerInfo("biswa",900,2500);
 //		PlayerInfo player4 = new PlayerInfo("biswa",2500,3400);
@@ -32,15 +33,16 @@ public class FileUtils
 //		System.out.println("Total Score for biswa: "+fileUtils.getTotalScoreForAPlayer("biswa"));
 //		System.out.println("Highest Score for baba1: "+fileUtils.getHighestScore("baba1"));
 //		System.out.println("Total Score for baba1: "+fileUtils.getTotalScoreForAPlayer("baba1"));
-//		System.out.println("Highscore for player: "+fileUtils.getHighestScore("priya"));
-//		System.out.println("Level for player: "+fileUtils.getThePlayerLevel("priya"));
+		System.out.println("Highscore for player: "+fileUtils.getHighestScore("priya",1));
+		//System.out.println("Level for player: "+fileUtils.getThePlayerLevel("priya"));
+		System.out.println("Level for player: "+fileUtils.getTotalScoreForAPlayer("priya"));
 		
 
 	}
 
 	/* This method returns an integer as it takes the player
 	 * name and returns their highest score */ 
-	public int getHighestScore(String playerName) 
+	public int getHighestScore(String playerName,int level) 
 	{
 		PlayerInfo player = null;
 		FileInputStream fis = null;
@@ -86,7 +88,8 @@ public class FileUtils
 		if(playerList != null && playerList.size() >0) 
 		{
 			for(PlayerInfo player1 : playerList) {
-				if(player1.getPlayerName().equalsIgnoreCase(playerName)) 
+				if(player1.getPlayerName().equalsIgnoreCase(playerName)
+						&& player1.getPlayerLevel() == level) 
 				{
 					highestScore = player1.getHighestIndividualScore();
 				}
