@@ -13,8 +13,10 @@ public class Spawn
 	private int silverTimer = r.nextInt(200)+120;
 	private int goldTimer = r.nextInt(600)+300;
 	private int emeraldTime = 200;
+	private int purpleTime = 400;
 	private int rubyTime = 600;
-	private int diamondTime = 1200;
+	private int diamondTime = 900;
+	private int healthTime = 450;
 	private int fireballTimer = 120;
 	private int magmaRockTimer = 100;
 	private int wave = 500;
@@ -24,16 +26,36 @@ public class Spawn
 	private int disappear = 20;
 	private int enemyBulletSpeed = 60;
 	private int enemyArrow = 80;
+	private int pinkGemTime = 120;
 	private int icePotion = 140;
+	public int exploderTime = 250;
+	public int rayTime = 300;
+	public int rayBulletTime = 200;
+	public int rocketTime = 400;
+	public int eggTime = 100;
+	public int tankTime = 350;
+	public int boomerangTime = 250;
+	public int shieldEnemy = 150;
+	public int crateTime = 100;
+	public int level4bulletTime = 250;
+	public static boolean shieldEnemyTime = true;
+	public static boolean rocketEnemyTime = true;
+	public static boolean boomerangEnemyTime = true;
+	public static boolean spawnbabyDragon = false;
+	public static boolean rayEnemyTime = true;
+	public static boolean exploderEnemyTime = true;
 	public static boolean undergroundenemyShow = true;
 	public static boolean wizardspawn = true;
 	public static boolean throwerspawn = true;
+	public static boolean tankspawn  = true;
 	private int throwerTime = 650;
 	private int wizardTime = 300;
 	private boolean isWave = false;
 	private int gap;
 	public boolean bossMade = false;
 	public boolean bossMade2 = false;
+	public boolean bossMade3 = false;
+	public boolean bossMade4 = false;
 	public boolean dead = false;
 	public boolean stopSplit = false;
 	public static int showIt = 500;
@@ -213,7 +235,7 @@ public class Spawn
 			{
 				ThrowerEnemy.split = false;
 				HUD.THROWERHEALTH = 50;
-				handler.addObject(new ThrowerEnemy(r.nextInt(700)+80,-32,ID.ThrowerEnemy,handler,texture,48,48));
+				handler.addObject(new ThrowerEnemy(r.nextInt(540)+80,-32,ID.ThrowerEnemy,handler,texture,48,48));
 				throwerspawn = false;
 			}
 			if(ThrowerEnemy.giveInfo && HUD.THROWERHEALTH<=25)
@@ -239,9 +261,9 @@ public class Spawn
 				{
 					ThrowerEnemy.split = false;
 					
-					handler.addObject(new ThrowerEnemy(r.nextInt(700)+80,r.nextInt(200)+0,ID.ThrowerEnemy,handler,texture,48,48));
+					handler.addObject(new ThrowerEnemy(r.nextInt(540)+80,r.nextInt(200)+0,ID.ThrowerEnemy,handler,texture,48,48));
 					HUD.THROWERHEALTH = 50;
-					throwerTime = 650;
+					throwerTime = 500;
 				}
 				else throwerTime--;
 			}
@@ -249,13 +271,13 @@ public class Spawn
 			{		
 				handler.addObject(new Fireball(r.nextInt(740),-50,texture,handler,ID.Fireball,r.nextInt(16)+7));
 				
-				fireballTimer = 120;
+				fireballTimer = 100;
 			}
 			else
 				fireballTimer--;
 			if(emeraldTime<= 0)
 			{
-				handler.addObject(new Emerald(r.nextInt(768)+0,-32,ID.Emerald,handler,texture,r.nextInt(10)+4));
+				handler.addObject(new Emerald(r.nextInt(768)+0,-32,ID.Emerald,handler,texture,r.nextInt(8)+3));
 				emeraldTime = 200;
 			}
 			else emeraldTime--;
@@ -289,6 +311,325 @@ public class Spawn
 				keyTime = 140;
 			}
 			else keyTime--;
+			if(diamondTime<=0)
+			{
+				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(14)+5,r.nextInt(14)+5));
+				diamondTime = 600;
+			}
+			else diamondTime--;
+			if(rubyTime<=0)
+			{
+				handler.addObject(new RubyGem(r.nextInt(768)+0,r.nextInt(100)-32,ID.RubyGem,handler,texture,r.nextInt(12)+7));
+				handler.addObject(new RubyGem(r.nextInt(768)+0,r.nextInt(100)-32,ID.RubyGem,handler,texture,r.nextInt(12)+7));
+				rubyTime = 300;
+			}
+			else rubyTime--;
+		}
+		if(game.gameState == game.STATE.LEVEL3 && game.level3pause>=500 && !game.isBossFight3)
+		{
+			if(pinkGemTime<=0)
+			{
+				handler.addObject(new PinkGem(r.nextInt(768),-32,ID.PinkGem,handler,texture,r.nextInt(12)+7));
+				pinkGemTime = 120;
+			}
+			else pinkGemTime--;
+			if(magmaRockTimer<=0)
+			{
+				handler.addObject(new MagmaRock(r.nextInt(10)+0,r.nextInt(200)+0,texture,handler,ID.MagmaRock,r.nextInt(10)+5,r.nextInt(8)+3,true));
+				handler.addObject(new MagmaRock(r.nextInt(800)+600,r.nextInt(100)+0,texture,handler,ID.MagmaRock,r.nextInt(10)+5,-(r.nextInt(8)+3),false));
+				magmaRockTimer = 100;
+			}
+			else magmaRockTimer--;
+			if(goldTimer<=0)
+			{		
+				handler.addObject(new GoldCoin(r.nextInt(768),-32,texture,handler,ID.GoldCoin));
+				goldTimer = r.nextInt(600)+300;
+			}
+			if(diamondTime<=0)
+			{
+				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(14)+5,r.nextInt(14)+5));
+				diamondTime = 1200;
+			}
+			else diamondTime--;
+			if(healthTime<=0)
+			{
+				handler.addObject(new HealthPotion(r.nextInt(748)+0, r.nextInt(100)-100,ID.HealthPotion,handler,texture, r.nextInt(12)+5,r.nextInt(14)+5));
+				healthTime = 450;
+			}
+			else healthTime--;
+			/* Enemies */
+			if(exploderEnemyTime)
+			{
+				LevelDisplay.exploderTime = 200;
+				HUD.EXPLODERHEALTH = 20;
+				handler.addObject(new ExploderEnemy(r.nextInt(746),-32,ID.ExploderEnemy,handler,texture,-4));
+				exploderEnemyTime = false;
+			}
+			if(HUD.EXPLODERHEALTH<=0)
+			{
+				if(exploderTime<=0)
+				{
+					LevelDisplay.exploderTime = 200;
+					HUD.EXPLODERHEALTH = 20;
+					handler.addObject(new ExploderEnemy(r.nextInt(746),-32,ID.ExploderEnemy,handler,texture,-4));
+					exploderTime = 250;
+				}
+				else exploderTime--;
+			}
+			if(rayEnemyTime)
+			{
+				LevelDisplay.rayEnemyTime = 200;
+				HUD.RAYHEALTH = 30;
+				handler.addObject(new RayEnemy(r.nextInt(745),-32,ID.RayEnemy,handler,texture));
+				rayEnemyTime = false;
+			}
+			if(HUD.RAYHEALTH<=0)
+			{
+				if(rayTime <= 0)
+				{
+					LevelDisplay.rayEnemyTime = 200;
+					HUD.RAYHEALTH = 30;
+					handler.addObject(new RayEnemy(r.nextInt(745),-32,ID.RayEnemy,handler,texture));
+					rayTime = 300;
+				}
+				else rayTime--;
+			}
+			if(rocketEnemyTime)
+			{
+				LevelDisplay.rocketEnemyTime = 200;
+				HUD.ROCKETHEALTH = 60;
+				handler.addObject(new RocketEnemy(r.nextInt(745),-32,ID.RocketEnemy,handler,texture));
+				rocketEnemyTime = false;
+			}
+			if(HUD.ROCKETHEALTH<=0)
+			{
+				if(rocketTime<=0)
+				{
+					LevelDisplay.rocketEnemyTime = 200;
+					HUD.ROCKETHEALTH = 60;
+					handler.addObject(new RocketEnemy(r.nextInt(745),-32,ID.RocketEnemy,handler,texture));
+					rocketTime = 400;
+				}
+				else rocketTime--;
+			}
+		}
+		if(game.isBossFight3 && !bossMade3)
+		{
+			bossMade3 = true;
+			handler.addObject(new Level3Boss(Game.WIDTH/2-100,-40,ID.Level3Boss,texture,handler,10));
+		}
+		if(game.isBossFight3)
+		{
+			if(eggTime<=0)
+			{
+				Egg egg = new Egg(r.nextInt(764)+0,730,texture,handler,ID.Egg);
+				handler.addObject(egg);
+				eggTime = 100;
+			}
+			else eggTime--;
+			if(spawnbabyDragon)
+			{
+				LevelDisplay.dragonTime = 200;
+				HUD.BABYDRAGONHEALTH = 15;
+				handler.addObject(new BabyDragon((int)Level3Boss.spawnX,(int)Level3Boss.spawnY,ID.BabyDragon,handler,texture));
+				spawnbabyDragon = false;
+			}
+			if(rayBulletTime<=0)
+			{
+				handler.addObject(new RayBullet(Level3Boss.x+40,Level3Boss.y+200,ID.RayBullet,handler,texture,r.nextInt(8)+4));
+				handler.addObject(new RayBullet(Level3Boss.x+200,Level3Boss.y+200,ID.RayBullet,handler,texture,r.nextInt(8)+4));
+				rayBulletTime = 200;
+			}
+			else rayBulletTime--;
+			if(pinkGemTime<=0)
+			{
+				handler.addObject(new PinkGem(r.nextInt(768),-32,ID.PinkGem,handler,texture,r.nextInt(12)+7));
+				pinkGemTime = 120;
+			}
+			else pinkGemTime--;
+			if(diamondTime<=0)
+			{
+				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(14)+5,r.nextInt(14)+5));
+				diamondTime = 600;
+			}
+			else diamondTime--;
+		}
+		if(game.gameState == game.STATE.LEVEL4 && game.level4pause>=500 && !game.isBossFight4)
+		{
+			if(tankspawn)
+			{
+				LevelDisplay.tankTime = 200;
+				HUD.TANKHEALTH = 60;
+				handler.addObject(new TankEnemy(r.nextInt(700)+20,-32,ID.TankEnemy,handler,texture));
+				tankspawn = false;
+			}
+			if(HUD.TANKHEALTH<=0)
+			{
+				if(tankTime<=0)
+				{
+					LevelDisplay.tankTime = 200;
+					handler.addObject(new TankEnemy(r.nextInt(700)+20,-32,ID.TankEnemy,handler,texture));
+					HUD.TANKHEALTH = 60;
+					tankTime = 450;
+				}
+				else tankTime--;
+			}
+			if(boomerangEnemyTime)
+			{
+				LevelDisplay.boomerangTime = 200;
+				HUD.BOOMERANGHEALTH = 40;
+				handler.addObject(new BoomerangEnemy(r.nextInt(720)+20,-32,ID.BoomerangEnemy,handler,texture,r.nextInt(10)+7));
+				boomerangEnemyTime = false;
+			}
+			if(HUD.BOOMERANGHEALTH<=0)
+			{
+				if(boomerangTime<=0)
+				{
+					LevelDisplay.boomerangTime = 200;
+					handler.addObject(new BoomerangEnemy(r.nextInt(720)+20,-32,ID.BoomerangEnemy,handler,texture,r.nextInt(8)+4));
+					HUD.BOOMERANGHEALTH = 40;
+					boomerangTime = 250;
+				}
+				else boomerangTime--;
+			}
+			if(pinkGemTime<=0)
+			{
+				handler.addObject(new PinkGem(r.nextInt(768),-32,ID.PinkGem,handler,texture,r.nextInt(12)+7));
+				pinkGemTime = 120;
+			}
+			else pinkGemTime--;
+			if(emeraldTime<= 0)
+			{
+				handler.addObject(new Emerald(r.nextInt(768)+0,-32,ID.Emerald,handler,texture,r.nextInt(8)+3));
+				emeraldTime = 200;
+			}
+			else emeraldTime--;
+			if(purpleTime<= 0)
+			{
+				handler.addObject(new PurpleEmerald(r.nextInt(768)+0,-32,ID.PurpleEmerald,handler,texture,r.nextInt(8)+3));
+				purpleTime = 400;
+			}
+			else purpleTime--;
+			if(wave<=0)
+			{
+				isWave = true;
+				wave = 500;
+			}
+			else
+			{
+				isWave = false;
+				wave--;
+			}
+			while(isWave)
+			{
+				//wave
+				int total = 0;		
+				gap = r.nextInt(12)+1;
+				while(total<=12)
+				{
+					if(total == gap)
+					{
+						total++;
+						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,7));
+					}
+					else
+					{
+						handler.addObject(new Fireball(total*60+26,-32,texture,handler,ID.Fireball,7));
+					}
+					total++;
+				}
+				if(total >= 12)
+					isWave = false;
+				else 
+					isWave = true;
+			}
+			if(healthTime<=0)
+			{
+				handler.addObject(new HealthPotion(r.nextInt(748)+0, r.nextInt(100)-100,ID.HealthPotion,handler,texture, r.nextInt(12)+5,r.nextInt(14)+5));
+				healthTime = 450;
+			}
+			else healthTime--;
+			if(shieldEnemyTime)
+			{
+				LevelDisplay.shieldTime = 200;
+				HUD.SHIELDENEMYHEALTH = 40;
+				handler.addObject(new ShieldEnemy(r.nextInt(720)+20,-32,ID.ShieldEnemy,handler,texture));
+				shieldEnemyTime = false;
+			}
+			if(HUD.SHIELDENEMYHEALTH<=0)
+			{
+				if(shieldEnemy<=0)
+				{
+					LevelDisplay.shieldTime = 200;
+					handler.addObject(new ShieldEnemy(r.nextInt(720)+20,-32,ID.ShieldEnemy,handler,texture));
+					HUD.SHIELDENEMYHEALTH = 40;
+					shieldEnemy = 250;
+				}
+				else shieldEnemy--;
+			}
+			if(silverTimer<=0)
+			{		
+				handler.addObject(new SilverCoin(r.nextInt(768),-32,texture,handler,ID.SilverCoin));
+				silverTimer = r.nextInt(200)+120;;
+			}
+			else
+				silverTimer--;
+			if(magmaRockTimer<=0)
+			{
+				handler.addObject(new MagmaRock(r.nextInt(10)+0,r.nextInt(200)+0,texture,handler,ID.MagmaRock,r.nextInt(10)+5,r.nextInt(8)+3,true));
+				handler.addObject(new MagmaRock(r.nextInt(800)+600,r.nextInt(100)+0,texture,handler,ID.MagmaRock,r.nextInt(10)+5,-(r.nextInt(8)+3),false));
+				magmaRockTimer = 100;
+			}
+			else magmaRockTimer--;
+		}
+		if(game.isBossFight4 && !bossMade4)
+		{
+			//make the boss here
+			handler.addObject(new Level4Boss(Game.WIDTH/2-100,-40,ID.Level4Boss,texture,handler,10));
+			bossMade4 = true;
+		}
+		if(game.isBossFight4)
+		{
+			if(crateTime<=0)
+			{
+				Crate crate = new Crate(r.nextInt(764)+0,730,texture,handler,ID.Crate);
+				handler.addObject(crate);
+				crateTime = 100;
+			}
+			else crateTime--;
+			if(pinkGemTime<=0)
+			{
+				handler.addObject(new PinkGem(r.nextInt(768),-32,ID.PinkGem,handler,texture,r.nextInt(12)+7));
+				pinkGemTime = 120;
+			}
+			else pinkGemTime--;
+			if(diamondTime<=0)
+			{
+				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(14)+5,r.nextInt(14)+5));
+				diamondTime = 600;
+			}
+			else diamondTime--;
+			if(emeraldTime<= 0)
+			{
+				handler.addObject(new Emerald(r.nextInt(768)+0,-32,ID.Emerald,handler,texture,r.nextInt(8)+3));
+				emeraldTime = 200;
+			}
+			else emeraldTime--;
+			if(exploderEnemyTime)
+			{
+				LevelDisplay.exploderTime = 200;
+				HUD.EXPLODERHEALTH = 20;
+				handler.addObject(new ExploderEnemy(Level4Boss.x+50,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5));
+				exploderEnemyTime = false;
+			}
+			if(exploderTime<=0)
+			{
+				LevelDisplay.exploderTime = 200;
+				HUD.EXPLODERHEALTH = 20;
+				handler.addObject(new ExploderEnemy(Level4Boss.x+120,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5));
+				exploderTime = 500;
+			}
+			
 		}
 	}
 }

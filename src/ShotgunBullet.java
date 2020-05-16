@@ -2,8 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 /* This is the class for the player bullet
- * to you can kill the boss starting in level 2 */
-public class DoubleBullet extends GameObject
+ * to you can kill the boss starting in level 4 */
+public class ShotgunBullet extends GameObject
 {
 	private double x;
 	private double y;
@@ -14,7 +14,7 @@ public class DoubleBullet extends GameObject
 	private boolean split = false;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public DoubleBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel) 
+	public ShotgunBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -28,28 +28,17 @@ public class DoubleBullet extends GameObject
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
-		return new Rectangle((int)x+4,(int)y,12,20);
+		return new Rectangle((int)x,(int)y,5,8);
 	}
 	/* This method is called 60 times per second and 
-	 * it makes the DoubleBullet go up and it also adds
+	 * it makes the shotgunBullet go up and it also adds
 	 * the another bullet object and removes the previous on when 
 	 * it is passed the y value(<450) of
 	 * the game screen */
 	public void update() 
 	{
 		y+=yVel;
-		if(y<=450)
-		{
-			split = true;
-			if(split)
-			{
-				handler.addObject(new SplitBullet1((int)x-15,450,ID.DoubleBullet,handler,texture));
-				handler.addObject(new SplitBullet2((int)x+15,450,ID.DoubleBullet,handler,texture));
-			}
-			handler.removeObject(this);
-		}
 		checkCollision();
-		
 	}
 	/* This method checks Collision depending on the 
 	 * game Object which decreases the health
@@ -59,22 +48,44 @@ public class DoubleBullet extends GameObject
 		for(int i = 0; i<handler.object.size();i++)
 		{
 			GameObject obj = handler.object.get(i);
-			if(obj.id == ID.Level2Boss)
+			if(obj.id == ID.Level4Boss)
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
 					handler.removeObject(this);
-					HUD.LEVEL2BOSSHEALTH-=20;
+					HUD.LEVEL2BOSSHEALTH-=5;
+				}
+			}
+			if(obj.id == ID.Level4BossInvisibleTrail)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(this);
+					if(Level4Boss.isInvisible)
+						Level4Boss.isInvisible = false;
+				}
+			}
+			if(obj.id == ID.Level4Boss)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.LEVEL4BOSSHEALTH-=5;
+					handler.removeObject(this);
+					if(HUD.LEVEL4BOSSHEALTH<=0)
+					{
+						handler.removeObject(obj);
+					}
 				}
 			}
 		}
 	}
 	/* This method is also called 60 times per second 
-	 * and it takes the values and draws the DoubleBullet into the game
+	 * and it takes the values and draws the shotgunBullet into the game
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.doubleBullet,(int)x-2,(int)y,20,20,null);
+		g.setColor(Color.BLACK);
+		g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,5,8,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

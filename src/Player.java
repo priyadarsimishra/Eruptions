@@ -20,15 +20,25 @@ public class Player extends GameObject
 	private Game game;
 	public int bucketCount = 0;
 	public int keyCount = 0;
+	public int eggCount = 0;
+	public int crateCount = 0;
 	private Image explosion;
 	private Image freeze;
 	private Image bomb;
+	private Image healthparticle;
 	private ImageIcon icon1;
 	private ImageIcon icon2;
 	private ImageIcon icon3;
-	private int imageTime = 0;
+	private ImageIcon icon4;
+	private int imageTimeExplosion = 0;
+	private int imageTimeBomb = 0;
+	private int imageTimeParticle = 0;
 	public static boolean shoot = false;
+	public static boolean doubleShoot = false;
 	public static boolean isDisplay = false;
+	public static boolean explosionPic;
+	public static boolean bombPic;
+	public static boolean particle;
 	/* This constructor has similar parameters to other game objects
 	 * and this is required to make the player work */
 	public Player(double x,double y,Game game,SpriteTextures texture,ObjectHandler handler,ID id)
@@ -69,30 +79,51 @@ public class Player extends GameObject
 		bomb = icon2.getImage();
 		icon3 = new ImageIcon(getClass().getResource("/Freeze.gif"));
 		freeze = icon3.getImage();
+		icon4 = new ImageIcon(getClass().getResource("health.png"));
+		healthparticle = icon4.getImage();
 		if(shoot) g.drawImage(texture.playerShooting,(int)x,(int)y,50,80,null);
 		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
+		if(doubleShoot) g.drawImage(texture.doublePistolPlayer,(int)x,(int)y,50,80,null);
+		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
 		if(changeSpeed) g.drawImage(freeze,(int)x-10,(int)y,60,60,null);
-		for(int i=0;i<handler.object.size();i++)
+		if(particle)
 		{
-			GameObject obj = handler.object.get(i);
-			
-			if(obj.id == ID.Fireball || obj.id == ID.FireballTrail)
+			System.out.println(particle);
+			if(imageTimeParticle>=100)
 			{
-				if(getRect().intersects(obj.getRect()))
-				{
-					if(imageTime<=360)
-						g.drawImage(explosion,(int)x-50,(int)y-160,null);
-					else imageTime++;
-				}
+				particle = false;
+				imageTimeParticle = 0;
 			}
-			if(obj.id == ID.Level1BossBomb)
+			else 
 			{
-				if(getRect().intersects(obj.getRect()))
-				{
-					if(imageTime<=360)
-						g.drawImage(bomb,(int)x-50,(int)y-160,null);
-					else imageTime++;
-				}
+				g.drawImage(healthparticle,(int)x+10,(int)y-8,20,20,null);
+				imageTimeParticle++;
+			}
+		}
+		if(explosionPic)
+		{
+			if(imageTimeExplosion>=350)
+			{
+				explosionPic = false;
+				imageTimeExplosion = 0;
+			}
+			else
+			{
+				g.drawImage(explosion,(int)x-53,(int)y-120,null);
+				imageTimeExplosion++;
+			}
+		}
+		if(bombPic)
+		{
+			if(imageTimeBomb>=350)
+			{
+				bombPic = false;
+				imageTimeBomb = 0;
+			}
+			else
+			{
+				g.drawImage(bomb,(int)x-50,(int)y-80,null);
+				imageTimeBomb++;
 			}
 		}
 	}
@@ -109,6 +140,7 @@ public class Player extends GameObject
 				if(getRect().intersects(obj.getRect()))
 				{
 					HUD.HEALTH-=1;
+					explosionPic = true;
 				}
 			}
 			if(obj.id == ID.Level1BossBomb)
@@ -116,6 +148,7 @@ public class Player extends GameObject
 				if(getRect().intersects(obj.getRect()))
 				{
 					HUD.HEALTH-=15;
+					bombPic = true;
 					handler.removeObject(obj);
 				}
 			}
@@ -124,6 +157,20 @@ public class Player extends GameObject
 				if(getRect().intersects(obj.getRect()))
 				{
 					HUD.HEALTH-=2;
+				}
+			}
+			if(obj.id == ID.Level3Boss)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=1.4;
+				}
+			}
+			if(obj.id == ID.Level4Boss)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=1.2;
 				}
 			}
 			if(obj.id == ID.MagmaRock)
@@ -172,6 +219,22 @@ public class Player extends GameObject
 				{
 					handler.removeObject(obj);
 					keyCount++;
+				}
+			}
+			if(obj.id == ID.Egg)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					eggCount++;
+				}
+			}
+			if(obj.id == ID.Crate)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					crateCount++;
 				}
 			}
 			if(obj.id == ID.UnderGroundEnemy)
@@ -249,6 +312,76 @@ public class Player extends GameObject
 				{
 					handler.removeObject(obj);
 					HUD.HEALTH-=5;
+				}
+			}
+			if(obj.id == ID.PinkGem)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.SCORE+=150;
+				}
+			}
+			if(obj.id == ID.HealthPotion)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					if(HUD.HEALTH<=90)
+						HUD.HEALTH+=10;
+					else HUD.HEALTH = 100;
+					particle = true;
+				}
+			}
+			if(obj.id == ID.ExploderEnemy)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(obj);
+					HUD.HEALTH-=15;
+					Spawn.exploderEnemyTime = true;
+					HUD.EXPLODERHEALTH = 1;
+					explosionPic = true;
+				}
+			}
+			if(obj.id == ID.RayBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=0.2;
+					handler.removeObject(obj);
+				}
+			}
+			if(obj.id == ID.Rocket)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=8;
+					handler.removeObject(obj);
+					Rocket.destroyed = true;
+				}
+			}
+			if(obj.id == ID.Boomerang)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=4;
+				}
+			}
+			if(obj.id == ID.TankBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.HEALTH-=15;
+					handler.removeObject(obj);
+				}
+			}
+			if(obj.id == ID.PurpleEmerald)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.SCORE+=400;
+					handler.removeObject(obj);
 				}
 			}
 		}

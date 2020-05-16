@@ -23,6 +23,9 @@ public class Game extends Canvas implements Runnable
 	private Thread thread;
 	private boolean running = false;
 	private BufferedImage spritesheet = null;
+	private BufferedImage level2 = null;
+	private BufferedImage level3 = null;
+	private BufferedImage level4 = null;
 	private Image background;
 	private ImageIcon icon;
 	private Image menuImage;
@@ -37,26 +40,39 @@ public class Game extends Canvas implements Runnable
 	private Spawn spawner;
 	private Menu menu;
 	private LevelDisplay levelDisplay;
-	private Upgrades upgrades;
+	public Upgrades upgrades;
 	private int gunStop = 0;
 	public static int level1pause = 0;
 	public static int level2pause = 0;
+	public static int level3pause = 0;
+	public static int level4pause = 0;
 	public int level1Complete = 0;
 	public int level2Complete = 0;
+	public int level3Complete = 0;
+	public int level4Complete = 0;
 	private int xVel = 7;
-	private int bossDisplay = 0;
+	public int bossDisplay = 0;
 	public int bossDisplay2 = 0;
+	public int bossDisplay3 = 0;
+	public int bossDisplay4 = 0;
 	private int bulletCount = 0;
+	private int explosiveBulletCount = 0;
 	private int doubleBulletCount = 0;
+	private int shotgunBulletCount = 0;
 	public int bossFight = 1500;
 	public int bossFight2 = 1500;
+	public int bossFight3 = 1500;
+	public int bossFight4 = 2000;
 	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
 	public boolean isBossFight2 = false;
+	public boolean isBossFight3 = false;
+	public boolean isBossFight4 = false;
 	private boolean isShooting = false;
 	public boolean isLevel1Complete = false;
 	public boolean isLevel2Complete = false;
 	public boolean isLevel3Complete = false;
+	public boolean isLevel4Complete = false;
 	public static final STATE STATE = null;
 	public static String stateholder = "";
 	private PlayerInfo playerInfo = null;
@@ -96,6 +112,9 @@ public class Game extends Canvas implements Runnable
 			spritesheet = loader.loadImage("/SpriteSheet.png");
 			level1 = loader.loadImage("/LEVEL1.png");
 			story = loader.loadImage("/Story.png");
+			level2 = loader.loadImage("/LEVEL2.png");
+			level3 = loader.loadImage("/LEVEL3.png");
+			level4 = loader.loadImage("/LEVEL4.png");
 		}
 		catch(IOException e)
 		{
@@ -209,12 +228,24 @@ public class Game extends Canvas implements Runnable
 			player.x = 385;
 			level1Complete = 0;
 			level2Complete = 0;
+			level3Complete = 0;
+			level4Complete = 0;
 			bossDisplay = 0;
 			bossDisplay2 = 0;
+			bossDisplay3 = 0;			
+			bossDisplay4 = 0;
 			level1pause = 0;
 			level2pause = 0;
+			level3pause = 0;
+			level4pause = 0;
+			isBossFight = false;
+			isBossFight2 = false;
+			isBossFight3 = false;
+			isBossFight4 = false;
 			HUD.LEVEL1BOSSHEALTH = 200;
 			HUD.LEVEL2BOSSHEALTH = 500;
+			HUD.LEVEL3BOSSHEALTH = 550;
+			HUD.LEVEL4BOSSHEALTH = 570;
 			HUD.SCORE = 0;
 			HUD.COUNT= 0;
 			HUD.LEVEL = 0;
@@ -223,33 +254,79 @@ public class Game extends Canvas implements Runnable
 			HUD.THROWERHEALTH = 1;
 			HUD.SPLITHEALTH1 = 0;
 			HUD.SPLITHEALTH2 = 0;
+			HUD.EXPLODERHEALTH = 1;
+			HUD.RAYHEALTH = 1;
+			HUD.ROCKETHEALTH = 1;
+			HUD.BABYDRAGONHEALTH = 0;
+			HUD.TANKHEALTH = 1;
+			HUD.BOOMERANGHEALTH = 1;
 			hud.display = 150;
 			hud.display2 = 150;
+			hud.displaylev3 = 150;
+			hud.displaylev4 = 150;
+			/* Change here when level progress has been implemented */
 			isLevel1Complete = true;
+			isLevel2Complete = true;
+			isLevel3Complete = true;
+			/* Change here when level progress has been implemented */
 			player.changeSpeed = false;
 			player.changeBack = 20;
 			player.shoot = false;
+			player.doubleShoot = false;
+			player.bombPic = false;
+			player.particle = false;
+			player.explosionPic = false;
 			hud.addScore = false;
 			menu.storeScoreStop = false;
 			hud.stopScore = false;
 			hud.stopScore2 = false;
+			hud.stopScorelev3  = false;
+			hud.stopScorelev4 = false;
 			hud.stoptotalScore = false;
+			hud.stoptotalScore2 = false;
+			hud.stoptotalScore3 = false;
+			hud.stoptotalScore4 = false;
 			menu.stopScoreChange1 = false;
 			menu.stopScoreChange2 = false;
+			menu.stopScoreChange3 = false;
+			menu.stopScoreChange4 = false;
+			menu.stopScoreChange5 = false;
 			levelDisplay.scoreTime = 300;
 			levelDisplay.scoreTime2 = 300;
+			levelDisplay.scoreTime3 = 300;
+			levelDisplay.scoreTime3 = 300;
 			levelDisplay.wizardTime= 100;
 			levelDisplay.underTime = 100;
 			levelDisplay.split1Time = 200;
 			levelDisplay.split2Time = 200;
-			isBossFight = false;
-			isBossFight2 = false;
+			levelDisplay.exploderTime = 200;
+			levelDisplay.rayEnemyTime = 200;
+			levelDisplay.rocketEnemyTime = 200;
+			levelDisplay.dragonTime = 200;
+			levelDisplay.tankTime = 200;
+			levelDisplay.shieldTime = 200;
 			spawner.bossMade = false;
 			spawner.bossMade2 = false;
+			spawner.bossMade3 = false;
+			spawner.bossMade4 = false;
+			spawner.shieldEnemyTime = true;
+			spawner.exploderEnemyTime = true;
 			spawner.wizardspawn = true;
 			spawner.throwerspawn = true;
 			spawner.undergroundenemyShow = true;
+			spawner.rayEnemyTime = true;
+			spawner.rocketEnemyTime = true;
+			spawner.tankspawn = true;
+			spawner.boomerangEnemyTime = true;
+			upgrades.box1Row1Cost = 1000;
+			upgrades.box2Row1Cost = 2000;
+			RocketEnemy.bulletShow = true;
 			ThrowerEnemy.giveInfo = true;
+			ShieldEnemy.once = false;
+			ShieldEnemy.startDamage = false;
+			BoomerangEnemy.isThrow = false;
+			Rocket.destroyed = false;
+			Level4Boss.makeOne = false;
 		}		
 		else if(gameState == STATE.LEVEL1)
 		{
@@ -312,7 +389,10 @@ public class Game extends Canvas implements Runnable
 						spawner.update();
 						if(gunStop>=100 && !isShooting)
 						{
-							player.shoot = false;
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;							
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -324,11 +404,12 @@ public class Game extends Canvas implements Runnable
 				}
 				if(HUD.LEVEL1BOSSHEALTH<=0)
 				{
+					isLevel1Complete = true;
+					HUD.LEVEL1BOSSHEALTH = 0;
 					handler.clearAll();
 					hud.update();
 					menu.update();
 					handler.update();
-					isLevel1Complete = true;
 				}
 				
 			}
@@ -366,7 +447,10 @@ public class Game extends Canvas implements Runnable
 						spawner.update();
 						if(gunStop>=50 && !isShooting)
 						{
-							player.shoot = false;
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;							
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -416,7 +500,10 @@ public class Game extends Canvas implements Runnable
 						spawner.update();
 						if(gunStop>=100 && !isShooting)
 						{
-							player.shoot = false;
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;							
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -427,11 +514,12 @@ public class Game extends Canvas implements Runnable
 					}
 					if(HUD.LEVEL2BOSSHEALTH<=0)
 					{
+						isLevel2Complete = true;
+						HUD.LEVEL2BOSSHEALTH = 0;
 						handler.clearAll();
 						hud.update();
 						menu.update();
 						handler.update();
-						isLevel2Complete = true;
 					}
 				}
 			}
@@ -439,20 +527,197 @@ public class Game extends Canvas implements Runnable
 		else if(gameState == STATE.LEVEL3) 
 		{
 			HUD.LEVEL = 3;
-			if(HUD.HEALTH<=0)
+			if((level3Complete<bossFight3) && !(isBossFight3))
 			{
-				gameState = STATE.DEADSCREEN;
-				handler.clearAll();
-				hud.update();
+				if(HUD.HEALTH<=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					handler.clearAll();
+					hud.update();
+					level3pause = 0;
+					isBossFight3 = false;
+					level3Complete = 0;
+					HUD.EXPLODERHEALTH = 20;
+				}
+				else
+				{
+					if(level3pause>=500)
+					{
+						hud.update();
+						handler.update();
+						player.update();
+						spawner.update();
+						if(gunStop>=50 && !isShooting)
+						{
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;							
+							gunStop = 0;
+						}
+						else gunStop++;	
+					}
+					else
+					{
+						hud.update();
+						level3pause++;
+					}
+				}
+				level3Complete++;
 			}
 			else
 			{
-				hud.update();
-				handler.update();
-				player.update();
+				if(!isBossFight3)
+				{
+					isBossFight3 = true;
+					handler.clearAll();
+ 				}
+			}
+			if(isBossFight3 && bossDisplay3>=200)
+			{
+				if(HUD.HEALTH<=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					handler.clearAll();
+					hud.update();
+					level3pause = 0;
+					isBossFight3 = false;
+					level3Complete = 0;
+					HUD.EXPLODERHEALTH = 20;
+				}
+				else
+				{
+					if(level3pause>=500)
+					{
+						hud.update();
+						handler.update();
+						player.update();
+						spawner.update();
+						if(gunStop>=50 && !isShooting)
+						{
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;
+							gunStop = 0;
+						}
+						else gunStop++;	
+					}
+					else
+					{
+						hud.update();
+						level3pause++;
+					}
+				}
+				if(HUD.LEVEL3BOSSHEALTH<=0)
+				{
+					isLevel3Complete = true;
+					HUD.LEVEL3BOSSHEALTH = 0;
+					handler.clearAll();
+					hud.update();
+					menu.update();
+					handler.update();
+				}
 			}
 		}
-		else if(gameState == STATE.LEVEL4) {}
+		else if(gameState == STATE.LEVEL4) 
+		{
+			HUD.LEVEL = 4;
+			if((level4Complete < bossFight4) && !(isBossFight4))
+			{
+				if(HUD.HEALTH <=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					handler.clearAll();
+					hud.update();
+					BoomerangEnemy.isThrow = false;
+					ShieldEnemy.once = false;
+					ShieldEnemy.startDamage = false;
+				}
+				else
+				{
+					if(level4pause>=500)
+					{
+						hud.update();
+						handler.update();
+						player.update();
+						spawner.update();
+						if(gunStop>=50 && !isShooting)
+						{
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;
+							gunStop = 0;
+						}
+						else gunStop++;	
+					}
+					else
+					{
+						hud.update();
+						level4pause++;
+					}
+				}
+				level4Complete++;
+			}
+			else
+			{
+				if(!(isBossFight4))
+				{
+					isBossFight4 = true;
+					handler.clearAll();
+				}
+			}
+			if(isBossFight4 && bossDisplay4>=200)
+			{
+				if(HUD.HEALTH<=0)
+				{
+					gameState = STATE.DEADSCREEN;
+					handler.clearAll();
+					hud.update();
+					level4pause = 0;
+					isBossFight4 = false;
+					level4Complete = 0;
+					BoomerangEnemy.isThrow = false;
+					ShieldEnemy.once = false;
+					ShieldEnemy.startDamage = false;
+					//HUD.EXPLODERHEALTH = 20;
+				}
+				else
+				{
+					if(level4pause>=500)
+					{
+						hud.update();
+						handler.update();
+						player.update();
+						spawner.update();
+						if(gunStop>=50 && !isShooting)
+						{
+							if(player.doubleShoot)
+								player.doubleShoot = false;
+							else
+								player.shoot = false;
+							gunStop = 0;
+						}
+						else gunStop++;	
+					}
+					else
+					{
+						hud.update();
+						level4pause++;
+					}
+				}
+				if(HUD.LEVEL4BOSSHEALTH<=0)
+				{
+					isLevel4Complete = true;
+					HUD.LEVEL4BOSSHEALTH = 0;
+					handler.clearAll();
+					hud.update();
+					menu.update();
+					handler.update();
+				}
+			}
+		}
 		else if(gameState == STATE.DEADSCREEN)
 		{
 			hud.update();
@@ -541,8 +806,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.LEVEL2)
 		{	
-			g.setColor(Color.PINK);
-			g.fillRect(0,0,WIDTH,HEIGHT);
+			g.drawImage(level2,0,0,null);
 			player.render(g);
 			if(level2pause>=500)
 			{
@@ -573,21 +837,78 @@ public class Game extends Canvas implements Runnable
 				menu.render(g);
 			}
 		}
+		else if(gameState == STATE.LEVEL3) 
+		{
+			g.drawImage(level3,0,0,null);
+			player.render(g);
+			if(level3pause>=500)
+			{
+				hud.render(g);
+				handler.render(g);
+				levelDisplay.render(g);
+			}
+			else 
+			{
+				levelDisplay.render(g);
+				level3pause++;
+				hud.render(g);
+			}
+			hud.render(g);
+			if(bossDisplay3>=200 && isBossFight3)
+			{
+				hud.render(g);
+				handler.render(g);
+			}
+			else if(isBossFight3)
+			{
+				bossDisplay3++;
+				levelDisplay.render(g);
+			}
+			if(HUD.LEVEL3BOSSHEALTH<=0)
+			{
+				levelDisplay.render(g);
+				menu.render(g);
+			}
+		}
+		else if(gameState == STATE.LEVEL4) 
+		{
+			g.drawImage(level4,0,0,null);
+			player.render(g);
+			if(level4pause>=500)
+			{
+				hud.render(g);
+				handler.render(g);
+				levelDisplay.render(g);
+			}
+			else 
+			{
+				levelDisplay.render(g);
+				level4pause++;
+				hud.render(g);
+			}
+			hud.render(g);
+			if(bossDisplay4>=200 && isBossFight4)
+			{
+				hud.render(g);
+				handler.render(g);
+			}
+			else if(isBossFight4)
+			{
+				bossDisplay4++;
+				levelDisplay.render(g);
+			}
+			if(HUD.LEVEL4BOSSHEALTH<=0)
+			{
+				levelDisplay.render(g);
+				menu.render(g);
+			}
+		}
 		else if(gameState == STATE.UPGRADES)
 		{
-			g.setColor(Color.WHITE);
+			g.setColor(menu.coral);
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			upgrades.render(g);
 		}
-		else if(gameState == STATE.LEVEL3) 
-		{
-			g.setColor(Color.ORANGE);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			hud.render(g);
-			handler.render(g);
-			player.render(g);
-		}
-		else if(gameState == STATE.LEVEL4) {}
 		else if(gameState == STATE.DEADSCREEN)
 		{
 			g.setColor(Color.RED);
@@ -657,7 +978,6 @@ public class Game extends Canvas implements Runnable
 			player.shoot = true;
 			handler.addObject(new WaterBullet(player.getX()+9,player.getY()-25,ID.WaterBullet,handler,texture,-15));			
 			bulletCount++;
-			
 		}
 		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2 && !isBossFight2)
 		{
@@ -672,7 +992,61 @@ public class Game extends Canvas implements Runnable
 			handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
 			doubleBulletCount++;
 		}
-		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500))
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3 && !isShooting && !isBossFight3)
+		{
+			player.shoot = true;
+			isShooting = true;
+			handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+		}
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3 && isBossFight3 && explosiveBulletCount < player.eggCount)
+		{
+			player.doubleShoot = true;
+			handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
+			handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
+			explosiveBulletCount++;
+		}
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL4 && !isShooting && !isBossFight4)
+		{
+			player.doubleShoot = true;
+			isShooting = true;
+			handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
+			handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));		
+		}
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL4 && isBossFight4 && shotgunBulletCount < player.crateCount)
+		{
+			player.shoot = true;
+			handler.addObject(new ShotgunBullet(player.getX()+4,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			handler.addObject(new ShotgunBullet(player.getX()+10,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			shotgunBulletCount++;
+		}
+		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500 || level3pause>=500 || level4pause>=500) && (!isBossFight || !isBossFight2 || !isBossFight3 || !isBossFight4))
+		{
+			if(gameState == STATE.LEVEL1)
+				stateholder = "LEVEL1";
+			else if(gameState == STATE.LEVEL2)
+				stateholder = "LEVEL2";
+			else if(gameState == STATE.LEVEL3)
+				stateholder = "LEVEL3";
+			else if(gameState == STATE.LEVEL4)
+				stateholder = "LEVEL4";
+			gameState = STATE.UPGRADES;
+		}
+		if(key == KeyEvent.VK_SHIFT && (isBossFight || isBossFight2 || isBossFight3) && (bossDisplay>500 || bossDisplay2>200 || bossDisplay3 > 200))
+		{
+			if(gameState == STATE.LEVEL1)
+				stateholder = "LEVEL1";
+			else if(gameState == STATE.LEVEL2)
+				stateholder = "LEVEL2";
+			else if(gameState == STATE.LEVEL3)
+				stateholder = "LEVEL3";
+			else if(gameState == STATE.LEVEL4)
+				stateholder = "LEVEL4";
+			gameState = STATE.UPGRADES;
+		}
+		if(key == KeyEvent.VK_SHIFT  && !(bossDisplay<500 || bossDisplay2<200 || bossDisplay3<200) && (isBossFight || isBossFight2 || isBossFight3))
 		{
 			if(gameState == STATE.LEVEL1)
 				stateholder = "LEVEL1";
@@ -702,6 +1076,18 @@ public class Game extends Canvas implements Runnable
 		{		
 			isShooting = false;
 		}//shoot bullets
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3)
+		{		
+			isShooting = false;
+		}
+//		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3)
+//		{		
+//			isShooting = false;
+//		}
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL4)
+		{		
+			isShooting = false;
+		}
 		//movement(fixes the sticky key problem)
 		if(!keyDown[0] && !keyDown[1])
 		{

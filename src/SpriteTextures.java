@@ -7,7 +7,11 @@ public class SpriteTextures
 	public BufferedImage rightArrowKey, leftArrowKey, space, BossLevel1, waterbucket, bomb;
 	public BufferedImage rightMagmaRock,leftMagmaRock, undergroundEnemy, ruby,diamond;
 	public BufferedImage enemyBullet,rightWizard,leftWizard,freezePotion,throwerEnemy, Bosslevel2,key;
-	public BufferedImage emerald, doubleBullet, bossArrow;
+	public BufferedImage emerald, doubleBullet, bossArrow, pinkGem, healthPotion, healthLogo;
+	public BufferedImage shiftKey, exploderEnemy, rayEnemy, rocketEnemy,rocket,doublePistolPlayer,rayBullet;
+	public BufferedImage healthRefillLogo,explosiveBullet, egg, Bosslevel3, babyDragon,tankEnemy;
+	public BufferedImage boomerangEnemy, tankBullet, shield, shieldEnemy,purpleEmerald, shotgunBullet;
+	public BufferedImage crate, BossLevel4;
 	private SpriteSheet spriteSheet = null;
 	/* This is the constructor that requires the game instance 
 	 * to get the sprite sheet and calls the getTexture */
@@ -50,5 +54,29 @@ public class SpriteTextures
 		emerald = spriteSheet.getImage(3, 4, 32, 32);
 		doubleBullet = spriteSheet.getImage(4, 4, 32, 32);
 		bossArrow = spriteSheet.getImage(5, 4, 32, 32);
+		pinkGem = spriteSheet.getImage(6, 4, 32, 32);
+		healthPotion = spriteSheet.getImage(7, 4, 32, 32);
+		healthLogo = spriteSheet.getImage(8, 4, 32, 32);
+		exploderEnemy = spriteSheet.getImage(1, 5, 32, 32);
+		rayEnemy = spriteSheet.getImage(2, 5, 32, 32);
+		rocketEnemy = spriteSheet.getImage(3, 5, 32, 32);
+		shiftKey = spriteSheet.getImage(4, 5, 32, 32);
+		rocket = spriteSheet.getImage(5, 5, 32, 32);
+		doublePistolPlayer = spriteSheet.getImage(6, 5, 32, 32);
+		rayBullet = spriteSheet.getImage(7, 5, 32, 32);
+		healthRefillLogo = spriteSheet.getImage(8, 5, 32, 32);
+		explosiveBullet = spriteSheet.getImage(1, 6, 32, 32);
+		egg = spriteSheet.getImage(2, 6, 32, 32);
+		Bosslevel3 = spriteSheet.getImage(3, 6, 32, 32);
+		babyDragon = spriteSheet.getImage(4, 6, 32, 32);
+		boomerangEnemy = spriteSheet.getImage(5, 6, 32, 32);
+		tankEnemy = spriteSheet.getImage(6, 6, 32, 32);
+		tankBullet = spriteSheet.getImage(7, 6, 32, 32);
+		shield = spriteSheet.getImage(8, 6, 32, 32);
+		shieldEnemy = spriteSheet.getImage(1, 7, 32, 32);
+		purpleEmerald = spriteSheet.getImage(2, 7, 32, 32);
+		shotgunBullet = spriteSheet.getImage(3, 7, 32, 32);
+		crate = spriteSheet.getImage(4, 7, 32, 32);
+		BossLevel4 = spriteSheet.getImage(5, 7, 32, 32);
 	}
 }

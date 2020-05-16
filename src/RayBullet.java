@@ -1,20 +1,18 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-
-/* This class is for the diamond in the game
- * which the player can collect */
-public class DiamondGem extends GameObject
+/* This is the class for ray bullet for the ray enemy */
+public class RayBullet extends GameObject
 {
 	private double x;
 	private double y;
-	private double xVel;
-	private double yVel;
+	private int yVel;
 	private ID id;
-	private SpriteTextures texture;
 	private ObjectHandler handler;
+	private SpriteTextures texture;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public DiamondGem(double x, double y, ID id, ObjectHandler handler, SpriteTextures texture, int xVel, int yVel) 
+	public RayBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture,int yVel) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -22,32 +20,28 @@ public class DiamondGem extends GameObject
 		this.id = id;
 		this.handler = handler;
 		this.texture = texture;
-		this.xVel = xVel;
 		this.yVel = yVel;
 	}
-	/* This creates a rectangle around the diamond 
+	/* This creates a rectangle around the ray
 	 * which is used to check collision with the player */
 	public Rectangle getRect() 
 	{
-		return new Rectangle((int)x,(int)y,48,48);
+		return new Rectangle((int)x,(int)y,15,10);
 	}
 	/* This method is called 60 times per second and 
-	 * it makes the diamond falls in different directions(this one is faster + rare) */
+	 * it makes the ray fall down */
 	public void update() 
 	{
-		x+=xVel;
 		y+=yVel;
-		if(x<=0 || x>=752) xVel*=-1;
-		if(y>=800)
-		{
+		if(y>840)
 			handler.removeObject(this);
-		}
+		handler.addObject(new Trail((int)x,(int)y,ID.RayBullet,Color.RED,15,250,0.07f,handler));
 	}
 	/* This method is also called 60 times per second 
-	 * and it takes the values and draws the diamonds into the game
+	 * and it takes the values and draws the ray into the game
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.diamond,(int)x,(int)y,48,48,null);
+		g.drawImage(texture.rayBullet,(int)x-2,(int)y+248,20,20,null);
 	}
 }

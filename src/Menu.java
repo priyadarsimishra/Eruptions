@@ -14,14 +14,14 @@ public class Menu extends MouseAdapter
 	private ObjectHandler handler;
 	private Spawn spawner;
 	private SpriteTextures texture;
-	private Color purple = new Color(139,0,139);
-	private Color skyBlue = new Color(0,191,255);
-	private Color lime = new Color(50,205,50);
-	private Color coral = new Color(255,127,80);
-	private Color deepPink = new Color(255,20,147);
-	private Color springGreen = new Color(0,255,127);
-	private Color violet = new Color(238,130,238);
-	private Color lavender = new Color(230,230,250);
+	public Color purple = new Color(139,0,139);
+	public Color skyBlue = new Color(0,191,255);
+	public Color lime = new Color(50,205,50);
+	public Color coral = new Color(255,127,80);
+	public Color deepPink = new Color(255,20,147);
+	public Color springGreen = new Color(0,255,127);
+	public Color violet = new Color(238,130,238);
+	public Color lavender = new Color(230,230,250);
 	public boolean customizeColor = false;
 	public boolean playColor = false;
 	public boolean helpColor = false;
@@ -37,12 +37,17 @@ public class Menu extends MouseAdapter
 	public boolean howtoPlayButtonBACK = false;
 	public boolean howtoPlayButtonMENU = false;
 	public boolean menuButtonLevel1End = false;
-	public boolean nextLevelLevel1End = false;
 	public boolean menuButtonLevel2End = false;
+	public boolean menuButtonLevel3End = false;
+	public boolean menuButtonLevel4End = false;
+	public boolean nextLevelLevel1End = false;
 	public boolean nextLevelLevel2End = false;
+	public boolean nextLevelLevel3End = false;
 	public boolean stopScoreChange1 = false;
 	public boolean stopScoreChange2 = false;	
 	public boolean stopScoreChange3 = false;
+	public boolean stopScoreChange4 = false;
+	public boolean stopScoreChange5 = false;
 	public boolean level1highlight = false;
 	public boolean level2highlight = false;
 	public boolean level3highlight = false;
@@ -114,11 +119,15 @@ public class Menu extends MouseAdapter
 		{
 			//LEVEL 1
 			game.gameState = game.STATE.LEVEL1;
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
 		}
 		else if(contains(mx,my,490,115,261,261) && game.isLevel1Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 2
-			game.gameState = game.STATE.LEVEL2;	
+			game.gameState = game.STATE.LEVEL2;
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
 			HUD.UNDERGROUNDHEALTH = 50;
 			HUD.WIZARDHEALTH = 25;
 			HUD.THROWERHEALTH = 50;
@@ -126,15 +135,20 @@ public class Menu extends MouseAdapter
 			HUD.SPLITHEALTH2 = 25;
 			ThrowerEnemy.giveInfo = true;
 		}
-		else if(contains(mx,my,490,400,261,261) && game.isLevel2Complete && game.gameState == game.STATE.SELECTLEVEL)
+		else if(contains(mx,my,50,400, 261, 261) && game.isLevel2Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 3
 			game.gameState = game.STATE.LEVEL3;	
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
+			//HUD.EXPLODERHEALTH = 20;
 		}
-		else if(contains(mx,my,490,115,261,261) &&  game.isLevel3Complete && game.gameState == game.STATE.SELECTLEVEL)
+		else if(contains(mx,my,490, 400, 261, 261) &&  game.isLevel3Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 4
 			game.gameState = game.STATE.LEVEL4;	
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
 		}
 		else if(contains(mx,my,game.WIDTH/2-370,game.HEIGHT/2+250,740,100) && game.gameState == game.STATE.DEADSCREEN)
 		{
@@ -145,8 +159,12 @@ public class Menu extends MouseAdapter
 		{
 			// END OF LEVEL 1 
 			game.gameState = game.STATE.LEVEL2;
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
 			handler.clearAll();
 			game.isBossFight = false;
+			game.bossDisplay = 0;
+			game.bossDisplay2 = 0;
 			game.player.x = 385;
 			HUD.HEALTH = 100;
 			HUD.SCORE = 0;
@@ -200,7 +218,10 @@ public class Menu extends MouseAdapter
 		}
 		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
+			// END OF LEVEL 2
 			game.gameState = game.STATE.LEVEL3;
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
 			handler.clearAll();
 			game.isBossFight2 = false;
 			game.player.x = 385;
@@ -209,14 +230,49 @@ public class Menu extends MouseAdapter
 			HUD.COUNT = 0;
 			HUD.LEVEL2BOSSHEALTH = 500;
 		}
+		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0)
+		{
+			// END OF LEVEL 3
+			game.gameState = game.STATE.LEVEL4;
+			game.upgrades.box1Row1Cost = 1000;
+			game.upgrades.box2Row1Cost = 2000;
+			handler.clearAll();
+			game.isBossFight3 = false;
+			game.player.x = 385;
+			HUD.HEALTH = 100;
+			HUD.SCORE = 0;
+			HUD.COUNT = 0;
+			HUD.LEVEL3BOSSHEALTH = 550;
+		}
 		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
+			// END OF LEVEL 2
+			game.gameState = game.STATE.MENU;
+		}
+		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0)
+		{
+			// END OF LEVEL 3
+			game.gameState = game.STATE.MENU;
+		}
+		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0)
+		{
+			// END OF LEVEL 4
 			game.gameState = game.STATE.MENU;
 		}
 		else if(game.gameState == game.STATE.LEVEL2 && !stopScoreChange3 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
 			HUD.COUNT = HUD.SCORE;
 			stopScoreChange3 = true;
+		}
+		else if(game.gameState == game.STATE.LEVEL3 && !stopScoreChange4 && HUD.LEVEL3BOSSHEALTH<=0)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange4 = true;
+		}
+		else if(game.gameState == game.STATE.LEVEL4 && !stopScoreChange5 && HUD.LEVEL4BOSSHEALTH<=0)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange5 = true;
 		}
 //		if(stopScoreChange1 || stopScoreChange2)
 //		{
@@ -273,6 +329,12 @@ public class Menu extends MouseAdapter
 		else nextLevelLevel2End = false;
 		if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0) menuButtonLevel2End = true;
 		else menuButtonLevel2End = false;
+		if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0) nextLevelLevel3End = true;
+		else nextLevelLevel3End = false;
+		if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0) menuButtonLevel3End = true;
+		else menuButtonLevel3End = false;
+		if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0) menuButtonLevel4End = true;
+		else menuButtonLevel4End = false;
 		
 	}
 	/* This is the mouseReleased method which is not in use right now */
@@ -301,7 +363,6 @@ public class Menu extends MouseAdapter
 		if(game.gameState == game.STATE.MENU)
 		{
 	        ((Graphics2D)g).setStroke(new BasicStroke(3));
-
 			g.setColor(violet);
 			Font font = new Font("Superpower Synonym",Font.BOLD,180);
 			g.setFont(font);
@@ -794,6 +855,140 @@ public class Menu extends MouseAdapter
 				g.drawImage(texture.doubleBullet,455,475,null);
 				g.drawString("This is now accessible in all levels after", 5, 540);
 				g.drawString("Level "+HUD.LEVEL, 5, 586);
+			}
+		}
+		else if(game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0)
+		{
+			if(LevelDisplay.scoreTime3<=0)
+			{
+				g.setColor(Color.WHITE);
+				Font f = new Font("Superpower Synonym",Font.BOLD,28);
+				g.setFont(f);
+				/* Edit here */
+				if(nextLevelLevel3End) 	g.fillRect(620, 290, 150, 50);
+				else g.drawRect(620, 290, 150, 50);
+				if(nextLevelLevel3End) g.setColor(Color.BLACK);
+				else g.setColor(Color.WHITE);
+				g.drawString("Next Level", 624,325);
+				
+				g.setColor(Color.WHITE);
+				/* Edit here */
+				if(menuButtonLevel3End) g.fillRect(620, 490, 150, 50);
+				else g.drawRect(620, 490, 150, 50);
+				if(menuButtonLevel3End) g.setColor(Color.BLACK);
+				else g.setColor(Color.WHITE);
+				g.drawString("MENU",665,525);
+				g.setColor(Color.WHITE);
+				Font f2 = new Font("Arial",Font.BOLD,40);
+				g.setFont(f2);
+				g.drawString("LEVEL COMPLETED",Game.WIDTH/2-197, Game.HEIGHT/2-160);
+				g.drawLine(2, 250, Game.WIDTH-2, 250);
+				if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 3)
+				{
+					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
+					playerInfo.setPlayerName(Game.NAME);
+					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
+					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setPlayerLevel(HUD.LEVEL);
+					fileUtils.store(playerInfo);
+					storeScoreStop = true;
+				}
+				if(HUD.LEVEL == 3)
+				{
+					//System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+					if(HUD.SCORE == 0)
+					{
+						g.drawString("SCORE: 0",5,295);
+						if(playerInfo != null)
+								g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);
+					}
+					else
+					{
+						g.drawString("SCORE: "+HUD.COUNT,5,295);
+						if(playerInfo != null)
+							g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);							
+					}
+				}
+				g.drawLine(200, 250, 600, 250);
+				g.drawString("Player: "+Game.NAME, 5, 380);
+				g.drawString("Level: "+HUD.LEVEL,5,420);
+				g.setColor(Color.YELLOW);
+				
+				g.drawString("UNLOCK:",5,460);
+				g.setColor(Color.GREEN);
+				Font unlock = new Font("Superpower Synonym",Font.BOLD,30);
+				g.setFont(unlock);
+				g.drawString("You unlocked the explosive bullet", 5, 500);
+				g.drawImage(texture.explosiveBullet,490,475,null);
+				g.drawString("This is now accessible in all levels after", 5, 540);
+				g.drawString("Level "+HUD.LEVEL, 5, 586);
+			}
+		}
+		else if(game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0)
+		{
+			if(LevelDisplay.scoreTime4<=0)
+			{
+				g.setColor(Color.WHITE);
+				Font f = new Font("Superpower Synonym",Font.BOLD,28);
+				g.setFont(f);
+				/* Edit here */
+				if(nextLevelLevel3End) 	g.fillRect(620, 290, 150, 50);
+				else g.drawRect(620, 290, 150, 50);
+				if(nextLevelLevel3End) g.setColor(Color.BLACK);
+				else g.setColor(Color.WHITE);
+				g.drawString("Next Level", 624,325);
+				
+				g.setColor(Color.WHITE);
+				/* Edit here */
+				if(menuButtonLevel4End) g.fillRect(620, 490, 150, 50);
+				else g.drawRect(620, 490, 150, 50);
+				if(menuButtonLevel4End) g.setColor(Color.BLACK);
+				else g.setColor(Color.WHITE);
+				g.drawString("MENU",665,525);
+				g.setColor(Color.WHITE);
+				Font f2 = new Font("Arial",Font.BOLD,40);
+				g.setFont(f2);
+				g.drawString("LEVEL COMPLETED",Game.WIDTH/2-197, Game.HEIGHT/2-160);
+				g.drawLine(2, 250, Game.WIDTH-2, 250);
+				if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 4)
+				{
+					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
+					playerInfo.setPlayerName(Game.NAME);
+					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
+					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setPlayerLevel(HUD.LEVEL);
+					fileUtils.store(playerInfo);
+					storeScoreStop = true;
+				}
+				if(HUD.LEVEL == 4)
+				{
+					//System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+					if(HUD.SCORE == 0)
+					{
+						g.drawString("SCORE: 0",5,295);
+						if(playerInfo != null)
+								g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);
+					}
+					else
+					{
+						g.drawString("SCORE: "+HUD.COUNT,5,295);
+						if(playerInfo != null)
+							g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);							
+					}
+				}
+				g.drawLine(200, 250, 600, 250);
+				g.drawString("Player: "+Game.NAME, 5, 380);
+				g.drawString("Level: "+HUD.LEVEL,5,420);
+				g.setColor(Color.YELLOW);
+				
+				g.drawString("UNLOCK:",5,460);
+				g.setColor(Color.GREEN);
+				Font unlock = new Font("Superpower Synonym",Font.BOLD,30);
+				g.setFont(unlock);
+				g.drawString("You unlocked the shotgun bullet", 5, 500);
+				g.drawImage(texture.shotgunBullet,490,475,null);
+				g.drawString("You completed the game,how did you escape", 5, 540);
+				g.drawString("Congratulations", 5, 586);
 			}
 		}
 	}

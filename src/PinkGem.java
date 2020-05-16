@@ -1,20 +1,20 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.Random;
 
-/* This class is for the diamond in the game
- * which the player can collect */
-public class DiamondGem extends GameObject
+/* This is class is for the PinkGem in LEVEL 3 */
+public class PinkGem extends GameObject
 {
 	private double x;
 	private double y;
-	private double xVel;
-	private double yVel;
 	private ID id;
-	private SpriteTextures texture;
 	private ObjectHandler handler;
+	private SpriteTextures texture;
+	private Random r;
+	private int yVel;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public DiamondGem(double x, double y, ID id, ObjectHandler handler, SpriteTextures texture, int xVel, int yVel) 
+	public PinkGem(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, int yVel) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -22,32 +22,28 @@ public class DiamondGem extends GameObject
 		this.id = id;
 		this.handler = handler;
 		this.texture = texture;
-		this.xVel = xVel;
 		this.yVel = yVel;
 	}
-	/* This creates a rectangle around the diamond 
+	/* This creates a rectangle around the PinkGem 
 	 * which is used to check collision with the player */
 	public Rectangle getRect() 
 	{
-		return new Rectangle((int)x,(int)y,48,48);
+		return new Rectangle((int)x,(int)y,32,32);
 	}
 	/* This method is called 60 times per second and 
-	 * it makes the diamond falls in different directions(this one is faster + rare) */
+	 * it makes the PinkGem fall down, y value of the game screen */
 	public void update() 
 	{
-		x+=xVel;
 		y+=yVel;
-		if(x<=0 || x>=752) xVel*=-1;
 		if(y>=800)
-		{
 			handler.removeObject(this);
-		}
 	}
 	/* This method is also called 60 times per second 
-	 * and it takes the values and draws the diamonds into the game
+	 * and it takes the values and draws the PinkGems into the game
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.diamond,(int)x,(int)y,48,48,null);
+		g.drawImage(texture.pinkGem,(int)x,(int)y,null);
 	}
+	
 }
