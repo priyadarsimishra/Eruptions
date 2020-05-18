@@ -67,10 +67,10 @@ public class Game extends Canvas implements Runnable
 	private int explosiveBulletCount = 0;
 	private int doubleBulletCount = 0;
 	private int shotgunBulletCount = 0;
-	public int bossFight = 2000;
-	public int bossFight2 = 20000;
-	public int bossFight3 = 2000;
-	public int bossFight4 = 2000;
+	public int bossFight = 200;
+	public int bossFight2 = 200;
+	public int bossFight3 = 200;
+	public int bossFight4 = 200;
 	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
 	public boolean isBossFight2 = false;
@@ -286,9 +286,9 @@ public class Game extends Canvas implements Runnable
 			hud.displaylev3 = 150;
 			hud.displaylev4 = 150;
 			/* Change here when level progress has been implemented */
-			isLevel1Complete = true;
-			isLevel2Complete = true;
-			isLevel3Complete = true;
+//			isLevel1Complete = true;
+//			isLevel2Complete = true;
+//			isLevel3Complete = true;
 			/* Change here when level progress has been implemented */
 			player.changeSpeed = false;
 			player.changeBack = 20;
@@ -1054,7 +1054,11 @@ public class Game extends Canvas implements Runnable
 		{
 			player.shoot = true;
 			isShooting = true;
-			handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+			if(upgrades.isDualPistolBullet) handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
+			else if(upgrades.isWaterBullet) handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
+			else if(upgrades.isShotgunBullet) handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			else handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+			//handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3 && isBossFight3 && explosiveBulletCount < player.eggCount)
 		{
@@ -1080,7 +1084,7 @@ public class Game extends Canvas implements Runnable
 			handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
 			shotgunBulletCount++;
 		}
-		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500 || level3pause>=500 || level4pause>=500) && (!isBossFight || !isBossFight2 || !isBossFight3 || !isBossFight4))
+		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500 || level3pause>=500 || level4pause>=500) && (!isBossFight || !isBossFight2 || !isBossFight3 || !isBossFight4) && !(HUD.LEVEL1BOSSHEALTH<=0 || HUD.LEVEL2BOSSHEALTH<=0 || HUD.LEVEL3BOSSHEALTH<=0 || HUD.LEVEL4BOSSHEALTH<=0))
 		{
 			if(gameState == STATE.LEVEL1)
 				stateholder = "LEVEL1";

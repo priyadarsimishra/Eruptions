@@ -60,7 +60,7 @@ public class Upgrades extends MouseAdapter
 	public boolean isPistol = false;
 	public boolean isShotgun = false;
 	public boolean isDualPistol = false;
-	public boolean isSniper = false;
+	public boolean isSniper = false; 
 	/* This constructor requires some parameters that render 
 	 * objects from sprite sheet and the handler to make changes*/
 	public Upgrades(ObjectHandler handler, SpriteTextures texture)
@@ -299,180 +299,182 @@ public class Upgrades extends MouseAdapter
 			if(Game.stateholder.equalsIgnoreCase("Level4"))
 				Game.gameState = Game.STATE.LEVEL4;
 		}
-		if(contains(mx,my,150, 200, 110, 110) && !firstRow1SquareClicked)
+		if(Game.gameState == Game.STATE.UPGRADES)
 		{
-			firstRow1SquareClicked = true;
-			if(HUD.SCORE >= box1Row1Cost)
+			if(contains(mx,my,150, 200, 110, 110) && !firstRow1SquareClicked)
 			{
-				if(HUD.HEALTH<=70)
+				firstRow1SquareClicked = true;
+				if(HUD.SCORE >= box1Row1Cost)
 				{
-					HUD.HEALTH+=30;
-					HUD.SCORE-=box1Row1Cost;
-					box1Row1Cost+=500;
-				}
-				else if(HUD.HEALTH>70)
-					SquareRED = true;
-			}
-			else
-				SquareRED = true;
-		}
-		if(contains(mx,my,320, 200, 111, 111) && !secondRow1SquareClicked)
-		{
-			secondRow1SquareClicked = true;
-			if(HUD.SCORE>=box2Row1Cost)
-			{
-				HUD.HEALTH = 100;
-				HUD.SCORE-=box2Row1Cost;
-				box2Row1Cost+=500;
-			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,490, 200, 111, 111) && !thirdRow1SquareClicked)
-		{
-			thirdRow1SquareClicked = true;
-			if(HUD.SCORE>=box3Row1Cost)
-			{
-				//Here is where you put the impact of the upgrade
-				HUD.SCORE-=box3Row1Cost;
-				box3Row1Cost+=500;
-			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,660, 200, 111, 111) && !fourthRow1SquareClicked)
-		{
-			fourthRow1SquareClicked = true;
-			if(HUD.SCORE>=box4Row1Cost)
-			{
-				//Here is where you put the impact of the upgrade
-				HUD.SCORE-=box4Row1Cost;
-				box4Row1Cost+=500;
-			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,150, 380, 111, 111) && !firstRow2SquareClicked)
-		{
-			firstRow2SquareClicked = true;
-			if(!(Game.stateholder.equalsIgnoreCase("Level1")))
-			{
-				if(HUD.SCORE>=box1Row2Cost)
-				{
-					//Here is where you put the impact of the upgrade
-					isSplitBullet = false;
-					isDualPistolBullet = false;
-					isShotgunBullet = false;
-					isWaterBullet = true;
-					HUD.SCORE-=box1Row2Cost;
-					//box1Row2Cost+=500;
-				}
-				else SquareRED = true;
-			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,320, 380, 111, 111) && !secondRow2SquareClicked)
-		{
-			secondRow2SquareClicked = true;	
-			if(!(Game.stateholder.equalsIgnoreCase("Level1")))
-			{
-				secondRow2SquareClicked = true;	
-				if(HUD.SCORE>=box2Row2Cost)
-				{
-					//Here is where you put the impact of the upgrade
-					isDualPistolBullet = false;
-					isShotgunBullet = false;
-					isWaterBullet = false;
-					isSplitBullet = true;
-					HUD.SCORE-=box2Row2Cost;
-					//box2Row2Cost+=500;
+					if(HUD.HEALTH<=70)
+					{
+						HUD.HEALTH+=30;
+						HUD.SCORE-=box1Row1Cost;
+						box1Row1Cost+=500;
+					}
+					else if(HUD.HEALTH>70)
+						SquareRED = true;
 				}
 				else
 					SquareRED = true;
 			}
-			else SquareRED = true;
-		
-		}
-		if(contains(mx,my,490, 380, 111, 111) && !thirdRow2SquareClicked)
-		{
-			thirdRow2SquareClicked = true;
-			if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+			if(contains(mx,my,320, 200, 111, 111) && !secondRow1SquareClicked)
 			{
-				if(HUD.SCORE>=box3Row2Cost)
+				secondRow1SquareClicked = true;
+				if(HUD.SCORE>=box2Row1Cost)
 				{
-					//Here is where you put the impact of the upgrade
-					isShotgunBullet = false;
-					isWaterBullet = false;
-					isSplitBullet = false;
-					isDualPistolBullet = true;
-					HUD.SCORE-=box3Row2Cost;
-					//box3Row2Cost+=500;
+					HUD.HEALTH = 100;
+					HUD.SCORE-=box2Row1Cost;
+					box2Row1Cost+=500;
 				}
 				else SquareRED = true;
 			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,660, 380, 111, 111) && !fourthRow2SquareClicked)
-		{
-			fourthRow2SquareClicked = true;
-			if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+			if(contains(mx,my,490, 200, 111, 111) && !thirdRow1SquareClicked)
 			{
-				if(HUD.SCORE>=box4Row2Cost)
+				thirdRow1SquareClicked = true;
+				if(HUD.SCORE>=box3Row1Cost)
 				{
 					//Here is where you put the impact of the upgrade
-					isWaterBullet = false;
-					isSplitBullet = false;
-					isDualPistolBullet = false;
-					isShotgunBullet = true;
-					HUD.SCORE-=box4Row2Cost;
-					box4Row2Cost+=500;
+					HUD.SCORE-=box3Row1Cost;
+					box3Row1Cost+=500;
 				}
 				else SquareRED = true;
 			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,150, 560, 111, 111) && !firstRow3SquareClicked)
-		{
-			firstRow3SquareClicked = true;
-			if(HUD.SCORE>=box1Row3Cost)
+			if(contains(mx,my,660, 200, 111, 111) && !fourthRow1SquareClicked)
 			{
-				//Here is where you put the impact of the upgrade
-				HUD.SCORE-=box1Row3Cost;
-				box1Row3Cost+=500;
+				fourthRow1SquareClicked = true;
+				if(HUD.SCORE>=box4Row1Cost)
+				{
+					//Here is where you put the impact of the upgrade
+					HUD.SCORE-=box4Row1Cost;
+					box4Row1Cost+=500;
+				}
+				else SquareRED = true;
 			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,320, 560, 111, 111) && !secondRow3SquareClicked)
-		{
-			secondRow3SquareClicked = true;
-			if(HUD.SCORE>=box2Row3Cost)
+			if(contains(mx,my,150, 380, 111, 111) && !firstRow2SquareClicked)
 			{
-				//Here is where you put the impact of the upgrade
-				HUD.SCORE-=box2Row3Cost;
-				box2Row3Cost+=500;
+				firstRow2SquareClicked = true;
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				{
+					if(HUD.SCORE>=box1Row2Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isSplitBullet = false;
+						isDualPistolBullet = false;
+						isShotgunBullet = false;
+						isWaterBullet = true;
+						HUD.SCORE-=box1Row2Cost;
+						//box1Row2Cost+=500;
+					}
+					else SquareRED = true;
+				}
+				else SquareRED = true;
 			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,490, 560, 111, 111) && !thirdRow3SquareClicked)
-		{
-			thirdRow3SquareClicked = true;
-			if(HUD.SCORE>=box3Row3Cost)
+			if(contains(mx,my,320, 380, 111, 111) && !secondRow2SquareClicked)
 			{
-				//Here is where you put the impact of the upgrade
-				HUD.SCORE-=box3Row3Cost;
-				box3Row3Cost+=500;
+				secondRow2SquareClicked = true;	
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				{
+					secondRow2SquareClicked = true;	
+					if(HUD.SCORE>=box2Row2Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isDualPistolBullet = false;
+						isShotgunBullet = false;
+						isWaterBullet = false;
+						isSplitBullet = true;
+						HUD.SCORE-=box2Row2Cost;
+						//box2Row2Cost+=500;
+					}
+					else
+						SquareRED = true;
+				}
+				else SquareRED = true;
+			
 			}
-			else SquareRED = true;
-		}
-		if(contains(mx,my,660, 560, 111, 111) && !fourthRow3SquareClicked)
-		{
-			fourthRow3SquareClicked = true;
-			if(HUD.SCORE>=box4Row3Cost)
+			if(contains(mx,my,490, 380, 111, 111) && !thirdRow2SquareClicked)
 			{
-				//Here is where you put the impact of the upgrade
-				HUD.SCORE-=box4Row3Cost;
-				box4Row3Cost+=500;
+				thirdRow2SquareClicked = true;
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				{
+					if(HUD.SCORE>=box3Row2Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isShotgunBullet = false;
+						isWaterBullet = false;
+						isSplitBullet = false;
+						isDualPistolBullet = true;
+						HUD.SCORE-=box3Row2Cost;
+						//box3Row2Cost+=500;
+					}
+					else SquareRED = true;
+				}
+				else SquareRED = true;
 			}
-			else SquareRED = true;
+			if(contains(mx,my,660, 380, 111, 111) && !fourthRow2SquareClicked)
+			{
+				fourthRow2SquareClicked = true;
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				{
+					if(HUD.SCORE>=box4Row2Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isWaterBullet = false;
+						isSplitBullet = false;
+						isDualPistolBullet = false;
+						isShotgunBullet = true;
+						HUD.SCORE-=box4Row2Cost;
+						box4Row2Cost+=500;
+					}
+					else SquareRED = true;
+				}
+				else SquareRED = true;
+			}
+			if(contains(mx,my,150, 560, 111, 111) && !firstRow3SquareClicked)
+			{
+				firstRow3SquareClicked = true;
+				if(HUD.SCORE>=box1Row3Cost)
+				{
+					//Here is where you put the impact of the upgrade
+					HUD.SCORE-=box1Row3Cost;
+					box1Row3Cost+=500;
+				}
+				else SquareRED = true;
+			}
+			if(contains(mx,my,320, 560, 111, 111) && !secondRow3SquareClicked)
+			{
+				secondRow3SquareClicked = true;
+				if(HUD.SCORE>=box2Row3Cost)
+				{
+					//Here is where you put the impact of the upgrade
+					HUD.SCORE-=box2Row3Cost;
+					box2Row3Cost+=500;
+				}
+				else SquareRED = true;
+			}
+			if(contains(mx,my,490, 560, 111, 111) && !thirdRow3SquareClicked)
+			{
+				thirdRow3SquareClicked = true;
+				if(HUD.SCORE>=box3Row3Cost)
+				{
+					//Here is where you put the impact of the upgrade
+					HUD.SCORE-=box3Row3Cost;
+					box3Row3Cost+=500;
+				}
+				else SquareRED = true;
+			}
+			if(contains(mx,my,660, 560, 111, 111) && !fourthRow3SquareClicked)
+			{
+				fourthRow3SquareClicked = true;
+				if(HUD.SCORE>=box4Row3Cost)
+				{
+					//Here is where you put the impact of the upgrade
+					HUD.SCORE-=box4Row3Cost;
+					box4Row3Cost+=500;
+				}
+				else SquareRED = true;
+			}
 		}
-		
 	}
 	/* This method is part of MouseListener and this
 	 * is required to make sure you buy items in the shop 

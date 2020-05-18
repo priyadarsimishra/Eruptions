@@ -76,7 +76,6 @@ public class ShotgunBullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.setColor(Color.BLACK);
 		g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,5,8,null);
 	}
 	/* These two methods are not needed(yet) but since 

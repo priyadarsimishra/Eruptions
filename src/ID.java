@@ -49,7 +49,6 @@ public enum ID
 	TankBullet,
 	TankBulletTrail,
 	ShotgunBullet,
-	ShotgunBulletTrail,
 	RubyGem,
 	DiamondGem,
 	Emerald,

@@ -121,7 +121,7 @@ public class Level4Boss extends GameObject
 				yVel = -10;
 			
 		}
-		if(HUD.LEVEL3BOSSHEALTH<=0)
+		if(HUD.LEVEL4BOSSHEALTH<=0)
 		{
 			handler.removeObject(this);
 			rage = false;

@@ -366,10 +366,10 @@ public class LevelDisplay
 				g.setColor(springGreen);
 				if((int)Level3Boss.x+80+200>=Game.WIDTH)
 				{
-					g.drawString("+1000",(int)Level4Boss.x-20,Game.HEIGHT/2+20);
+					g.drawString("+3000",(int)Level4Boss.x-20,Game.HEIGHT/2+20);
 				}
 				else				
-					g.drawString("+1000",(int)Level4Boss.x+80,(int)Level4Boss.y+200);
+					g.drawString("+3000",(int)Level4Boss.x+80,(int)Level4Boss.y+200);
 				scoreTime4--;
 			}
 		}

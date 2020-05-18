@@ -103,23 +103,23 @@ public class HUD
 			HEALTH = 100;
 			LEVEL1BOSSHEALTH = 200;
 		}
-//		if(game.isBossFight)
-//		{
-//			LEVEL1BOSSHEALTH-=1;
-//		}
-//		
-//		if(game.isBossFight2)
-//		{
-//			LEVEL2BOSSHEALTH-=0.01;
-//		}
-//		if(game.isBossFight3)
-//		{
-//			LEVEL3BOSSHEALTH-=2;
-//		}
-//		if(game.isBossFight4)
-//		{
-//			LEVEL4BOSSHEALTH-=2;
-//		}
+		if(game.isBossFight)
+		{
+			LEVEL1BOSSHEALTH-=1;
+		}
+		
+		if(game.isBossFight2)
+		{
+			LEVEL2BOSSHEALTH-=2;
+		}
+		if(game.isBossFight3)
+		{
+			LEVEL3BOSSHEALTH-=2;
+		}
+		if(game.isBossFight4)
+		{
+			LEVEL4BOSSHEALTH-=2;
+		}
 		if(SCORE>=HIGHSCORE)
 		{
 			HIGHSCORE = SCORE;
@@ -201,7 +201,7 @@ public class HUD
 		//LEVEL 4 END PAGE
 		if(LEVEL4BOSSHEALTH<=0 && !addScore4)
 		{
-			SCORE+=1000;
+			SCORE+=3000;
 			addScore4 = true;
 		}
 		if(SCORE == COUNT && HUD.LEVEL4BOSSHEALTH<=0)

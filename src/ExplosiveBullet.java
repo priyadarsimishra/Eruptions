@@ -45,7 +45,6 @@ public class ExplosiveBullet extends GameObject
 		y+=yVel;
 		if(y<=-36)
 			handler.removeObject(this);
-		//checkCollision();
 	}
 	/* This method is also called 60 times per second 
 	 * and it takes the values and draws the bullet into the game
