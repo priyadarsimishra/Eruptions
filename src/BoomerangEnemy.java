@@ -52,7 +52,7 @@ public class BoomerangEnemy extends GameObject
 			xVel = 0;
 			yVel = 0;
 			if(stopSpawn)
-				handler.addObject(new Boomerang(x+14,y,ID.Boomerang,handler,texture,r.nextInt(18)+8));
+				handler.addObject(new Boomerang(x+14,y,ID.Boomerang,handler,texture,r.nextInt(5)+12));
 			stopSpawn = false;
 			stopMove = 120;
 		}
@@ -88,7 +88,10 @@ public class BoomerangEnemy extends GameObject
 		icon = new ImageIcon(getClass().getResource("/Explosion.gif"));
 		explosion = icon.getImage();
 		g.setColor(Color.YELLOW);
-		g.drawImage(texture.boomerangEnemy,(int)x,(int)y,45,45,null);
+		if(xVel <=0 )
+			g.drawImage(texture.boomerangEnemyLeft,(int)x,(int)y,45,45,null);
+		else
+			g.drawImage(texture.boomerangEnemyRight,(int)x,(int)y,45,45,null);
 		if(isExplode)
 		{
 			if(imageExplosionTime >= 200)

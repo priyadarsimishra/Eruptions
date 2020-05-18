@@ -26,6 +26,7 @@ public enum ID
 	FireballTrail,
 	MagmaRockTrail,
 	UnderGroundEnemy,
+	UnderGroundEnemyTrail,
 	Wizard,
 	ThrowerEnemy,
 	GoldenRod,

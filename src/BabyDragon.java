@@ -17,7 +17,7 @@ public class BabyDragon extends GameObject
 	private int xVel = 6;
 	private int yVel = -3;
 	private boolean stopMove = false;
-	public int dragonFire = 100;
+	public int dragonFire = 20;
 	private Random r = new Random();
 	private Image explosion;
 	private ImageIcon icon;
@@ -62,8 +62,8 @@ public class BabyDragon extends GameObject
 		}
 		if(dragonFire<=0)
 		{
-			handler.addObject(new EnemyBullet((int)x,(int)y,3,ID.EnemyBullet,handler,texture));
-			dragonFire = 100;
+			handler.addObject(new EnemyBullet((int)x,(int)y,5,ID.EnemyBullet,handler,texture));
+			dragonFire = 20;
 		}
 		else dragonFire--;
 		if(x<=0 || x>=768) xVel*=-1;

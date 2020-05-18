@@ -48,14 +48,6 @@ public class ShotgunBullet extends GameObject
 		for(int i = 0; i<handler.object.size();i++)
 		{
 			GameObject obj = handler.object.get(i);
-			if(obj.id == ID.Level4Boss)
-			{
-				if(getRect().intersects(obj.getRect()))
-				{
-					handler.removeObject(this);
-					HUD.LEVEL2BOSSHEALTH-=5;
-				}
-			}
 			if(obj.id == ID.Level4BossInvisibleTrail)
 			{
 				if(getRect().intersects(obj.getRect()))
@@ -69,7 +61,7 @@ public class ShotgunBullet extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.LEVEL4BOSSHEALTH-=5;
+					HUD.LEVEL4BOSSHEALTH-=7;
 					handler.removeObject(this);
 					if(HUD.LEVEL4BOSSHEALTH<=0)
 					{

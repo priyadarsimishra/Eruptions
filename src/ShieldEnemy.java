@@ -24,7 +24,7 @@ public class ShieldEnemy extends GameObject
 	private int imageExplosionTime = 0;
 	public static boolean startDamage = false;
 	public static boolean once = false;
-	private int fireRate = 80;
+	private int fireRate = 30;
 	/* This is the constructor for the shield Enemy
 	 * and it requires the same parameter as other game objects */
 	public ShieldEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture) 
@@ -69,7 +69,7 @@ public class ShieldEnemy extends GameObject
 		if(fireRate<=0)
 		{
 			handler.addObject(new EnemyBullet(x+15,y,r.nextInt(15)+8,ID.EnemyBullet,handler,texture));
-			fireRate = 50;
+			fireRate = 30;
 		}
 		else fireRate--;
 		checkCollision();

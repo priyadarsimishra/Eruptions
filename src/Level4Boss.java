@@ -31,6 +31,8 @@ public class Level4Boss extends GameObject
 	private ImageIcon icon;
 	private Image fire;
 	private ImageIcon icon2;
+	private Image greenSmoke;
+	private ImageIcon icon3;
 	private double colX;
 	private double colY;
 	public static boolean isInvisible = false;
@@ -38,9 +40,11 @@ public class Level4Boss extends GameObject
 	private int change = 200;
 	public static double spawnX,spawnY;
 	private int level4bulletTime = 100;
-	private int exploderTime = 200;
+	private int exploderTime = 500;
 	private int rayTime = 450;
 	public static boolean makeOne = false;
+	private Color kingInvisibleColor = new Color(255,0,0,1);
+	public static boolean isAlive = false;
 	/* This is the constructor for the boss which requires
 	 * almost the same parameters as the other game Objects */
 	public Level4Boss(double x, double y, ID id, SpriteTextures texture, ObjectHandler handler, int yVel)
@@ -145,13 +149,12 @@ public class Level4Boss extends GameObject
 		
 		if(!makeOne)
 		{
-			handler.addObject(new Rocket(Level4Boss.x+200,Level4Boss.y+250,ID.Rocket,handler,texture,-1));
+			handler.addObject(new Rocket(Level4Boss.x+200,Level4Boss.y+250,ID.Rocket,handler,texture,-1.5));
 			makeOne = true;
 		}
 		if(level4bulletTime <=0 && !rage && Rocket.destroyed)
 		{
-			handler.addObject(new Rocket(Level4Boss.x+5,Level4Boss.y+250,ID.Rocket,handler,texture,-1));
-			handler.addObject(new Rocket(Level4Boss.x+200,Level4Boss.y+250,ID.Rocket,handler,texture,-1));
+			handler.addObject(new Rocket(Level4Boss.x+200,Level4Boss.y+250,ID.Rocket,handler,texture,-1.5));
 			level4bulletTime = 200;
 			Rocket.destroyed = false;
 		}
@@ -162,13 +165,27 @@ public class Level4Boss extends GameObject
 			handler.addObject(new RayBullet(Level4Boss.x+5,Level4Boss.y+250,ID.RayBullet,handler,texture,speed));
 			handler.addObject(new RayBullet(Level4Boss.x+200,Level4Boss.y+250,ID.RayBullet,handler,texture,speed));
 			rayTime = 500;
-		}
+		}			
 		else 
 		{
 			rayTime--;
 		}
-		if(HUD.EXPLODERHEALTH<=0)
-			Spawn.exploderEnemyTime = true;
+		if(exploderTime<=0)
+		{
+			if(!isAlive)
+				HUD.EXPLODERHEALTH = 20;
+			if(HUD.EXPLODERHEALTH>0)
+			{
+				LevelDisplay.exploderTime = 200;
+				HUD.EXPLODERHEALTH = 20;
+				handler.addObject(new ExploderEnemy(Level4Boss.x+50,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5));
+				exploderTime = 550;
+				isAlive = true;
+			}
+		}
+		else exploderTime--;
+//		if(HUD.EXPLODERHEALTH<=0)
+//			Spawn.exploderEnemyTime = true;
 		checkCollision();
 	}
 	/* This method also runs 60 times per second and 
@@ -179,14 +196,17 @@ public class Level4Boss extends GameObject
 		explosion = icon.getImage();
 		icon2 = new ImageIcon(getClass().getResource("/fire.gif"));
 		fire = icon2.getImage();
+		icon3 = new ImageIcon(getClass().getResource("/greenSmoke.gif"));
+		greenSmoke = icon3.getImage();
 		if(!isInvisible)
 		{
-			g.drawImage(fire,(int)x,(int)y-85,250,100,null);
+			g.drawImage(fire,(int)x,(int)y-70,250,100,null);
 			g.drawImage(texture.BossLevel4,(int)x,(int)y,250,250,null);
+			g.drawImage(greenSmoke,(int)x+65,(int)y+90,120,120,null);
 		}
 		else
 		{
-			handler.addObject(new Trail((int)x,(int)y,ID.Level4BossInvisibleTrail,Color.RED,250,250,0.07f,handler));
+			handler.addObject(new Trail((int)x,(int)y,ID.Level4BossInvisibleTrail,kingInvisibleColor,250,250,0.07f,handler));
 		}
 		if(isExplode)
 		{

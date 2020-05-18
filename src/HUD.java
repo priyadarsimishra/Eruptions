@@ -31,6 +31,10 @@ public class HUD
 	public static int SHIELDENEMYHEALTH = 40;
  	private Color lightPurple = new Color(141, 112, 255);
 	public Color deepPink = new Color(255,20,147);
+	private Color limeChiffon = new Color(255,250,205);
+	public Color aqua = new Color(0,255,255);
+	public Color azure = new Color(240,255,255);
+	private Color springGreen = new Color(0,255,127);
 	private int sector = 0;
 	private int level = 0;
 	public int display = 150;
@@ -242,36 +246,38 @@ public class HUD
 	{
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && !game.isBossFight2)
 		{
-			if(UnderGroundEnemy.show)
+			if(UnderGroundEnemy.show && !(UNDERGROUNDHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
-				g.setColor(Color.RED);
-				g.fillRect((int)UnderGroundEnemy.x+10,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
+				g.fillRect((int)UnderGroundEnemy.x+7,(int)UnderGroundEnemy.y-20,50+sector/4,10);
+				g.setColor(limeChiffon);
+				g.fillRect((int)UnderGroundEnemy.x+7,(int)UnderGroundEnemy.y-20,UNDERGROUNDHEALTH*2,10);
 			}
-			
-			g.setColor(Color.GRAY);
-			g.fillRect((int)Wizard.x-10, (int)Wizard.y-15, WIZARDHEALTH, 10);
-			g.setColor(Color.ORANGE);
-			g.fillRect((int)Wizard.x-10, (int)Wizard.y-15, WIZARDHEALTH, 10);
-			if(!(ThrowerEnemy.giveInfo))
+			if(!(WIZARDHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)ThrowerEnemy.x-4, (int)ThrowerEnemy.y-15, THROWERHEALTH, 10);
+				g.fillRect((int)Wizard.x-10, (int)Wizard.y-15, 50+sector/4, 10);
+				g.setColor(Color.ORANGE);
+				g.fillRect((int)Wizard.x-10, (int)Wizard.y-15, WIZARDHEALTH, 10);
+			}
+			if(!(ThrowerEnemy.giveInfo) && !(THROWERHEALTH<=25))
+			{
+				g.setColor(Color.GRAY);
+				g.fillRect((int)ThrowerEnemy.x-4, (int)ThrowerEnemy.y-15, 50+sector/4, 10);
 				g.setColor(Color.BLUE);
 				g.fillRect((int)ThrowerEnemy.x-4, (int)ThrowerEnemy.y-15, THROWERHEALTH, 10);
 			}			
-			if(SplitEnemy1.show && THROWERHEALTH<=25)
+			if(SplitEnemy1.show && THROWERHEALTH<=25 && !(SPLITHEALTH1<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, SPLITHEALTH1, 10);
+				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, 25+sector/4, 10);
 				g.setColor(Color.YELLOW);
 				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, SPLITHEALTH1, 10);
 			}
-			if(SplitEnemy2.show && THROWERHEALTH<=25)
+			if(SplitEnemy2.show && THROWERHEALTH<=25 && !(SPLITHEALTH2<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, SPLITHEALTH2, 10);
+				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, 25+sector/4, 10);
 				g.setColor(Color.YELLOW);
 				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, SPLITHEALTH2, 10);
 			}
@@ -295,23 +301,23 @@ public class HUD
 			if(!(EXPLODERHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)ExploderEnemy.x,(int)ExploderEnemy.y-20,EXPLODERHEALTH*2,10);
-				g.setColor(Color.BLACK);
+				g.fillRect((int)ExploderEnemy.x,(int)ExploderEnemy.y-20,40+sector/4,10);
+				g.setColor(aqua);
 				g.fillRect((int)ExploderEnemy.x,(int)ExploderEnemy.y-20,EXPLODERHEALTH*2,10);
 			}
 			if(!(RAYHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)RayEnemy.x-2,(int)RayEnemy.y-20,RAYHEALTH*2,10);
-				g.setColor(lightPurple);
+				g.fillRect((int)RayEnemy.x-2,(int)RayEnemy.y-20,60+sector,10);
+				g.setColor(limeChiffon);
 				g.fillRect((int)RayEnemy.x-2,(int)RayEnemy.y-20,RAYHEALTH*2,10);
 			}
 			if(!(ROCKETHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)RocketEnemy.x-2,(int)RocketEnemy.y-20,ROCKETHEALTH,10);
-				g.setColor(deepPink);
-				g.fillRect((int)RocketEnemy.x-2,(int)RocketEnemy.y-20,ROCKETHEALTH,10);
+				g.fillRect((int)RocketEnemy.x-4,(int)RocketEnemy.y-20,60+sector/4,10);
+				g.setColor(Color.BLACK);
+				g.fillRect((int)RocketEnemy.x-4,(int)RocketEnemy.y-20,ROCKETHEALTH,10);
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL3 && game.level3pause>=500 && game.isBossFight3)
@@ -331,9 +337,9 @@ public class HUD
    			if(BABYDRAGONHEALTH > 0)
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)BabyDragon.x+2, (int)BabyDragon.y-15, BABYDRAGONHEALTH*2, 10);
-				g.setColor(Color.BLACK);
-				g.fillRect((int)BabyDragon.x+2, (int)BabyDragon.y-15, BABYDRAGONHEALTH*2, 10);
+				g.fillRect((int)BabyDragon.x+8, (int)BabyDragon.y-15, 30+sector/2, 10);
+				g.setColor(aqua);
+				g.fillRect((int)BabyDragon.x+8, (int)BabyDragon.y-15, BABYDRAGONHEALTH*2, 10);
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL4 && game.level4pause>=500 && !game.isBossFight4)
@@ -341,22 +347,22 @@ public class HUD
 			if(!(TANKHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)TankEnemy.x,(int)TankEnemy.y-20,TANKHEALTH,10);
+				g.fillRect((int)TankEnemy.x,(int)TankEnemy.y-20,60+sector/4,10);
 				g.setColor(deepPink);
 				g.fillRect((int)TankEnemy.x,(int)TankEnemy.y-20,TANKHEALTH,10);
 			}
 			if(!(BOOMERANGHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)BoomerangEnemy.x+2,(int)BoomerangEnemy.y-20,BOOMERANGHEALTH,10);
+				g.fillRect((int)BoomerangEnemy.x+2,(int)BoomerangEnemy.y-20,40+sector/4,10);
 				g.setColor(lightPurple);
 				g.fillRect((int)BoomerangEnemy.x+2,(int)BoomerangEnemy.y-20,BOOMERANGHEALTH,10);
 			}
 			if(!(SHIELDENEMYHEALTH<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)ShieldEnemy.x,(int)ShieldEnemy.y-20,SHIELDENEMYHEALTH,10);
-				g.setColor(Color.RED);
+				g.fillRect((int)ShieldEnemy.x,(int)ShieldEnemy.y-20,40+sector/4,10);
+				g.setColor(azure);
 				g.fillRect((int)ShieldEnemy.x,(int)ShieldEnemy.y-20,SHIELDENEMYHEALTH,10);
 			}
 		}
@@ -374,11 +380,11 @@ public class HUD
 			g.setFont(health);
    			g.drawString(LEVEL4BOSSHEALTH+"",716,43);
    			
-   			if(!(EXPLODERHEALTH<=0))
+   			if(!(EXPLODERHEALTH<0) && Level4Boss.isAlive)
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)ExploderEnemy.x,(int)ExploderEnemy.y-20,EXPLODERHEALTH*2,10);
-				g.setColor(Color.BLACK);
+				g.fillRect((int)ExploderEnemy.x,(int)ExploderEnemy.y-20,40+sector/4,10);
+				g.setColor(aqua);
 				g.fillRect((int)ExploderEnemy.x,(int)ExploderEnemy.y-20,EXPLODERHEALTH*2,10);
 			}
 		}

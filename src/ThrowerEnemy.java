@@ -79,7 +79,10 @@ public class ThrowerEnemy extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.throwerEnemy,(int)x,(int)y,width,height,null);
+		if(xVel <= 0)
+			g.drawImage(texture.throwerEnemyLeft,(int)x,(int)y,width,height,null);
+		else 
+			g.drawImage(texture.throwerEnemyRight,(int)x,(int)y,width,height,null);
 		if(fireRate<=0)
 		{
 			handler.addObject(new GoldenRod(this.x+10,this.y+14,r.nextInt(8)+5,ID.GoldenRod,handler,texture));

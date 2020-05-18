@@ -1,6 +1,6 @@
 import java.awt.image.BufferedImage;
 /* This class gets each picture as the
- * each sprite is 32 x 32 and this gets each specfic image */
+ * each sprite is 32 x 32 and this gets each specific image */
 public class SpriteSheet 
 {
 	private BufferedImage image;

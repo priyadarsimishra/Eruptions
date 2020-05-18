@@ -12,18 +12,18 @@ implements Serializable
 	}
 	private static final long serialVersionUID = 1L;
 	private String playerName;
-	private Integer highestIndividualScore;
-	private Integer totalIndividualScore;
+	private Integer highestLevelScore;
+	private Integer totalScore;
 	private Integer playerLevel;
 	/* This is the constructor that has parameters which
 	 * store the players highest score, name, and their
 	 * total score */
-	public PlayerInfo(String playerName, Integer highestIndividualScore,Integer totalIndividualScore,Integer playerLevel) 
+	public PlayerInfo(String playerName, Integer highestLevelScore,Integer totalScore,Integer playerLevel) 
 	{
 		super();
 		this.playerName = playerName;
-		this.highestIndividualScore = highestIndividualScore;
-		this.totalIndividualScore = totalIndividualScore;
+		this.highestLevelScore = highestLevelScore;
+		this.totalScore = totalScore;
 		this.playerLevel = playerLevel;
 	}
 	/* Gets the player name */
@@ -37,24 +37,24 @@ implements Serializable
 		this.playerName = playerName;
 	}
 	/* Gets the player Highest score */
-	public Integer getHighestIndividualScore() 
+	public Integer getHighestLevelScore() 
 	{
-		return highestIndividualScore;
+		return highestLevelScore;
 	}
 	/* sets the player Highest score used for drawing */
-	public void setHighestIndividualScore(Integer highestIndividualScore) 
+	public void setHighestLevelScore(Integer highestLevelScore) 
 	{
-		this.highestIndividualScore = highestIndividualScore;
+		this.highestLevelScore = highestLevelScore;
 	}
 	/* Gets the player total score */
-	public Integer getTotalIndividualScore() 
+	public Integer getTotalScore() 
 	{
-		return totalIndividualScore;
+		return totalScore;
 	}
 	/* sets the player total score used for drawing */
-	public void setTotalIndividualScore(Integer totalIndividualScore) 
+	public void setTotalScore(Integer totalScore) 
 	{
-		this.totalIndividualScore = totalIndividualScore;
+		this.totalScore = totalScore;
 	}
 	/* Gets player Level */
 	public Integer getPlayerLevel()
@@ -68,7 +68,7 @@ implements Serializable
 	}
 	/* This returns all the player details used in FileUtils */
 	public String toString() {
-		return "PlayerInfo [playerName=" + playerName + ", highestIndividualScore=" + highestIndividualScore
-				+ ", totalIndividualScore=" + totalIndividualScore + ", playerLevel=" + playerLevel + "]";
+		return "PlayerInfo [playerName=" + playerName + ", highestIndividualScore=" + highestLevelScore
+				+ ", totalIndividualScore=" + totalScore + ", playerLevel=" + playerLevel + "]";
 	}
 }

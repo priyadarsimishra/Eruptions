@@ -28,7 +28,7 @@ public class Spawn
 	private int enemyArrow = 80;
 	private int pinkGemTime = 120;
 	private int icePotion = 140;
-	public int exploderTime = 250;
+	public int exploderTime = 100;
 	public int rayTime = 300;
 	public int rayBulletTime = 200;
 	public int rocketTime = 400;
@@ -314,14 +314,14 @@ public class Spawn
 			if(diamondTime<=0)
 			{
 				handler.addObject(new DiamondGem(r.nextInt(748)+0, r.nextInt(100)-100,ID.DiamondGem,handler,texture, r.nextInt(14)+5,r.nextInt(14)+5));
-				diamondTime = 600;
+				diamondTime = 750;
 			}
 			else diamondTime--;
 			if(rubyTime<=0)
 			{
 				handler.addObject(new RubyGem(r.nextInt(768)+0,r.nextInt(100)-32,ID.RubyGem,handler,texture,r.nextInt(12)+7));
 				handler.addObject(new RubyGem(r.nextInt(768)+0,r.nextInt(100)-32,ID.RubyGem,handler,texture,r.nextInt(12)+7));
-				rubyTime = 300;
+				rubyTime = 450;
 			}
 			else rubyTime--;
 		}
@@ -594,7 +594,7 @@ public class Spawn
 			{
 				Crate crate = new Crate(r.nextInt(764)+0,730,texture,handler,ID.Crate);
 				handler.addObject(crate);
-				crateTime = 100;
+				crateTime = 75;
 			}
 			else crateTime--;
 			if(pinkGemTime<=0)
@@ -615,20 +615,6 @@ public class Spawn
 				emeraldTime = 200;
 			}
 			else emeraldTime--;
-			if(exploderEnemyTime)
-			{
-				LevelDisplay.exploderTime = 200;
-				HUD.EXPLODERHEALTH = 20;
-				handler.addObject(new ExploderEnemy(Level4Boss.x+50,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5));
-				exploderEnemyTime = false;
-			}
-			if(exploderTime<=0)
-			{
-				LevelDisplay.exploderTime = 200;
-				HUD.EXPLODERHEALTH = 20;
-				handler.addObject(new ExploderEnemy(Level4Boss.x+120,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5));
-				exploderTime = 500;
-			}
 			
 		}
 	}

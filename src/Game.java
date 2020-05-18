@@ -23,15 +23,23 @@ public class Game extends Canvas implements Runnable
 	private Thread thread;
 	private boolean running = false;
 	private BufferedImage spritesheet = null;
-	private BufferedImage level2 = null;
-	private BufferedImage level3 = null;
-	private BufferedImage level4 = null;
+	private Image level2;
+	private Image level3;
+	private Image level4;
 	private Image background;
 	private ImageIcon icon;
+	private ImageIcon lev2Icon;
+	private ImageIcon lev3Icon;
+	private ImageIcon lev4Icon;
 	private Image menuImage;
 	private ImageIcon menuIcon;
-	public BufferedImage level1;
-	public BufferedImage story;
+	public BufferedImage level1Display;
+	public BufferedImage level2Display;
+	public BufferedImage level3Display;
+	public BufferedImage level4Display;
+	public Image story;
+	public ImageIcon storyIcon;
+	public BufferedImage level4Old;
 	private Window window;
 	public Player player;
 	private HUD hud;
@@ -59,9 +67,9 @@ public class Game extends Canvas implements Runnable
 	private int explosiveBulletCount = 0;
 	private int doubleBulletCount = 0;
 	private int shotgunBulletCount = 0;
-	public int bossFight = 1500;
-	public int bossFight2 = 1500;
-	public int bossFight3 = 1500;
+	public int bossFight = 2000;
+	public int bossFight2 = 20000;
+	public int bossFight3 = 2000;
 	public int bossFight4 = 2000;
 	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
@@ -74,6 +82,7 @@ public class Game extends Canvas implements Runnable
 	public boolean isLevel3Complete = false;
 	public boolean isLevel4Complete = false;
 	public static final STATE STATE = null;
+	public boolean setHighScore = false;
 	public static String stateholder = "";
 	private PlayerInfo playerInfo = null;
 	/* This enumeration holds constants for the State of the game */
@@ -110,18 +119,27 @@ public class Game extends Canvas implements Runnable
 		try
 		{
 			spritesheet = loader.loadImage("/SpriteSheet.png");
-			level1 = loader.loadImage("/LEVEL1.png");
-			story = loader.loadImage("/Story.png");
-			level2 = loader.loadImage("/LEVEL2.png");
-			level3 = loader.loadImage("/LEVEL3.png");
-			level4 = loader.loadImage("/LEVEL4.png");
+			//story = loader.loadImage("/Story.png");
+			level4Old = loader.loadImage("/LEVEL4.png");
+			level1Display = loader.loadImage("/Level1Display.png");
+			level2Display = loader.loadImage("/Level2Display.png");
+			level3Display = loader.loadImage("/Level3Display.png");
+			level4Display = loader.loadImage("/Level4Display.png");
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 		icon = new ImageIcon(this.getClass().getResource("/background.gif"));
+		storyIcon = new ImageIcon(this.getClass().getResource("/Story.gif"));
 		menuIcon = new ImageIcon(this.getClass().getResource("/Menu.gif"));
+		lev2Icon = new ImageIcon(this.getClass().getResource("LEVEL2.gif"));
+		lev3Icon = new ImageIcon(this.getClass().getResource("LEVEL3.gif"));
+		lev4Icon = new ImageIcon(this.getClass().getResource("LEVEL4.gif"));
+		level2 = lev2Icon.getImage();
+		level3 = lev3Icon.getImage();
+		level4 = lev4Icon.getImage();
+		story = storyIcon.getImage();
 		addKeyListener(new KeyMovement(this));
 		background = icon.getImage();
 		menuImage = menuIcon.getImage();
@@ -230,10 +248,13 @@ public class Game extends Canvas implements Runnable
 			level2Complete = 0;
 			level3Complete = 0;
 			level4Complete = 0;
-			bossDisplay = 0;
-			bossDisplay2 = 0;
-			bossDisplay3 = 0;			
-			bossDisplay4 = 0;
+			//edit here for testing
+//			bossFight = 200;
+//			bossFight2 = 2000;
+//			bossFight3 = 200;
+//			bossFight4 = 2000;
+			//edit here for testing
+			//setHighScore = false;
 			level1pause = 0;
 			level2pause = 0;
 			level3pause = 0;
@@ -320,6 +341,10 @@ public class Game extends Canvas implements Runnable
 			spawner.boomerangEnemyTime = true;
 			upgrades.box1Row1Cost = 1000;
 			upgrades.box2Row1Cost = 2000;
+			upgrades.isWaterBullet = false;
+			upgrades.isSplitBullet = false;
+			upgrades.isDualPistolBullet = false;
+			upgrades.isShotgunBullet = false;
 			RocketEnemy.bulletShow = true;
 			ThrowerEnemy.giveInfo = true;
 			ShieldEnemy.once = false;
@@ -327,10 +352,17 @@ public class Game extends Canvas implements Runnable
 			BoomerangEnemy.isThrow = false;
 			Rocket.destroyed = false;
 			Level4Boss.makeOne = false;
+			Level4Boss.isAlive = false;
 		}		
 		else if(gameState == STATE.LEVEL1)
 		{
 			HUD.LEVEL = 1;
+			//might need to change
+//			if(!setHighScore)
+//			{
+//				HUD.HIGHSCORE = 0;
+//				setHighScore = true;
+//			}
 			if((level1Complete < bossFight) && !isBossFight)
 			{
 				if(hud.HEALTH<=0)
@@ -341,7 +373,9 @@ public class Game extends Canvas implements Runnable
 					player.x = 385;
 					level1Complete = 0;
 					bossDisplay = 0;
+					isBossFight = false;
 					HUD.LEVEL1BOSSHEALTH = 200;
+					//setHighScore = false;
 				}
 				else
 				{
@@ -365,6 +399,7 @@ public class Game extends Canvas implements Runnable
 				{
 					isBossFight = true;
 					handler.clearAll();
+					level1pause = 0;
 				}
 			}
 			if(isBossFight && bossDisplay>=500)
@@ -377,7 +412,9 @@ public class Game extends Canvas implements Runnable
 					player.x = 385;
 					level1Complete = 0;
 					HUD.LEVEL1BOSSHEALTH = 200;
+					isBossFight = false;
 					bossDisplay = 0;
+					//setHighScore = false;
 				}
 				else 
 				{
@@ -419,6 +456,11 @@ public class Game extends Canvas implements Runnable
 			HUD.LEVEL = 2;
 			if((level2Complete<bossFight2) && !(isBossFight2))
 			{
+//				if(!setHighScore)
+//				{
+//					HUD.HIGHSCORE = 0;
+//					setHighScore = true;
+//				}
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
@@ -427,6 +469,8 @@ public class Game extends Canvas implements Runnable
 					level2pause = 0;
 					isBossFight2 = false;
 					player.x = 385;
+					level2Complete = 0;
+					bossDisplay2 = 0;
 					HUD.UNDERGROUNDHEALTH = 25;
 					HUD.WIZARDHEALTH = 25;
 					HUD.THROWERHEALTH = 50;
@@ -435,6 +479,7 @@ public class Game extends Canvas implements Runnable
 					UnderGroundEnemy.show = false;
 					Spawn.undergroundenemyShow = true;
 					Spawn.wizardspawn = false;
+					//setHighScore = false;
 				}
 				else
 				{
@@ -469,6 +514,7 @@ public class Game extends Canvas implements Runnable
 				{
 					isBossFight2 = true;
 					handler.clearAll();
+					level2pause = 0;
 				}
 			}
 			if(isBossFight2 && bossDisplay2>=200)
@@ -479,8 +525,10 @@ public class Game extends Canvas implements Runnable
 					hud.update();
 					handler.clearAll();
 					level2pause = 0;
+					level2Complete = 0;
 					isBossFight2 = false;
 					player.x = 385;
+					bossDisplay2 = 0;
 					HUD.UNDERGROUNDHEALTH = 25;
 					HUD.WIZARDHEALTH = 25;
 					HUD.THROWERHEALTH = 50;
@@ -489,6 +537,7 @@ public class Game extends Canvas implements Runnable
 					UnderGroundEnemy.show = false;
 					Spawn.undergroundenemyShow = true;
 					Spawn.wizardspawn = false;
+					//setHighScore = 0;
 				}
 				else
 				{
@@ -536,6 +585,7 @@ public class Game extends Canvas implements Runnable
 					hud.update();
 					level3pause = 0;
 					isBossFight3 = false;
+					bossDisplay3 = 0;
 					level3Complete = 0;
 					HUD.EXPLODERHEALTH = 20;
 				}
@@ -571,6 +621,7 @@ public class Game extends Canvas implements Runnable
 				{
 					isBossFight3 = true;
 					handler.clearAll();
+					level3pause = 0;
  				}
 			}
 			if(isBossFight3 && bossDisplay3>=200)
@@ -583,6 +634,7 @@ public class Game extends Canvas implements Runnable
 					level3pause = 0;
 					isBossFight3 = false;
 					level3Complete = 0;
+					bossDisplay3 = 0;
 					HUD.EXPLODERHEALTH = 20;
 				}
 				else
@@ -628,6 +680,9 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH <=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					level4Complete = 0;
+					level4pause = 0;
+					bossDisplay4 = 0;
 					handler.clearAll();
 					hud.update();
 					BoomerangEnemy.isThrow = false;
@@ -666,6 +721,7 @@ public class Game extends Canvas implements Runnable
 				{
 					isBossFight4 = true;
 					handler.clearAll();
+					level4pause = 0;
 				}
 			}
 			if(isBossFight4 && bossDisplay4>=200)
@@ -678,10 +734,10 @@ public class Game extends Canvas implements Runnable
 					level4pause = 0;
 					isBossFight4 = false;
 					level4Complete = 0;
+					bossDisplay4 = 0;
 					BoomerangEnemy.isThrow = false;
 					ShieldEnemy.once = false;
 					ShieldEnemy.startDamage = false;
-					//HUD.EXPLODERHEALTH = 20;
 				}
 				else
 				{
@@ -759,9 +815,9 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.HELP)
 		{
-				g.setColor(Color.YELLOW);
-				g.fillRect(0, 0,WIDTH,HEIGHT);
-				menu.render(g);
+			g.setColor(Color.YELLOW);
+			g.fillRect(0, 0,WIDTH,HEIGHT);
+			menu.render(g);
 		}
 		else if(gameState == STATE.STORY)
 		{
@@ -806,7 +862,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.LEVEL2)
 		{	
-			g.drawImage(level2,0,0,null);
+			g.drawImage(level2,0,0,WIDTH,HEIGHT,null);
 			player.render(g);
 			if(level2pause>=500)
 			{
@@ -839,7 +895,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.LEVEL3) 
 		{
-			g.drawImage(level3,0,0,null);
+			g.drawImage(level3,0,0,WIDTH,HEIGHT,null);
 			player.render(g);
 			if(level3pause>=500)
 			{
@@ -872,7 +928,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.LEVEL4) 
 		{
-			g.drawImage(level4,0,0,null);
+			g.drawImage(level4,0,0,WIDTH,HEIGHT,null);
 			player.render(g);
 			if(level4pause>=500)
 			{
@@ -983,8 +1039,10 @@ public class Game extends Canvas implements Runnable
 		{
 			player.shoot = true;
 			isShooting = true;
-			handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
-
+			if(upgrades.isDualPistolBullet) handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
+			else if(upgrades.isSplitBullet) handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+			else if(upgrades.isShotgunBullet) handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			else handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
 		}//shoot bullets
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2 && isBossFight2 && doubleBulletCount < player.keyCount)
 		{

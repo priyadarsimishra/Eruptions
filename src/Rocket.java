@@ -39,7 +39,7 @@ public class Rocket extends GameObject
 	 * which is used to check collision with the player */
 	public Rectangle getRect() 
 	{
-		Rectangle rect = new Rectangle((int)x, (int)y,40,46);
+		Rectangle rect = new Rectangle((int)x, (int)y,50,50);
 		return rect;
 		
 	}
@@ -55,7 +55,8 @@ public class Rocket extends GameObject
 		
 		xVel = (speed/distance)*differenceX;
 		yVel = (speed/distance)*differenceY;
-		
+		if(y>=805)
+			handler.removeObject(this);
 		checkCollision();
 	}
 	public void checkCollision()
@@ -93,7 +94,7 @@ public class Rocket extends GameObject
 		angle = -Math.atan2( x - Player.x , y - Player.y )-(Math.PI/2)-45;
 	    AffineTransform at = AffineTransform.getRotateInstance(angle, (int)x+10, (int)y+5);
 	    g2d.setTransform(at);
-		g.drawImage(texture.rocket,(int)x,(int)y,46,46,null);
+		g.drawImage(texture.rocket,(int)x,(int)y,50,50,null);
 	    g2d.setTransform(backup);
 
 	}

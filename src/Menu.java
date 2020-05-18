@@ -48,6 +48,9 @@ public class Menu extends MouseAdapter
 	public boolean stopScoreChange3 = false;
 	public boolean stopScoreChange4 = false;
 	public boolean stopScoreChange5 = false;
+	public boolean stopScoreChange6 = false;
+	public boolean stopScoreChange7 = false;
+	public boolean stopScoreChange8 = false;
 	public boolean level1highlight = false;
 	public boolean level2highlight = false;
 	public boolean level3highlight = false;
@@ -119,8 +122,13 @@ public class Menu extends MouseAdapter
 		{
 			//LEVEL 1
 			game.gameState = game.STATE.LEVEL1;
+			HUD.HIGHSCORE = 0;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 		}
 		else if(contains(mx,my,490,115,261,261) && game.isLevel1Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
@@ -128,27 +136,43 @@ public class Menu extends MouseAdapter
 			game.gameState = game.STATE.LEVEL2;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 			HUD.UNDERGROUNDHEALTH = 50;
 			HUD.WIZARDHEALTH = 25;
 			HUD.THROWERHEALTH = 50;
 			HUD.SPLITHEALTH1 = 25;
 			HUD.SPLITHEALTH2 = 25;
+			HUD.HIGHSCORE = 0;
 			ThrowerEnemy.giveInfo = true;
 		}
 		else if(contains(mx,my,50,400, 261, 261) && game.isLevel2Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 3
 			game.gameState = game.STATE.LEVEL3;	
+			HUD.HIGHSCORE = 0;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 			//HUD.EXPLODERHEALTH = 20;
 		}
 		else if(contains(mx,my,490, 400, 261, 261) &&  game.isLevel3Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 4
-			game.gameState = game.STATE.LEVEL4;	
+			game.gameState = game.STATE.LEVEL4;
+			HUD.HIGHSCORE = 0;
+			HUD.EXPLODERHEALTH = 20;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 		}
 		else if(contains(mx,my,game.WIDTH/2-370,game.HEIGHT/2+250,740,100) && game.gameState == game.STATE.DEADSCREEN)
 		{
@@ -161,6 +185,10 @@ public class Menu extends MouseAdapter
 			game.gameState = game.STATE.LEVEL2;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 			handler.clearAll();
 			game.isBossFight = false;
 			game.bossDisplay = 0;
@@ -169,6 +197,7 @@ public class Menu extends MouseAdapter
 			HUD.HEALTH = 100;
 			HUD.SCORE = 0;
 			HUD.COUNT = 0;
+			HUD.HIGHSCORE = 0;
 			HUD.LEVEL1BOSSHEALTH = 200;				
 		}
 		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
@@ -206,20 +235,14 @@ public class Menu extends MouseAdapter
 			// BACK BUTTON FOR HOW TO PLAY
 			game.gameState = game.STATE.HELP;
 		}
-		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange1)
-		{
-			HUD.COUNT = HUD.SCORE;
-			stopScoreChange1 = true;
-		}
-		else if(game.gameState == game.STATE.LEVEL1 && !stopScoreChange2 && HUD.LEVEL1BOSSHEALTH<=0)
-		{
-			HUD.COUNT = HUD.SCORE;
-			stopScoreChange2 = true;
-		}
 		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 2
 			game.gameState = game.STATE.LEVEL3;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
 			handler.clearAll();
@@ -234,6 +257,10 @@ public class Menu extends MouseAdapter
 		{
 			// END OF LEVEL 3
 			game.gameState = game.STATE.LEVEL4;
+			game.upgrades.isWaterBullet = false;
+			game.upgrades.isSplitBullet = false;
+			game.upgrades.isDualPistolBullet = false;
+			game.upgrades.isShotgunBullet = false;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
 			handler.clearAll();
@@ -243,6 +270,7 @@ public class Menu extends MouseAdapter
 			HUD.SCORE = 0;
 			HUD.COUNT = 0;
 			HUD.LEVEL3BOSSHEALTH = 550;
+			HUD.EXPLODERHEALTH = 20;
 		}
 		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
@@ -259,20 +287,45 @@ public class Menu extends MouseAdapter
 			// END OF LEVEL 4
 			game.gameState = game.STATE.MENU;
 		}
-		else if(game.gameState == game.STATE.LEVEL2 && !stopScoreChange3 && HUD.LEVEL2BOSSHEALTH<=0)
+		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange1)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange1 = true;
+		}
+		else if(game.gameState == game.STATE.LEVEL1 && !stopScoreChange2 && HUD.LEVEL1BOSSHEALTH<=0)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange2 = true;
+		}
+		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange3)
 		{
 			HUD.COUNT = HUD.SCORE;
 			stopScoreChange3 = true;
 		}
-		else if(game.gameState == game.STATE.LEVEL3 && !stopScoreChange4 && HUD.LEVEL3BOSSHEALTH<=0)
+		else if(game.gameState == game.STATE.LEVEL2 && !stopScoreChange4 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
 			HUD.COUNT = HUD.SCORE;
 			stopScoreChange4 = true;
 		}
-		else if(game.gameState == game.STATE.LEVEL4 && !stopScoreChange5 && HUD.LEVEL4BOSSHEALTH<=0)
+		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange5)
 		{
 			HUD.COUNT = HUD.SCORE;
 			stopScoreChange5 = true;
+		}
+		else if(game.gameState == game.STATE.LEVEL3 && !stopScoreChange6 && HUD.LEVEL3BOSSHEALTH<=0)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange6 = true;
+		}
+		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange7)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange7 = true;
+		}
+		else if(game.gameState == game.STATE.LEVEL4 && !stopScoreChange8 && HUD.LEVEL4BOSSHEALTH<=0)
+		{
+			HUD.COUNT = HUD.SCORE;
+			stopScoreChange8 = true;
 		}
 //		if(stopScoreChange1 || stopScoreChange2)
 //		{
@@ -585,7 +638,7 @@ public class Menu extends MouseAdapter
 			Font lev = new Font("Superpower Synonym", Font.BOLD,128);
 			g.setFont(lev);
 			g.drawString("Select Level",5,100);
-			g.drawImage(game.level1,50,115,260,260,null);
+			g.drawImage(game.level1Display,50,115,260,260,null);
 			if(level1highlight) g.setColor(Color.BLACK);
 			else g.setColor(Color.WHITE);
 	        ((Graphics2D)g).setStroke(new BasicStroke(3));
@@ -608,6 +661,7 @@ public class Menu extends MouseAdapter
 			
 			g.setColor(Color.GRAY);
 			g.fillRect(490,115,260,260);
+			g.drawImage(game.level2Display,490,115,260,260,null);
 			g.setColor(Color.CYAN);
 			g.setFont(difLevDisplay);
 			g.drawString("LEVEL 2",590,396);
@@ -622,6 +676,7 @@ public class Menu extends MouseAdapter
 	        ((Graphics2D)g).setStroke(new BasicStroke(3));
 			g.setColor(Color.GRAY);
 			g.fillRect(50, 400, 260, 260);
+			g.drawImage(game.level3Display,50, 400, 260, 260,null);
 			if(level3highlight) g.setColor(Color.BLACK);
 			else g.setColor(Color.WHITE);
 			g.drawRect(50, 400, 261, 261);
@@ -631,6 +686,7 @@ public class Menu extends MouseAdapter
 			((Graphics2D)g).setStroke(new BasicStroke(3));
 			g.setColor(Color.GRAY);
 			g.fillRect(490, 400, 260, 260);
+			g.drawImage(game.level4Display,490, 400, 260, 260,null);
 			if(level4highlight) g.setColor(Color.BLACK);
 			else g.setColor(Color.WHITE);
 			g.drawRect(490, 400, 261, 261);
@@ -664,18 +720,26 @@ public class Menu extends MouseAdapter
 			{
 				//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 				playerInfo.setPlayerName(Game.NAME);
-				playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
-				playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+				playerInfo.setTotalScore(HUD.TOTALSCORE);
 				playerInfo.setPlayerLevel(HUD.LEVEL);
 				fileUtils.store(playerInfo);
 				storeScoreStop = true;
 			}
 			if(HUD.LEVEL == 1)
 			{
-				System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 				if(HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+				}
+				else if(HUD.SCORE == HUD.COUNT)
+				{
+					g.drawString("SCORE: "+(HUD.COUNT),5,255);
 					if(playerInfo != null)
 					{
 						g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
@@ -695,26 +759,117 @@ public class Menu extends MouseAdapter
 			{
 				System.out.println("Storing the Player Details:");
 				playerInfo.setPlayerName(Game.NAME);
-				playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
-				playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+				playerInfo.setTotalScore(HUD.TOTALSCORE);
 				playerInfo.setPlayerLevel(HUD.LEVEL);
 				fileUtils.store(playerInfo);
 				storeScoreStop = true;
 			}
 			if(HUD.LEVEL == 2)
 			{
-				//System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 				if(HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5,255);
 					if(playerInfo != null)
-							g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					{
+						g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+				}
+				else if(HUD.SCORE == HUD.COUNT)
+				{
+					g.drawString("SCORE: "+(HUD.COUNT),5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
 				}
 				else
 				{
 					g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
 					if(playerInfo != null)
-						g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);							
+					{
+						g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+						
+				}
+			}
+			if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 3)
+			{
+				//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
+				playerInfo.setPlayerName(Game.NAME);
+				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+				playerInfo.setTotalScore(HUD.TOTALSCORE);
+				playerInfo.setPlayerLevel(HUD.LEVEL);
+				fileUtils.store(playerInfo);
+				storeScoreStop = true;
+			}
+			if(HUD.LEVEL == 3)
+			{
+				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+				if(HUD.SCORE == 0)
+				{
+					g.drawString("SCORE: 0",5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+				}
+				else if(HUD.SCORE == HUD.COUNT)
+				{
+					g.drawString("SCORE: "+(HUD.COUNT),5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+				}
+				else
+				{
+					g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+						
+				}
+			}
+			if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 4)
+			{
+				//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
+				playerInfo.setPlayerName(Game.NAME);
+				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+				playerInfo.setTotalScore(HUD.TOTALSCORE);
+				playerInfo.setPlayerLevel(HUD.LEVEL);
+				fileUtils.store(playerInfo);
+				storeScoreStop = true;
+			}
+			if(HUD.LEVEL == 4)
+			{
+				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+				if(HUD.SCORE == 0)
+				{
+					g.drawString("SCORE: 0",5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+				}
+				else if(HUD.SCORE == HUD.COUNT)
+				{
+					g.drawString("SCORE: "+(HUD.COUNT),5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+				}
+				else
+				{
+					g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
+					if(playerInfo != null)
+					{
+						g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+					}
+						
 				}
 			}
 			g.drawString("Player: "+Game.NAME, 5, 330);
@@ -750,8 +905,8 @@ public class Menu extends MouseAdapter
 				{
 					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 					playerInfo.setPlayerName(Game.NAME);
-					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
-					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+					playerInfo.setTotalScore(HUD.TOTALSCORE);
 					playerInfo.setPlayerLevel(HUD.LEVEL);
 					fileUtils.store(playerInfo);
 					storeScoreStop = true;
@@ -765,11 +920,17 @@ public class Menu extends MouseAdapter
 						if(playerInfo != null)
 								g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
 					}
-					else
+					else if(HUD.SCORE == HUD.COUNT)
 					{
 						g.drawString("SCORE: "+(HUD.COUNT),5,295);
 						if(playerInfo != null)
 							g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);							
+					}
+					else
+					{
+						g.drawString("SCORE: "+(HUD.COUNT-1),5,295);
+						if(playerInfo != null)
+							g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);						
 					}
 				}
 				g.drawLine(200, 250, 600, 250);
@@ -816,30 +977,43 @@ public class Menu extends MouseAdapter
 				g.setFont(f2);
 				g.drawString("LEVEL COMPLETED",Game.WIDTH/2-197, Game.HEIGHT/2-160);
 				g.drawLine(2, 250, Game.WIDTH-2, 250);
-				if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 2)
+				if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 1)
 				{
 					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 					playerInfo.setPlayerName(Game.NAME);
-					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
-					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+					playerInfo.setTotalScore(HUD.TOTALSCORE);
 					playerInfo.setPlayerLevel(HUD.LEVEL);
 					fileUtils.store(playerInfo);
 					storeScoreStop = true;
 				}
 				if(HUD.LEVEL == 2)
 				{
-					//System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+					System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 					if(HUD.SCORE == 0)
 					{
-						g.drawString("SCORE: 0",5,295);
+						g.drawString("SCORE: 0",5,255);
 						if(playerInfo != null)
-								g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);
+						{
+							g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
+					}
+					else if(HUD.SCORE == HUD.COUNT)
+					{
+						g.drawString("SCORE: "+(HUD.COUNT),5,255);
+						if(playerInfo != null)
+						{
+							g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
 					}
 					else
 					{
-						g.drawString("SCORE: "+HUD.COUNT,5,295);
+						g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
 						if(playerInfo != null)
-							g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);							
+						{
+							g.drawString("LEVEL 2 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
+							
 					}
 				}
 				g.drawLine(200, 250, 600, 250);
@@ -887,26 +1061,39 @@ public class Menu extends MouseAdapter
 				{
 					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 					playerInfo.setPlayerName(Game.NAME);
-					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
-					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+					playerInfo.setTotalScore(HUD.TOTALSCORE);
 					playerInfo.setPlayerLevel(HUD.LEVEL);
 					fileUtils.store(playerInfo);
 					storeScoreStop = true;
 				}
 				if(HUD.LEVEL == 3)
 				{
-					//System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+					System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 					if(HUD.SCORE == 0)
 					{
-						g.drawString("SCORE: 0",5,295);
+						g.drawString("SCORE: 0",5,255);
 						if(playerInfo != null)
-								g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);
+						{
+							g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
+					}
+					else if(HUD.SCORE == HUD.COUNT)
+					{
+						g.drawString("SCORE: "+(HUD.COUNT),5,255);
+						if(playerInfo != null)
+						{
+							g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
 					}
 					else
 					{
-						g.drawString("SCORE: "+HUD.COUNT,5,295);
+						g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
 						if(playerInfo != null)
-							g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);							
+						{
+							g.drawString("LEVEL 3 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
+							
 					}
 				}
 				g.drawLine(200, 250, 600, 250);
@@ -954,26 +1141,39 @@ public class Menu extends MouseAdapter
 				{
 					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 					playerInfo.setPlayerName(Game.NAME);
-					playerInfo.setHighestIndividualScore(HUD.HIGHSCORE);
-					playerInfo.setTotalIndividualScore(HUD.TOTALSCORE);
+					playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
+					playerInfo.setTotalScore(HUD.TOTALSCORE);
 					playerInfo.setPlayerLevel(HUD.LEVEL);
 					fileUtils.store(playerInfo);
 					storeScoreStop = true;
 				}
 				if(HUD.LEVEL == 4)
 				{
-					//System.out.println("Storing the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
+					System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 					if(HUD.SCORE == 0)
 					{
-						g.drawString("SCORE: 0",5,295);
+						g.drawString("SCORE: 0",5,255);
 						if(playerInfo != null)
-								g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);
+						{
+							g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
+					}
+					else if(HUD.SCORE == HUD.COUNT)
+					{
+						g.drawString("SCORE: "+(HUD.COUNT),5,255);
+						if(playerInfo != null)
+						{
+							g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
 					}
 					else
 					{
-						g.drawString("SCORE: "+HUD.COUNT,5,295);
+						g.drawString("SCORE: "+(HUD.COUNT-2),5,255);
 						if(playerInfo != null)
-							g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);							
+						{
+							g.drawString("LEVEL 4 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,295);
+						}
+							
 					}
 				}
 				g.drawLine(200, 250, 600, 250);

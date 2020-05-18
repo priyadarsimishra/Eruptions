@@ -21,6 +21,7 @@ public class UnderGroundEnemy extends GameObject
 	public static boolean show = false;
 	public int fireRate = 200;
 	private Random r = new Random();
+	private Color brown = new Color(160,82,45,3);
 	/* This is the constructor for the Under Ground Enemy
 	 * and it requires the same parameter as other game objects */
 	public UnderGroundEnemy(double x,double y,ID id,ObjectHandler handler,SpriteTextures texture)
@@ -109,8 +110,8 @@ public class UnderGroundEnemy extends GameObject
 		else
 		{
 			show = false;
-			g.setColor(Color.GREEN);
-			g.fillRect((int)x, (int)y, 54, 54);
+			g.setColor(brown);
+			handler.addObject(new Trail((int)x,(int)y,ID.UnderGroundEnemyTrail,brown,32,32,0.07f,handler));
 		}
 	}
 	/* These methods are used to get the location

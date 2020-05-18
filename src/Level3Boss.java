@@ -30,6 +30,8 @@ public class Level3Boss extends GameObject
 	private ImageIcon icon;
 	private Image fire;
 	private ImageIcon icon2;
+	private Image greenFire;
+	private ImageIcon icon3;
 	private double colX;
 	private double colY;
 	public static double spawnX,spawnY;
@@ -128,9 +130,12 @@ public class Level3Boss extends GameObject
 		explosion = icon.getImage();
 		icon2 = new ImageIcon(getClass().getResource("/fire.gif"));
 		fire = icon2.getImage();
-		g.drawImage(fire,(int)x,(int)y-85,250,100,null);
-
+		icon3 = new ImageIcon(getClass().getResource("greenFire.gif"));
+		greenFire = icon3.getImage();
+		g.drawImage(fire,(int)x,(int)y-60,250,100,null);
 		g.drawImage(texture.Bosslevel3,(int)x,(int)y,250,250,null);
+		g.drawImage(greenFire,(int)x-20,(int)y+150,100,100,null);
+		g.drawImage(greenFire,(int)x+165,(int)y+150,100,100,null);
 		if(isExplode)
 		{
 			if(imageExplosionTime >= 350)

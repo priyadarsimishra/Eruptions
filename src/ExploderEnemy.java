@@ -57,6 +57,8 @@ public class ExploderEnemy extends GameObject
 		yVel = (speed/distance)*differenceY;
 		x+=xVel;
 		y+=yVel;
+		if(y>=805)
+			handler.removeObject(this);
 		checkCollision();
 	}
 	/* This method checks for collision with game objects
@@ -86,11 +88,13 @@ public class ExploderEnemy extends GameObject
 					HUD.EXPLODERHEALTH-=4;
 					handler.removeObject(obj);
 					isExplode = true;
+					
 					if(HUD.EXPLODERHEALTH<=0)
 					{
 						HUD.EXPLODERHEALTH = 0;
 						handler.removeObject(this);
 						HUD.SCORE+=200;
+						Level4Boss.isAlive = false;
 					}
 				}
 			}
@@ -103,7 +107,10 @@ public class ExploderEnemy extends GameObject
 	{
 		icon = new ImageIcon(getClass().getResource("/Bomb.gif"));
 		explosion = icon.getImage();
-		g.drawImage(texture.exploderEnemy,(int)x,(int)y,null);
+		if(xVel>0)
+			g.drawImage(texture.exploderEnemyRight,(int)x,(int)y,null);
+		else
+			g.drawImage(texture.exploderEnemyLeft,(int)x,(int)y,null);
 		if(isExplode)
 		{
 			if(imageExplosionTime >= 200)

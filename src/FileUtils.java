@@ -17,27 +17,34 @@ public class FileUtils
 	public static void main(String[] args) 
 	{
 		FileUtils fileUtils = new FileUtils();
-//		PlayerInfo player1 = new PlayerInfo("priya",1500,1500,1);
-//		PlayerInfo player2 = new PlayerInfo("priya",200,2500,2);
-//		PlayerInfo player2 = new PlayerInfo("Baba1",300,1600);
+//		fileUtils.store(new PlayerInfo("papa",500,100,1));
+//		fileUtils.store(new PlayerInfo("papa",1000,100,2));
+//		fileUtils.store(new PlayerInfo("papa",1500,100,3));
+//		fileUtils.store(new PlayerInfo("papa",2500,100,4));
 //		
-//		fileUtils.store(player1);
-//		fileUtils.store(player2);
-//		PlayerInfo player3 = new PlayerInfo("biswa",900,2500);
-//		PlayerInfo player4 = new PlayerInfo("biswa",2500,3400);
-//	
-//		fileUtils.store(player3);
-//		fileUtils.store(player4);
-//
-//		System.out.println("Highest Score for biswa: "+fileUtils.getHighestScore("biswa"));
-//		System.out.println("Total Score for biswa: "+fileUtils.getTotalScoreForAPlayer("biswa"));
-//		System.out.println("Highest Score for baba1: "+fileUtils.getHighestScore("baba1"));
-//		System.out.println("Total Score for baba1: "+fileUtils.getTotalScoreForAPlayer("baba1"));
-		System.out.println("Highscore for player: "+fileUtils.getHighestScore("priya",1));
-		//System.out.println("Level for player: "+fileUtils.getThePlayerLevel("priya"));
-		System.out.println("Level for player: "+fileUtils.getTotalScoreForAPlayer("priya"));
+//		fileUtils.store(new PlayerInfo("mama",5000,100,1));
+//		//fileUtils.store(new PlayerInfo("mama",10000,100,2));
+//		fileUtils.store(new PlayerInfo("mama",15000,100,3));
+//		fileUtils.store(new PlayerInfo("mama",25000,100,4));		
 		
-
+		System.out.println("******** Higehest Score per Level ***********");
+		System.out.println(fileUtils.getHighestScore("priya",1));
+		System.out.println(fileUtils.getHighestScore("priya",2));
+		System.out.println(fileUtils.getHighestScore("priya",3));
+		System.out.println(fileUtils.getHighestScore("priya",4));
+		
+		System.out.println("******** Higehest Score per Level 2nd Player***********");
+		System.out.println(fileUtils.getHighestScore("priya",1));
+		System.out.println(fileUtils.getHighestScore("priya",2));
+		System.out.println(fileUtils.getHighestScore("priya",3));
+		System.out.println(fileUtils.getHighestScore("priya",4));
+		
+		System.out.println("******** Total Score per Level ***********");
+		
+		System.out.println(fileUtils.getTotalScoreForAPlayer("priya"));
+		System.out.println(fileUtils.getTotalScoreForAPlayer("priya"));
+		
+		
 	}
 
 	/* This method returns an integer as it takes the player
@@ -80,7 +87,7 @@ public class FileUtils
 			{
 				public int compare(PlayerInfo o1, PlayerInfo o2) 
 				{
-					 return (o1.getHighestIndividualScore()-o2.getHighestIndividualScore());
+					 return (o1.getHighestLevelScore()-o2.getHighestLevelScore());
 				}
 			});
 		}
@@ -91,7 +98,7 @@ public class FileUtils
 				if(player1.getPlayerName().equalsIgnoreCase(playerName)
 						&& player1.getPlayerLevel() == level) 
 				{
-					highestScore = player1.getHighestIndividualScore();
+					highestScore = player1.getHighestLevelScore();
 				}
 			}
 		}
@@ -138,7 +145,7 @@ public class FileUtils
 			{
 				public int compare(PlayerInfo o1, PlayerInfo o2) 
 				{
-					 return (o1.getTotalIndividualScore()-o2.getTotalIndividualScore());
+					 return (o1.getTotalScore()-o2.getTotalScore());
 				}
 			});
 		}
@@ -149,7 +156,7 @@ public class FileUtils
 				if(player1.getPlayerName().equalsIgnoreCase(playerName)) 
 				{
 					
-					totalScore = player1.getTotalIndividualScore();
+					totalScore = player1.getTotalScore();
 				}
 			}
 		}

@@ -88,7 +88,6 @@ public class Player extends GameObject
 		if(changeSpeed) g.drawImage(freeze,(int)x-10,(int)y,60,60,null);
 		if(particle)
 		{
-			System.out.println(particle);
 			if(imageTimeParticle>=100)
 			{
 				particle = false;
@@ -243,6 +242,7 @@ public class Player extends GameObject
 				{
 					handler.removeObject(obj);
 					HUD.HEALTH-=25;
+					explosionPic = true;
 					Spawn.undergroundenemyShow = true;
 				}
 			}
@@ -276,6 +276,9 @@ public class Player extends GameObject
 				{
 					handler.removeObject(obj);
 					HUD.HEALTH-=30;
+					changeSpeed = true;
+					changeBack = 5;
+					isDisplay = true;
 					Spawn.wizardspawn = true;
 				}
 			}
@@ -335,13 +338,26 @@ public class Player extends GameObject
 			}
 			if(obj.id == ID.ExploderEnemy)
 			{
-				if(getRect().intersects(obj.getRect()))
+				if(getRect().intersects(obj.getRect()) && !game.isBossFight4)
 				{
 					handler.removeObject(obj);
 					HUD.HEALTH-=15;
 					Spawn.exploderEnemyTime = true;
 					HUD.EXPLODERHEALTH = 1;
 					explosionPic = true;
+				}
+			}
+			//Level4Boss Fight
+			if(obj.id == ID.ExploderEnemy)
+			{
+				if(getRect().intersects(obj.getRect()) && game.isBossFight4)
+				{
+					System.out.println("Hello");
+					handler.removeObject(obj);
+					HUD.HEALTH-=15;
+					HUD.EXPLODERHEALTH = 1;
+					explosionPic = true;
+					Level4Boss.isAlive = false;
 				}
 			}
 			if(obj.id == ID.RayBullet)

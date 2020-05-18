@@ -13,7 +13,7 @@ public class RayEnemy extends GameObject
 	private double yVel;
 	private Random r = new Random();
 	private int xTimer = 5;
-	private int yTimer = r.nextInt(50)+30;
+	private int yTimer = r.nextInt(25)+20;
 	private int rayRate = 100;
 	private ObjectHandler handler;
 	private SpriteTextures texture;
