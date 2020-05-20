@@ -1,5 +1,8 @@
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
+
+import javax.swing.ImageIcon;
 /* This is class is for the RocketEnemy which is introduced
  * in LEVEL 3 */
 public class RocketEnemy extends GameObject
@@ -13,9 +16,14 @@ public class RocketEnemy extends GameObject
 	private int yVel = 6;
 	public static boolean bulletShow = true;
 	private int fireRate = 120;
+	private Image explosion;
+	private ImageIcon icon;
+	private boolean isExplode;
+	private int imageExplosionTime = 0;
+	private Game game;
 	/* This is the constructor for the RocketEnemy
 	 * and it requires the same parameter as other game objects */
-	public RocketEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture) 
+	public RocketEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -23,6 +31,7 @@ public class RocketEnemy extends GameObject
 		this.id = id;
 		this.handler = handler;
 		this.texture = texture;
+		this.game = game;
 	}
 	/* This creates a rectangle around the RocketEnemy
 	 * which is used to check collision with the objects */
@@ -66,10 +75,66 @@ public class RocketEnemy extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.ROCKETHEALTH-=5;
+					if(game.upgrades.isSniper) HUD.ROCKETHEALTH-=18;
+					else if(game.upgrades.isDualPistol) HUD.ROCKETHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.ROCKETHEALTH-=1;
+					else HUD.ROCKETHEALTH-=5;
 					handler.removeObject(obj);
 					if(HUD.ROCKETHEALTH<=0)
 					{
+						HUD.ROCKETHEALTH = 0;
+						handler.removeObject(this);
+						HUD.SCORE+=150;
+					}
+				}
+			}
+			if(obj.id == ID.Bullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.ROCKETHEALTH-=12;
+					else if(game.upgrades.isDualPistol) HUD.ROCKETHEALTH-=4;
+					else if(game.upgrades.isShotgun) HUD.ROCKETHEALTH-=1;
+					else HUD.ROCKETHEALTH-=6;
+					handler.removeObject(obj);
+					if(HUD.ROCKETHEALTH<=0)
+					{
+						HUD.ROCKETHEALTH = 0;
+						handler.removeObject(this);
+						HUD.SCORE+=150;
+					}
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.ROCKETHEALTH-=10;
+					else if(game.upgrades.isDualPistol) HUD.ROCKETHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.ROCKETHEALTH-=2;
+					else HUD.ROCKETHEALTH-=2;
+					handler.removeObject(obj);
+					if(HUD.ROCKETHEALTH<=0)
+					{
+						HUD.ROCKETHEALTH = 0;
+						handler.removeObject(this);
+						HUD.SCORE+=150;
+					}
+				}
+			}
+			if(obj.id == ID.ExplosiveBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					isExplode = true;
+					if(game.upgrades.isSniper) HUD.ROCKETHEALTH-=13;
+					else if(game.upgrades.isDualPistol) HUD.ROCKETHEALTH-=7;
+					else if(game.upgrades.isShotgun) HUD.ROCKETHEALTH-=1;
+					else HUD.ROCKETHEALTH-=6;
+					handler.removeObject(obj);
+					if(HUD.ROCKETHEALTH<=0)
+					{
+						HUD.ROCKETHEALTH = 0;
 						handler.removeObject(this);
 						HUD.SCORE+=150;
 					}
@@ -83,5 +148,20 @@ public class RocketEnemy extends GameObject
 	public void render(Graphics g) 
 	{
 		g.drawImage(texture.rocketEnemy,(int)x,(int)y,48,48,null);
+		icon = new ImageIcon(getClass().getResource("/Bomb.gif"));
+		explosion = icon.getImage();
+		if(isExplode)
+		{
+			if(imageExplosionTime >= 350)
+			{
+				isExplode = false;
+				imageExplosionTime = 0;
+			}
+			else
+			{
+				g.drawImage(explosion,(int)x,(int)y,50,50,null);
+				imageExplosionTime++;
+			}
+		}
 	}
 }

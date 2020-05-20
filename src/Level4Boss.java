@@ -45,9 +45,10 @@ public class Level4Boss extends GameObject
 	public static boolean makeOne = false;
 	private Color kingInvisibleColor = new Color(255,0,0,1);
 	public static boolean isAlive = false;
+	private Game game;
 	/* This is the constructor for the boss which requires
 	 * almost the same parameters as the other game Objects */
-	public Level4Boss(double x, double y, ID id, SpriteTextures texture, ObjectHandler handler, int yVel)
+	public Level4Boss(double x, double y, ID id, SpriteTextures texture, ObjectHandler handler, int yVel, Game game)
 	{
 		super(x, y, id);
 		this.x = x;
@@ -56,6 +57,7 @@ public class Level4Boss extends GameObject
 		this.texture = texture;
 		this.handler = handler;
 		this.yVel = yVel;
+		this.game = game;
 	}
 	/* This method returns a rectangle used for collision detection */
 	public Rectangle getRect() 
@@ -178,7 +180,7 @@ public class Level4Boss extends GameObject
 			{
 				LevelDisplay.exploderTime = 200;
 				HUD.EXPLODERHEALTH = 20;
-				handler.addObject(new ExploderEnemy(Level4Boss.x+50,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5));
+				handler.addObject(new ExploderEnemy(Level4Boss.x+50,Level4Boss.y+250,ID.ExploderEnemy,handler,texture,-1.5,this.game));
 				exploderTime = 550;
 				isAlive = true;
 			}

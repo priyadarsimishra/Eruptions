@@ -25,9 +25,10 @@ public class BoomerangEnemy extends GameObject
 	private Image explosion;
 	private ImageIcon icon;
 	private int imageExplosionTime = 0;
+	private Game game;
 	/* This is the constructor for the BoomerangEnemy
 	 * and it requires the same parameter as other game objects */
-	public BoomerangEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture,int yVel) 
+	public BoomerangEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture,int yVel, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -36,6 +37,7 @@ public class BoomerangEnemy extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 		this.yVel = yVel;
+		this.game = game;
 	}
 	/* This creates a rectangle around the BoomerangEnemy 
 	 * which is used to check collision with the objects */
@@ -117,9 +119,59 @@ public class BoomerangEnemy extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.BOOMERANGHEALTH-=8;
+					if(game.upgrades.isSniper) HUD.BOOMERANGHEALTH-=15;
+					else if(game.upgrades.isDualPistol) HUD.BOOMERANGHEALTH-=3;
+					else if(game.upgrades.isShotgun) HUD.BOOMERANGHEALTH-=2;
+					else HUD.BOOMERANGHEALTH-=5;
 					isExplode = true;
 					handler.removeObject(obj);
+					if(HUD.BOOMERANGHEALTH<=0)
+					{
+						handler.removeObject(this);
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.Bullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.BOOMERANGHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.BOOMERANGHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.BOOMERANGHEALTH-=2;
+					else HUD.BOOMERANGHEALTH-=8;
+					handler.removeObject(obj);
+					if(HUD.BOOMERANGHEALTH<=0)
+					{
+						handler.removeObject(this);
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.BOOMERANGHEALTH-=12;
+					else if(game.upgrades.isDualPistol) HUD.BOOMERANGHEALTH-=3;
+					else if(game.upgrades.isShotgun) HUD.BOOMERANGHEALTH-=2;
+					else HUD.BOOMERANGHEALTH-=2;
+					handler.removeObject(obj);
+					if(HUD.BOOMERANGHEALTH<=0)
+					{
+						handler.removeObject(this);
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.DoubleBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.BOOMERANGHEALTH-=12;
+					else if(game.upgrades.isDualPistol) HUD.BOOMERANGHEALTH-=2;
+					else if(game.upgrades.isShotgun) HUD.BOOMERANGHEALTH-=1;
+					else HUD.BOOMERANGHEALTH-=3;
 					if(HUD.BOOMERANGHEALTH<=0)
 					{
 						handler.removeObject(this);

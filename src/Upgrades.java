@@ -3,8 +3,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.ImageIcon;
 
 /* This is the upgrade system class during levels
  * where you can buy certain items with your score */
@@ -12,8 +15,11 @@ public class Upgrades extends MouseAdapter
 {
 	private ObjectHandler handler;
 	private SpriteTextures texture;
+	private Game game;
 	public Color skyBlue = new Color(0,191,255);
 	public Color springGreen = new Color(0,255,127);
+	private Image shield;
+	private ImageIcon shieldIcon;
 	private boolean backButton = false;
 	public int redTime = 2;
 	public boolean SquareRED = false;
@@ -53,20 +59,22 @@ public class Upgrades extends MouseAdapter
 	//sniper
 	public int box4Row3Cost = 2000;
 	
-	public boolean isWaterBullet = false;
+	public boolean isBullet = false;
 	public boolean isSplitBullet = false;
 	public boolean isDualPistolBullet = false;
 	public boolean isShotgunBullet = false;
+	//guns
 	public boolean isPistol = false;
 	public boolean isShotgun = false;
 	public boolean isDualPistol = false;
 	public boolean isSniper = false; 
 	/* This constructor requires some parameters that render 
 	 * objects from sprite sheet and the handler to make changes*/
-	public Upgrades(ObjectHandler handler, SpriteTextures texture)
+	public Upgrades(ObjectHandler handler, SpriteTextures texture, Game game)
 	{
 		this.handler = handler;
 		this.texture = texture;
+		this.game = game;
 	}
 	/* This method is for adding cool effects 
 	 * when the mouse pointer is above a button */
@@ -81,6 +89,8 @@ public class Upgrades extends MouseAdapter
 	 * and it renders anything in Upgrades */
 	public void render(Graphics g)
 	{
+		shieldIcon = new ImageIcon(getClass().getResource("/ShieldLogo.png"));
+		shield = shieldIcon.getImage();
 		g.setColor(Color.BLACK);
 		Font shopFont = new Font("Superpower Synonym",Font.BOLD,160);
 		g.setFont(shopFont);
@@ -105,6 +115,7 @@ public class Upgrades extends MouseAdapter
 		g.fillRect(320, 200, 110, 110);
 		g.drawImage(texture.healthRefillLogo,320,200,110,110,null);
 		g.fillRect(490, 200, 110, 110);
+		g.drawImage(shield,490, 200, 110, 110,null);
 		//put picture of upgrade
 		g.fillRect(660, 200, 110, 110);
 		//put picture of upgrade
@@ -202,6 +213,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(150, 380, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Water Bullet",162,510);
+		g.drawString("Cost: "+box1Row2Cost,170, 530);
 		//put text under upgrade here
 		//2nd Square: Row 2
 		if(secondRow2SquareClicked) 
@@ -213,6 +228,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(320, 380, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Split Bullet",334,510);
+		g.drawString("Cost: "+box2Row2Cost,340, 530);
 		//put text under upgrade here
 		//3rd Square: Row 2
 		if(thirdRow2SquareClicked) 
@@ -224,6 +243,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(490, 380, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Explosive Bullet",488,510);
+		g.drawString("Cost: "+box3Row2Cost,506, 530);
 		//put text under upgrade here
 		//4th Square: Row 2
 		if(fourthRow2SquareClicked) 
@@ -235,6 +258,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(660, 380, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Shotgun Bullet",662,510);
+		g.drawString("Cost: "+box4Row2Cost,676, 530);
 		//put text under upgrade here
 		//3rd row outline
 		//1st Square: Row 3
@@ -247,6 +274,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(150, 560, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Pistol",183,688);
+		g.drawString("Cost: "+box1Row3Cost,170, 706);
 		//put text under upgrade here
 		//2nd Square: Row 3
 		if(secondRow3SquareClicked) 
@@ -258,6 +289,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(320, 560, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Shotgun",346,688);
+		g.drawString("Cost: "+box2Row3Cost,337, 706);
 		//put text under upgrade here
 		//3rd Square: Row 3
 		if(thirdRow3SquareClicked) 
@@ -269,6 +304,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(490, 560, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Dual Pistols",502,688);
+		g.drawString("Cost: "+box3Row3Cost,505, 706);
 		//put text under upgrade here
 		//4th Square: Row 3
 		if(fourthRow3SquareClicked) 
@@ -280,6 +319,10 @@ public class Upgrades extends MouseAdapter
        	}
         else g.setColor(skyBlue);
 		g.drawRect(660, 560, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.setFont(itemFont);
+		g.drawString("Sniper",690,688);
+		g.drawString("Cost: "+box4Row3Cost,675, 706);
 		//put text under upgrade here
 	}
 	/* This method is part of MouseListener and this
@@ -354,7 +397,7 @@ public class Upgrades extends MouseAdapter
 			if(contains(mx,my,150, 380, 111, 111) && !firstRow2SquareClicked)
 			{
 				firstRow2SquareClicked = true;
-				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isBullet && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
 					if(HUD.SCORE>=box1Row2Cost)
 					{
@@ -362,9 +405,8 @@ public class Upgrades extends MouseAdapter
 						isSplitBullet = false;
 						isDualPistolBullet = false;
 						isShotgunBullet = false;
-						isWaterBullet = true;
+						isBullet = true;
 						HUD.SCORE-=box1Row2Cost;
-						//box1Row2Cost+=500;
 					}
 					else SquareRED = true;
 				}
@@ -373,7 +415,7 @@ public class Upgrades extends MouseAdapter
 			if(contains(mx,my,320, 380, 111, 111) && !secondRow2SquareClicked)
 			{
 				secondRow2SquareClicked = true;	
-				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isSplitBullet && game.isLevel2Complete && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
 					secondRow2SquareClicked = true;	
 					if(HUD.SCORE>=box2Row2Cost)
@@ -381,10 +423,9 @@ public class Upgrades extends MouseAdapter
 						//Here is where you put the impact of the upgrade
 						isDualPistolBullet = false;
 						isShotgunBullet = false;
-						isWaterBullet = false;
+						isBullet = false;
 						isSplitBullet = true;
 						HUD.SCORE-=box2Row2Cost;
-						//box2Row2Cost+=500;
 					}
 					else
 						SquareRED = true;
@@ -395,17 +436,16 @@ public class Upgrades extends MouseAdapter
 			if(contains(mx,my,490, 380, 111, 111) && !thirdRow2SquareClicked)
 			{
 				thirdRow2SquareClicked = true;
-				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isDualPistolBullet && game.isLevel3Complete && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
 					if(HUD.SCORE>=box3Row2Cost)
 					{
 						//Here is where you put the impact of the upgrade
 						isShotgunBullet = false;
-						isWaterBullet = false;
+						isBullet = false;
 						isSplitBullet = false;
 						isDualPistolBullet = true;
 						HUD.SCORE-=box3Row2Cost;
-						//box3Row2Cost+=500;
 					}
 					else SquareRED = true;
 				}
@@ -414,12 +454,12 @@ public class Upgrades extends MouseAdapter
 			if(contains(mx,my,660, 380, 111, 111) && !fourthRow2SquareClicked)
 			{
 				fourthRow2SquareClicked = true;
-				if(!(Game.stateholder.equalsIgnoreCase("Level1")))
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isShotgunBullet && game.isLevel4Complete  && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
 					if(HUD.SCORE>=box4Row2Cost)
 					{
 						//Here is where you put the impact of the upgrade
-						isWaterBullet = false;
+						isBullet = false;
 						isSplitBullet = false;
 						isDualPistolBullet = false;
 						isShotgunBullet = true;
@@ -433,44 +473,72 @@ public class Upgrades extends MouseAdapter
 			if(contains(mx,my,150, 560, 111, 111) && !firstRow3SquareClicked)
 			{
 				firstRow3SquareClicked = true;
-				if(HUD.SCORE>=box1Row3Cost)
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isPistol  && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
-					//Here is where you put the impact of the upgrade
-					HUD.SCORE-=box1Row3Cost;
-					box1Row3Cost+=500;
+					if(HUD.SCORE>=box1Row3Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isSniper = false;
+						isDualPistol = false;
+						isShotgun = false;
+						isPistol = true;
+						HUD.SCORE-=box1Row3Cost;
+					}
+					else SquareRED = true;
 				}
 				else SquareRED = true;
 			}
 			if(contains(mx,my,320, 560, 111, 111) && !secondRow3SquareClicked)
 			{
 				secondRow3SquareClicked = true;
-				if(HUD.SCORE>=box2Row3Cost)
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isShotgun  && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
-					//Here is where you put the impact of the upgrade
-					HUD.SCORE-=box2Row3Cost;
-					box2Row3Cost+=500;
+					if(HUD.SCORE>=box2Row3Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isPistol = false;
+						isSniper = false;
+						isDualPistol = false;
+						isShotgun = true;
+						HUD.SCORE-=box2Row3Cost;
+					}
+					else SquareRED = true;
 				}
 				else SquareRED = true;
 			}
 			if(contains(mx,my,490, 560, 111, 111) && !thirdRow3SquareClicked)
 			{
 				thirdRow3SquareClicked = true;
-				if(HUD.SCORE>=box3Row3Cost)
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isDualPistol && game.isLevel2Complete  && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
-					//Here is where you put the impact of the upgrade
-					HUD.SCORE-=box3Row3Cost;
-					box3Row3Cost+=500;
+					if(HUD.SCORE>=box3Row3Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isPistol = false;
+						isShotgun = false;
+						isSniper = false;
+						isDualPistol = true;
+						HUD.SCORE-=box3Row3Cost;
+					}
+					else SquareRED = true;
 				}
 				else SquareRED = true;
 			}
 			if(contains(mx,my,660, 560, 111, 111) && !fourthRow3SquareClicked)
 			{
 				fourthRow3SquareClicked = true;
-				if(HUD.SCORE>=box4Row3Cost)
+				if(!(Game.stateholder.equalsIgnoreCase("Level1")) && !isSniper && game.isLevel3Complete  && !(game.isBossFight || game.isBossFight2 || game.isBossFight3 || game.isBossFight4))
 				{
-					//Here is where you put the impact of the upgrade
-					HUD.SCORE-=box4Row3Cost;
-					box4Row3Cost+=500;
+					if(HUD.SCORE>=box4Row3Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isPistol = false;
+						isShotgun = false;
+						isDualPistol = false;
+						isSniper = true;
+						HUD.SCORE-=box4Row3Cost;
+					}
+					else SquareRED = true;
 				}
 				else SquareRED = true;
 			}

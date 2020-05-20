@@ -23,9 +23,10 @@ public class TankEnemy extends GameObject
 	private ImageIcon icon;
 	private int imageExplosionTime = 0;
 	private int fireRate = 120;
+	private Game game;
 	/* This is the constructor for the Tank Enemy
 	 * and it requires the same parameter as other game objects */
-	public TankEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture) 
+	public TankEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -33,6 +34,7 @@ public class TankEnemy extends GameObject
 		this.id = id;
 		this.handler = handler;
 		this.texture = texture;
+		this.game = game;
 	}
 	/* This creates a rectangle around the Tank Enemy 
 	 * which is used to check collision with the objects */
@@ -103,8 +105,62 @@ public class TankEnemy extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.TANKHEALTH-=8;
+					if(game.upgrades.isSniper) HUD.TANKHEALTH-=25;
+					else if(game.upgrades.isDualPistol) HUD.TANKHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.TANKHEALTH-=2;
+					else HUD.TANKHEALTH-=5;
 					isHit = true;
+					handler.removeObject(obj);
+					if(HUD.TANKHEALTH<=0)
+					{
+						HUD.TANKHEALTH = 0;
+						HUD.SCORE+=450;
+						handler.removeObject(this);
+					}
+				}
+			}
+			if(obj.id == ID.Bullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.TANKHEALTH-=15;
+					else if(game.upgrades.isDualPistol) HUD.TANKHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.TANKHEALTH-=2;
+					else HUD.TANKHEALTH-=5;
+					handler.removeObject(obj);
+					if(HUD.TANKHEALTH<=0)
+					{
+						HUD.TANKHEALTH = 0;
+						HUD.SCORE+=450;
+						handler.removeObject(this);
+					}
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.TANKHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.TANKHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.TANKHEALTH-=2;
+					else HUD.TANKHEALTH-=1;
+					handler.removeObject(obj);
+					if(HUD.TANKHEALTH<=0)
+					{
+						HUD.TANKHEALTH = 0;
+						HUD.SCORE+=450;
+						handler.removeObject(this);
+					}
+				}
+			}
+			if(obj.id == ID.DoubleBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.TANKHEALTH-=10;
+					else if(game.upgrades.isDualPistol) HUD.TANKHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.TANKHEALTH-=1;
+					else HUD.TANKHEALTH-=2;
 					handler.removeObject(obj);
 					if(HUD.TANKHEALTH<=0)
 					{

@@ -3,8 +3,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.ImageIcon;
 /* This class is responsible for displaying the Menu 
  * and it handles the Death Screen and it also 
  * has a MouseAdapter to add mouse input for mouse input */
@@ -43,6 +46,7 @@ public class Menu extends MouseAdapter
 	public boolean nextLevelLevel1End = false;
 	public boolean nextLevelLevel2End = false;
 	public boolean nextLevelLevel3End = false;
+	public boolean gameCompleteLevel4End = false;
 	public boolean stopScoreChange1 = false;
 	public boolean stopScoreChange2 = false;	
 	public boolean stopScoreChange3 = false;
@@ -58,6 +62,8 @@ public class Menu extends MouseAdapter
 	private PlayerInfo playerInfo;
 	FileUtils fileUtils = new FileUtils();
 	public boolean storeScoreStop = false;
+	private Image questionDisplay;
+	private ImageIcon icon;
 	/* This constructor has a game instance and handler instance
 	 * for this class so we can check the game State or
 	 * to clear all the objects in the handler and 
@@ -126,7 +132,7 @@ public class Menu extends MouseAdapter
 			storeScoreStop = false;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -138,7 +144,7 @@ public class Menu extends MouseAdapter
 			storeScoreStop = false;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -158,7 +164,7 @@ public class Menu extends MouseAdapter
 			HUD.HIGHSCORE = 0;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -173,7 +179,7 @@ public class Menu extends MouseAdapter
 			HUD.EXPLODERHEALTH = 20;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -190,7 +196,7 @@ public class Menu extends MouseAdapter
 			storeScoreStop = false;
 			game.upgrades.box1Row1Cost = 1000;
 			game.upgrades.box2Row1Cost = 2000;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -245,7 +251,7 @@ public class Menu extends MouseAdapter
 			// END OF LEVEL 2
 			game.gameState = game.STATE.LEVEL3;
 			storeScoreStop = false;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -265,7 +271,7 @@ public class Menu extends MouseAdapter
 			// END OF LEVEL 3
 			game.gameState = game.STATE.LEVEL4;
 			storeScoreStop = false;
-			game.upgrades.isWaterBullet = false;
+			game.upgrades.isBullet = false;
 			game.upgrades.isSplitBullet = false;
 			game.upgrades.isDualPistolBullet = false;
 			game.upgrades.isShotgunBullet = false;
@@ -295,6 +301,11 @@ public class Menu extends MouseAdapter
 		{
 			// END OF LEVEL 4
 			game.gameState = game.STATE.MENU;
+		}
+		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0)
+		{
+			game.gameState = game.STATE.GAMECOMPLETE;
+			game.player.x = 370;
 		}
 		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange1)
 		{
@@ -397,6 +408,8 @@ public class Menu extends MouseAdapter
 		else menuButtonLevel3End = false;
 		if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0) menuButtonLevel4End = true;
 		else menuButtonLevel4End = false;
+		if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0) gameCompleteLevel4End = true;
+		else gameCompleteLevel4End = false;
 		
 	}
 	/* This is the mouseReleased method which is not in use right now */
@@ -654,6 +667,8 @@ public class Menu extends MouseAdapter
 				game.isLevel2Complete = true;
 				game.isLevel3Complete = true;
 			}
+			icon = new ImageIcon(getClass().getResource("QuestionDisplay.png"));
+			questionDisplay = icon.getImage();
 			
 			g.setColor(Color.GRAY);
 			g.fillRect(50,115,260,260);
@@ -684,7 +699,8 @@ public class Menu extends MouseAdapter
 			
 			g.setColor(Color.GRAY);
 			g.fillRect(490,115,260,260);
-			g.drawImage(game.level2Display,490,115,260,260,null);
+			if(game.isLevel1Complete) g.drawImage(game.level2Display,490,115,260,260,null);
+			else g.drawImage(questionDisplay,490,115,260,260,null);
 			g.setColor(Color.CYAN);
 			g.setFont(difLevDisplay);
 			g.drawString("LEVEL 2",590,396);
@@ -699,7 +715,8 @@ public class Menu extends MouseAdapter
 	        ((Graphics2D)g).setStroke(new BasicStroke(3));
 			g.setColor(Color.GRAY);
 			g.fillRect(50, 400, 260, 260);
-			g.drawImage(game.level3Display,50, 400, 260, 260,null);
+			if(game.isLevel2Complete) g.drawImage(game.level3Display,50, 400, 260, 260,null);
+			else g.drawImage(questionDisplay,50, 400, 260, 260,null);
 			if(level3highlight) g.setColor(Color.BLACK);
 			else g.setColor(Color.WHITE);
 			g.drawRect(50, 400, 261, 261);
@@ -709,13 +726,50 @@ public class Menu extends MouseAdapter
 			((Graphics2D)g).setStroke(new BasicStroke(3));
 			g.setColor(Color.GRAY);
 			g.fillRect(490, 400, 260, 260);
-			g.drawImage(game.level4Display,490, 400, 260, 260,null);
+			if(game.isLevel3Complete) g.drawImage(game.level4Display,490, 400, 260, 260,null);
+			else g.drawImage(questionDisplay,490, 400, 260, 260,null);
 			if(level4highlight) g.setColor(Color.BLACK);
 			else g.setColor(Color.WHITE);
 			g.drawRect(490, 400, 261, 261);
 			g.setColor(Color.CYAN);
 			g.drawString("LEVEL 4",590,680);
 
+		}
+		else if(game.gameState == game.STATE.GAMECOMPLETE)
+		{
+			if(Player.playerMoved)
+			{
+				g.setColor(Color.WHITE);
+				Font f2 = new Font("Roboto",Font.BOLD,60);
+				g.setFont(f2);
+				g.drawString("GAME COMPLETED",Game.WIDTH/2-285, Game.HEIGHT/2-80);
+				
+				g.setColor(Color.GREEN);
+				Font f3 = new Font("Roboto",Font.BOLD | Font.ITALIC,48);
+				g.setFont(f3);
+				g.drawString("You escaped the Volcano!",Game.WIDTH/2-320, Game.HEIGHT/2-30);
+				
+				g.setColor(Color.WHITE);
+				Font f4 = new Font("Roboto",Font.BOLD | Font.ITALIC,24);
+				g.setFont(f4);
+				g.setColor(deepPink);
+				g.drawString("Creator: ",10,420);
+				
+				Font f5 = new Font("Roboto",Font.BOLD,24);
+				g.setFont(f5);
+				g.drawString("Priyadarsi Mishra",120,420);
+				
+				g.setColor(skyBlue);
+				g.drawString("You can go back and play all levels and try to beat", 85, 450);
+				g.drawString("your previous highscores. You can also go back and", 75, 480);
+				g.drawString("customize your character", 230, 510);
+
+				g.setColor(Color.WHITE);
+				g.drawRect(10,570,780,75);
+				g.setFont(f3);
+				g.drawString("BACK TO MENU", 200, 625);
+				
+			}			
 		}
 		else if(game.gameState == game.STATE.DEADSCREEN)
 		{
@@ -751,7 +805,6 @@ public class Menu extends MouseAdapter
 			}
 			if(HUD.LEVEL == 1)
 			{
-				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 				if(HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5,255);
@@ -780,7 +833,6 @@ public class Menu extends MouseAdapter
 			}
 			if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 2)
 			{
-				System.out.println("Storing the Player Details:");
 				playerInfo.setPlayerName(Game.NAME);
 				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
 				playerInfo.setTotalScore(HUD.TOTALSCORE);
@@ -790,7 +842,6 @@ public class Menu extends MouseAdapter
 			}
 			if(HUD.LEVEL == 2)
 			{
-				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 				if(HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5,255);
@@ -819,7 +870,6 @@ public class Menu extends MouseAdapter
 			}
 			if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 3)
 			{
-				//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 				playerInfo.setPlayerName(Game.NAME);
 				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
 				playerInfo.setTotalScore(HUD.TOTALSCORE);
@@ -829,7 +879,6 @@ public class Menu extends MouseAdapter
 			}
 			if(HUD.LEVEL == 3)
 			{
-				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 				if(HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5,255);
@@ -858,7 +907,6 @@ public class Menu extends MouseAdapter
 			}
 			if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 4)
 			{
-				//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 				playerInfo.setPlayerName(Game.NAME);
 				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
 				playerInfo.setTotalScore(HUD.TOTALSCORE);
@@ -868,7 +916,6 @@ public class Menu extends MouseAdapter
 			}
 			if(HUD.LEVEL == 4)
 			{
-				System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 				if(HUD.SCORE == 0)
 				{
 					g.drawString("SCORE: 0",5,255);
@@ -1082,7 +1129,6 @@ public class Menu extends MouseAdapter
 				g.drawLine(2, 250, Game.WIDTH-2, 250);
 				if(playerInfo != null && !storeScoreStop && HUD.LEVEL == 3)
 				{
-					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 					playerInfo.setPlayerName(Game.NAME);
 					playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
 					playerInfo.setTotalScore(HUD.TOTALSCORE);
@@ -1092,7 +1138,6 @@ public class Menu extends MouseAdapter
 				}
 				if(HUD.LEVEL == 3)
 				{
-					System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 					if(HUD.SCORE == 0)
 					{
 						g.drawString("SCORE: 0",5,295);
@@ -1142,9 +1187,9 @@ public class Menu extends MouseAdapter
 				Font f = new Font("Superpower Synonym",Font.BOLD,28);
 				g.setFont(f);
 				/* Edit here */
-				if(nextLevelLevel3End) 	g.fillRect(620, 290, 150, 50);
+				if(gameCompleteLevel4End) g.fillRect(620, 290, 150, 50);
 				else g.drawRect(620, 290, 150, 50);
-				if(nextLevelLevel3End) g.setColor(Color.BLACK);
+				if(gameCompleteLevel4End) g.setColor(Color.BLACK);
 				else g.setColor(Color.WHITE);
 				g.drawString("Next Level", 624,325);
 				
@@ -1172,7 +1217,6 @@ public class Menu extends MouseAdapter
 				}
 				if(HUD.LEVEL == 4)
 				{
-					System.out.println("Getting the Player Score:"+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL)+" : HUD.LEVEL : "+HUD.LEVEL);
 					if(HUD.SCORE == 0)
 					{
 						g.drawString("SCORE: 0",5,295);

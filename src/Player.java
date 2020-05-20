@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -11,7 +12,7 @@ public class Player extends GameObject
 	public static double x;
 	public static double y;
 	private double xVel = 0;
-	private double yVel = 0;
+	private double yVel = -5;
 	public static boolean changeSpeed = true;
 	public static int changeBack = 20;
 	private ID id;
@@ -33,12 +34,21 @@ public class Player extends GameObject
 	private int imageTimeExplosion = 0;
 	private int imageTimeBomb = 0;
 	private int imageTimeParticle = 0;
-	public static boolean shoot = false;
+	public static boolean pistolShoot = false;
 	public static boolean doubleShoot = false;
+	public static boolean shotgunShoot = false;
+	public static boolean sniperShoot = false;
 	public static boolean isDisplay = false;
 	public static boolean explosionPic;
 	public static boolean bombPic;
 	public static boolean particle;
+	private Image shotgun;
+	private ImageIcon shotgunIcon;
+	private Image sniper;
+	private ImageIcon sniperIcon;
+	private int pause = 60;
+	private double offset = 0;
+	public static boolean playerMoved = false;
 	/* This constructor has similar parameters to other game objects
 	 * and this is required to make the player work */
 	public Player(double x,double y,Game game,SpriteTextures texture,ObjectHandler handler,ID id)
@@ -62,17 +72,33 @@ public class Player extends GameObject
 	 * and the it also checks for collision */
 	public void update()
 	{
-		x+=xVel;
-		if(x<=0)
-			x=0;
-		if(x>=763)
-			x=763;
-		checkCollision();
+		if(game.gameState == game.STATE.GAMECOMPLETE)
+		{
+			if(y<=75) 
+			{
+				y = 75;
+				playerMoved = true;
+			}
+			else y+=yVel;
+		}
+		else
+		{
+			x+=xVel;
+			if(x<=0)
+				x=0;
+			if(x>=763)
+				x=763;
+			checkCollision();
+		}
 	}
 	/* This method is called 60 times per second
 	 * Depending on the state it draws the player */
 	public void render(Graphics g)
 	{
+		shotgunIcon = new ImageIcon(getClass().getResource("/Shotgun.png"));
+		shotgun = shotgunIcon.getImage();
+		sniperIcon = new ImageIcon(getClass().getResource("/Sniper.png"));
+		sniper = sniperIcon.getImage();
 		icon1 = new ImageIcon(getClass().getResource("/Explosion.gif"));
 		explosion = icon1.getImage();
 		icon2 = new ImageIcon(getClass().getResource("/Bomb.gif"));
@@ -81,9 +107,22 @@ public class Player extends GameObject
 		freeze = icon3.getImage();
 		icon4 = new ImageIcon(getClass().getResource("health.png"));
 		healthparticle = icon4.getImage();
-		if(shoot) g.drawImage(texture.playerShooting,(int)x,(int)y,50,80,null);
+		 
+		if(pistolShoot) g.drawImage(texture.playerShooting,(int)x,(int)y,50,80,null);
 		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
 		if(doubleShoot) g.drawImage(texture.doublePistolPlayer,(int)x,(int)y,50,80,null);
+		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
+		if(shotgunShoot) 
+		{
+			g.drawImage(texture.playerShooting,(int)x,(int)y,50,80,null);
+			g.drawImage(shotgun,(int)x+2,(int)y-10,32,32,null);
+		}
+		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
+		if(sniperShoot)
+		{
+			g.drawImage(texture.playerShooting,(int)x,(int)y,50,80,null);
+			g.drawImage(sniper,(int)x-5,(int)y-25,44,44,null);
+		}
 		else g.drawImage(texture.player,(int)x,(int)y,50,80,null);
 		if(changeSpeed) g.drawImage(freeze,(int)x-10,(int)y,60,60,null);
 		if(particle)
@@ -125,6 +164,33 @@ public class Player extends GameObject
 				imageTimeBomb++;
 			}
 		}
+		
+		if(game.gameState == game.STATE.GAMECOMPLETE)
+		{
+			Font nameFont = new Font("Roboto",Font.BOLD,12);
+			g.setFont(nameFont);
+			g.setColor(Color.WHITE);
+			offset = Game.NAME.length()*2.75;
+			double nameOffset = Game.NAME.length()*(Game.NAME.length()/9);
+			g.fillRect((int)(x-offset+2),(int)y+102,(int)(Game.NAME.length()+26+offset*2),20);
+			g.setColor(Color.RED);
+			g.drawString(Game.NAME,(int)(x-(nameOffset+((double)Game.NAME.length()/4.5))),(int)y+114);
+//			if(Game.NAME.length() > 5)
+//			{
+//				offset = Game.NAME.length()*-2;
+//				g.fillRect((int)(x+offset), (int)y+90, (int)(30-(offset)+Game.NAME.length()*3), 15);
+//				g.setColor(Color.RED);
+//				g.drawString(Game.NAME,(int)(x+offset/2), (int)y+102);
+//			}
+//			else
+//			{
+//				offset = Game.NAME.length()*-1.75;
+//				g.setColor(Color.WHITE);
+//				g.fillRect((int)(x+offset), (int)y+90, (int)(50-(offset)), 15);
+//				g.setColor(Color.RED);
+//				g.drawString(Game.NAME,(int)(x-offset+Game.NAME.length()/2-1.2), (int)y+102);
+//			}
+		}//
 	}
 	/* This method checks Collision depending on the 
 	 * game Object which either adds to the score or 
@@ -162,14 +228,14 @@ public class Player extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.HEALTH-=1.4;
+					HUD.HEALTH-=1;
 				}
 			}
 			if(obj.id == ID.Level4Boss)
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.HEALTH-=1.2;
+					HUD.HEALTH-=0.8;
 				}
 			}
 			if(obj.id == ID.MagmaRock)

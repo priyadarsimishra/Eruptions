@@ -12,9 +12,10 @@ public class DoubleBullet extends GameObject
 	private ObjectHandler handler;
 	private SpriteTextures texture;
 	private boolean split = false;
+	private Game game;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public DoubleBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel) 
+	public DoubleBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -23,12 +24,16 @@ public class DoubleBullet extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 		this.yVel = yVel;
+		this.game = game;
 	}
 	/* This creates a rectangle around the DoubleBullet  
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
-		return new Rectangle((int)x+4,(int)y,12,20);
+		if(game.upgrades.isShotgun) return new Rectangle((int)x-2,(int)y,14,14);
+		else if(game.upgrades.isDualPistol) return new Rectangle((int)x-2,(int)y,14,14);
+		else if(game.upgrades.isSniper) return new Rectangle((int)x-2,(int)y,15,15);
+		else return new Rectangle((int)x+4,(int)y,12,20);
 	}
 	/* This method is called 60 times per second and 
 	 * it makes the DoubleBullet go up and it also adds
@@ -43,8 +48,8 @@ public class DoubleBullet extends GameObject
 			split = true;
 			if(split)
 			{
-				handler.addObject(new SplitBullet1((int)x-15,450,ID.DoubleBullet,handler,texture));
-				handler.addObject(new SplitBullet2((int)x+15,450,ID.DoubleBullet,handler,texture));
+				handler.addObject(new SplitBullet1((int)x-15,450,ID.DoubleBullet,handler,texture, this.game));
+				handler.addObject(new SplitBullet2((int)x+15,450,ID.DoubleBullet,handler,texture, this.game));
 			}
 			handler.removeObject(this);
 		}
@@ -74,7 +79,10 @@ public class DoubleBullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.doubleBullet,(int)x-2,(int)y,20,20,null);
+		if(game.upgrades.isShotgun) g.drawImage(texture.doubleBullet,(int)x-2,(int)y,14,14,null);
+		else if(game.upgrades.isDualPistol) g.drawImage(texture.doubleBullet,(int)x,(int)y,14,14,null);
+		else if(game.upgrades.isSniper) g.drawImage(texture.doubleBullet,(int)x-2,(int)y,15,15,null);
+		else g.drawImage(texture.doubleBullet,(int)x-2,(int)y,20,20,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

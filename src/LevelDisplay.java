@@ -22,6 +22,7 @@ public class LevelDisplay
 	public static int tankTime = 200;
 	public static int boomerangTime = 200;
 	public static int shieldTime = 200;
+	public static int pauseTime = 60;
 	private Color springGreen = new Color(0,255,127);
 	public Color skyBlue = new Color(0,191,255);
 	public Color lime = new Color(50,205,50);
@@ -130,7 +131,7 @@ public class LevelDisplay
 			if(wizardTime>0)
 			{
 				g.setColor(skyBlue);
-				g.drawString("+300", (int)Wizard.x, (int)Wizard.y);
+				g.drawString("+600", (int)Wizard.x, (int)Wizard.y);
 				wizardTime--;
 			}
 		}
@@ -372,6 +373,14 @@ public class LevelDisplay
 					g.drawString("+3000",(int)Level4Boss.x+80,(int)Level4Boss.y+200);
 				scoreTime4--;
 			}
+		}
+		if(game.gameState == game.STATE.GAMECOMPLETE && Player.playerMoved)
+		{
+			((Graphics2D)g).setStroke(new BasicStroke(6));
+			g.setColor(Color.BLACK);
+			g.fillRect(0, Game.HEIGHT/2-140,800,400);
+			g.setColor(Color.YELLOW);
+			g.drawRect(2, Game.HEIGHT/2-140, 797, 398);
 		}
 	}
 }

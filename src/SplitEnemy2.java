@@ -1,6 +1,9 @@
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.Random;
+
+import javax.swing.ImageIcon;
 /* This is class is for the SplitEnemy1 which is introduced
  * in LEVEL 2 */
 public class SplitEnemy2 extends GameObject
@@ -19,9 +22,14 @@ public class SplitEnemy2 extends GameObject
 	private ObjectHandler handler;
 	private SpriteTextures texture;
 	private int fireRate = 300;
+	private Image explosion;
+	private ImageIcon icon;
+	private int imageExplosionTime = 0;
+	private boolean isExplode = false;
+	private Game game;
 	/* This is the constructor for the SplitEnemy1
 	 * and it requires the same parameter as other game objects */
-	public SplitEnemy2(double x, double y, ID id,ObjectHandler handler, SpriteTextures texture,int width, int height, boolean show)
+	public SplitEnemy2(double x, double y, ID id,ObjectHandler handler, SpriteTextures texture,int width, int height, boolean show, Game game)
 	{
 		super(x,y,id);
 		this.x = x;
@@ -32,6 +40,7 @@ public class SplitEnemy2 extends GameObject
 		this.width = width;
 		this.height = height;
 		this.show = show;
+		this.game = game;
 	}
 	/* This creates a rectangle around the SplitEnemy1 enemy 
 	 * which is used to check collision with the bullet */
@@ -53,10 +62,25 @@ public class SplitEnemy2 extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
+		icon = new ImageIcon(getClass().getResource("/Bomb.gif"));
+		explosion = icon.getImage();
+		if(isExplode)
+		{
+			if(imageExplosionTime >= 200)
+			{
+				isExplode = false;
+				imageExplosionTime = 0;
+			}
+			else
+			{
+				g.drawImage(explosion,(int)x-50,(int)y-50,80,80,null);
+				imageExplosionTime++;
+			}
+		}
 		if(xVel <= 0)
-			g.drawImage(texture.throwerEnemyLeft,(int)x,(int)y,width,height,null);
+			g.drawImage(texture.throwerEnemyLeft,(int)x-15,(int)y-10,width,height,null);
 		else 
-			g.drawImage(texture.throwerEnemyRight,(int)x,(int)y,width,height,null);		
+			g.drawImage(texture.throwerEnemyRight,(int)x-15,(int)y-10,width,height,null);		
 		if(fireRate<=0)
 		{
 			handler.addObject(new GoldenRod(this.x+10,this.y+14,r.nextInt(8)+5,ID.GoldenRod,handler,texture));
@@ -81,6 +105,50 @@ public class SplitEnemy2 extends GameObject
 					{
 						handler.removeObject(this);
 						ThrowerEnemy.giveInfo = false;
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.DoubleBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.SPLITHEALTH2-=3;
+					handler.removeObject(obj);
+					if(HUD.SPLITHEALTH2 <= 0)
+					{
+						handler.removeObject(this);
+						ThrowerEnemy.giveInfo = false;
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.ExplosiveBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					isExplode = true;
+					HUD.SPLITHEALTH2-=4;
+					handler.removeObject(obj);
+					if(HUD.SPLITHEALTH2 <= 0)
+					{
+						handler.removeObject(this);
+						ThrowerEnemy.giveInfo = false;
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					HUD.SPLITHEALTH2-=4;
+					handler.removeObject(obj);
+					if(HUD.SPLITHEALTH2 <= 0)
+					{
+						handler.removeObject(this);
+						ThrowerEnemy.giveInfo = false;
+						HUD.SCORE+=200;
 					}
 				}
 			}

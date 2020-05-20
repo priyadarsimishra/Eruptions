@@ -12,9 +12,10 @@ public class ShotgunBullet extends GameObject
 	private ObjectHandler handler;
 	private SpriteTextures texture;
 	private boolean split = false;
+	private Game game;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public ShotgunBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel) 
+	public ShotgunBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -23,11 +24,15 @@ public class ShotgunBullet extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 		this.yVel = yVel;
+		this.game = game;
 	}
 	/* This creates a rectangle around the DoubleBullet  
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
+		if(game.upgrades.isSniper) return new Rectangle((int)x-2,(int)y,15,15);
+		else if(game.upgrades.isPistol) return new Rectangle((int)x-2,(int)y,20,20);
+		else if(game.upgrades.isDualPistol) return new Rectangle((int)x-2,(int)y,14,14);
 		return new Rectangle((int)x,(int)y,5,8);
 	}
 	/* This method is called 60 times per second and 
@@ -76,7 +81,10 @@ public class ShotgunBullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,5,8,null);
+		if(game.upgrades.isSniper) g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,15,15,null);
+		else if(game.upgrades.isPistol) g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,20,20,null);
+		else if(game.upgrades.isDualPistol) g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,14,14,null);
+		else g.drawImage(texture.shotgunBullet,(int)x-2,(int)y,5,8,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

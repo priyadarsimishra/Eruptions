@@ -18,9 +18,10 @@ public class ExplosiveBullet extends GameObject
 	private Image explosion;
 	private ImageIcon icon;
 	private int imageTimeExplosion = 0;
+	private Game game;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public ExplosiveBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel) 
+	public ExplosiveBullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -29,12 +30,15 @@ public class ExplosiveBullet extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 		this.yVel = yVel;
+		this.game = game;
 	}
 	/* This creates a rectangle around the bullet  
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
-		return new Rectangle((int)x+4,(int)y,12,20);
+		if(game.upgrades.isShotgun) return new Rectangle((int)x,(int)y,5,8);
+		else if(game.upgrades.isSniper) return new Rectangle((int)x,(int)y,15,15);
+		else return new Rectangle((int)x+4,(int)y,12,20);
 	}
 	/* This method is called 60 times per second and 
 	 * it makes the bullet go up, then it is removed if
@@ -51,7 +55,9 @@ public class ExplosiveBullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.explosiveBullet,(int)x,(int)y,20,20,null);
+		if(game.upgrades.isShotgun) g.drawImage(texture.explosiveBullet,(int)x,(int)y,5,8,null);
+		else if(game.upgrades.isSniper) g.drawImage(texture.explosiveBullet,(int)x,(int)y,15,15,null);
+		else g.drawImage(texture.explosiveBullet,(int)x,(int)y,20,20,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

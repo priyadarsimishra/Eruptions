@@ -17,7 +17,7 @@ public class ThrowerEnemy extends GameObject
 	public static double giveX;
 	public static double giveY;
 	private Random r = new Random();
-	private int ytimer = r.nextInt(50)+20;
+	private int ytimer = r.nextInt(50)+30;
 	private int xTimer = 40;
 	private ID id;
 	public static boolean split = false;
@@ -25,9 +25,14 @@ public class ThrowerEnemy extends GameObject
 	private ObjectHandler handler;
 	private SpriteTextures texture;
 	public int fireRate = 350;
+	private Image explosion;
+	private ImageIcon icon;
+	private int imageExplosionTime = 0;
+	private boolean isExplode = false;
+	private Game game;
 	/* This is the constructor for the Thrower Enemy
 	 * and it requires the same parameter as other game objects */
-	public ThrowerEnemy(double x, double y, ID id,ObjectHandler handler, SpriteTextures texture,int width, int height)
+	public ThrowerEnemy(double x, double y, ID id,ObjectHandler handler, SpriteTextures texture,int width, int height, Game game)
 	{
 		super(x,y,id);
 		this.x = x;
@@ -37,6 +42,7 @@ public class ThrowerEnemy extends GameObject
 		this.texture = texture;
 		this.width = width;
 		this.height = height;
+		this.game = game;
 	}
 	/* This creates a rectangle around the ThrowerEnemy enemy 
 	 * which is used to check collision with the bullet */
@@ -79,10 +85,25 @@ public class ThrowerEnemy extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
+		icon = new ImageIcon(getClass().getResource("/Bomb.gif"));
+		explosion = icon.getImage();
 		if(xVel <= 0)
 			g.drawImage(texture.throwerEnemyLeft,(int)x,(int)y,width,height,null);
 		else 
 			g.drawImage(texture.throwerEnemyRight,(int)x,(int)y,width,height,null);
+		if(isExplode)
+		{
+			if(imageExplosionTime >= 200)
+			{
+				isExplode = false;
+				imageExplosionTime = 0;
+			}
+			else
+			{
+				g.drawImage(explosion,(int)x-20,(int)y-20,80,80,null);
+				imageExplosionTime++;
+			}
+		}
 		if(fireRate<=0)
 		{
 			handler.addObject(new GoldenRod(this.x+10,this.y+14,r.nextInt(8)+5,ID.GoldenRod,handler,texture));
@@ -101,7 +122,44 @@ public class ThrowerEnemy extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()))
 				{
-					HUD.THROWERHEALTH-=5;
+					if(game.upgrades.isSniper) HUD.THROWERHEALTH-=25;
+					else if(game.upgrades.isDualPistol) HUD.THROWERHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.THROWERHEALTH-=2;
+					else HUD.THROWERHEALTH-=5;
+					handler.removeObject(obj);
+				}
+			}
+			if(obj.id == ID.ExplosiveBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					isExplode = true;
+					if(game.upgrades.isSniper) HUD.THROWERHEALTH-=25;
+					else if(game.upgrades.isDualPistol) HUD.THROWERHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.THROWERHEALTH-=6;
+					else HUD.THROWERHEALTH-=3;
+					handler.removeObject(obj);
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.THROWERHEALTH-=15;
+					else if(game.upgrades.isDualPistol) HUD.THROWERHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.THROWERHEALTH-=2;
+					else HUD.THROWERHEALTH-=3;
+					handler.removeObject(obj);
+				}
+			}
+			if(obj.id == ID.DoubleBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					if(game.upgrades.isSniper) HUD.THROWERHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.THROWERHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.THROWERHEALTH-=3;
+					else HUD.THROWERHEALTH-=3;
 					handler.removeObject(obj);
 				}
 			}

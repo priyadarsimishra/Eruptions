@@ -1,9 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+
+import javax.swing.ImageIcon;
 /* This is the class for Rocket bullet for the Rocket enemy */
 public class Rocket extends GameObject
 {
@@ -82,6 +85,24 @@ public class Rocket extends GameObject
 					destroyed = true;
 				}
 			}
+			if(obj.id == ID.ExplosiveBullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(this);
+					handler.removeObject(obj);
+					destroyed = true;
+				}
+			}
+			if(obj.id == ID.Bullet)
+			{
+				if(getRect().intersects(obj.getRect()))
+				{
+					handler.removeObject(this);
+					handler.removeObject(obj);
+					destroyed = true;
+				}
+			}
 		}
 	}
 	/* This method is also called 60 times per second 
@@ -96,6 +117,5 @@ public class Rocket extends GameObject
 	    g2d.setTransform(at);
 		g.drawImage(texture.rocket,(int)x,(int)y,50,50,null);
 	    g2d.setTransform(backup);
-
 	}
 }

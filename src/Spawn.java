@@ -183,7 +183,7 @@ public class Spawn
 			if(undergroundenemyShow)
 			{
 				HUD.UNDERGROUNDHEALTH = 25;
-				handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
+				handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture,game));
 				undergroundenemyShow = false;
 			}
 			if(HUD.UNDERGROUNDHEALTH<=0)
@@ -192,7 +192,7 @@ public class Spawn
 				{
 					LevelDisplay.underTime = 100;
 					UnderGroundEnemy.show = false;
-					handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture));
+					handler.addObject(new UnderGroundEnemy(r.nextInt(746),r.nextInt(5)+1,ID.UnderGroundEnemy,handler,texture,game));
 					HUD.UNDERGROUNDHEALTH = 25;	
 					showIt = 500;
 				}
@@ -217,7 +217,7 @@ public class Spawn
 				HUD.WIZARDHEALTH = 50;
 				LevelDisplay.wizardTime = 100;
 				HUD.WIZARDHEALTH = 50;
-				handler.addObject(new Wizard(r.nextInt(760)+0,-5,ID.Wizard,r.nextInt(6)+3,r.nextInt(6)+3,handler,texture));
+				handler.addObject(new Wizard(r.nextInt(760)+0,-5,ID.Wizard,r.nextInt(6)+3,r.nextInt(6)+3,handler,texture,game));
 				wizardspawn = false;
 			}
 			if(HUD.WIZARDHEALTH<=0)
@@ -225,7 +225,7 @@ public class Spawn
 				if(wizardTime<=0)
 				{
 					LevelDisplay.wizardTime = 100;
-					handler.addObject(new Wizard(r.nextInt(768)+1,-5,ID.Wizard,r.nextInt(3)+2,r.nextInt(2)+1,handler,texture));
+					handler.addObject(new Wizard(r.nextInt(768)+1,-5,ID.Wizard,r.nextInt(3)+2,r.nextInt(2)+1,handler,texture,game));
 					HUD.WIZARDHEALTH = 50;
 					wizardTime = 300;
 				}
@@ -235,7 +235,7 @@ public class Spawn
 			{
 				ThrowerEnemy.split = false;
 				HUD.THROWERHEALTH = 50;
-				handler.addObject(new ThrowerEnemy(r.nextInt(540)+80,-32,ID.ThrowerEnemy,handler,texture,48,48));
+				handler.addObject(new ThrowerEnemy(r.nextInt(540)+80,-32,ID.ThrowerEnemy,handler,texture,48,48,game));
 				throwerspawn = false;
 			}
 			if(ThrowerEnemy.giveInfo && HUD.THROWERHEALTH<=25)
@@ -245,8 +245,8 @@ public class Spawn
 				ThrowerEnemy.giveInfo = true;
 				HUD.SPLITHEALTH1 = 25;
 				HUD.SPLITHEALTH2 = 25;
-				handler.addObject(new SplitEnemy1(ThrowerEnemy.giveX,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
-				handler.addObject(new SplitEnemy2(ThrowerEnemy.giveX,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo));
+				handler.addObject(new SplitEnemy1(ThrowerEnemy.giveX,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo,game));
+				handler.addObject(new SplitEnemy2(ThrowerEnemy.giveX,ThrowerEnemy.giveY,ID.SplitEnemy2,handler,texture,32,32,ThrowerEnemy.giveInfo,game));
 
 				ThrowerEnemy.giveInfo = false;
 			}
@@ -261,7 +261,7 @@ public class Spawn
 				{
 					ThrowerEnemy.split = false;
 					
-					handler.addObject(new ThrowerEnemy(r.nextInt(540)+80,r.nextInt(200)+0,ID.ThrowerEnemy,handler,texture,48,48));
+					handler.addObject(new ThrowerEnemy(r.nextInt(540)+80,r.nextInt(200)+0,ID.ThrowerEnemy,handler,texture,48,48,game));
 					HUD.THROWERHEALTH = 50;
 					throwerTime = 500;
 				}
@@ -362,7 +362,7 @@ public class Spawn
 			{
 				LevelDisplay.exploderTime = 200;
 				HUD.EXPLODERHEALTH = 20;
-				handler.addObject(new ExploderEnemy(r.nextInt(746),-32,ID.ExploderEnemy,handler,texture,-4));
+				handler.addObject(new ExploderEnemy(r.nextInt(746),-32,ID.ExploderEnemy,handler,texture,-4,game));
 				exploderEnemyTime = false;
 			}
 			if(HUD.EXPLODERHEALTH<=0)
@@ -371,7 +371,7 @@ public class Spawn
 				{
 					LevelDisplay.exploderTime = 200;
 					HUD.EXPLODERHEALTH = 20;
-					handler.addObject(new ExploderEnemy(r.nextInt(746),-32,ID.ExploderEnemy,handler,texture,-4));
+					handler.addObject(new ExploderEnemy(r.nextInt(746),-32,ID.ExploderEnemy,handler,texture,-4,game));
 					exploderTime = 250;
 				}
 				else exploderTime--;
@@ -380,7 +380,7 @@ public class Spawn
 			{
 				LevelDisplay.rayEnemyTime = 200;
 				HUD.RAYHEALTH = 30;
-				handler.addObject(new RayEnemy(r.nextInt(745),-32,ID.RayEnemy,handler,texture));
+				handler.addObject(new RayEnemy(r.nextInt(745),-32,ID.RayEnemy,handler,texture,game));
 				rayEnemyTime = false;
 			}
 			if(HUD.RAYHEALTH<=0)
@@ -389,7 +389,7 @@ public class Spawn
 				{
 					LevelDisplay.rayEnemyTime = 200;
 					HUD.RAYHEALTH = 30;
-					handler.addObject(new RayEnemy(r.nextInt(745),-32,ID.RayEnemy,handler,texture));
+					handler.addObject(new RayEnemy(r.nextInt(745),-32,ID.RayEnemy,handler,texture,game));
 					rayTime = 300;
 				}
 				else rayTime--;
@@ -398,7 +398,7 @@ public class Spawn
 			{
 				LevelDisplay.rocketEnemyTime = 200;
 				HUD.ROCKETHEALTH = 60;
-				handler.addObject(new RocketEnemy(r.nextInt(745),-32,ID.RocketEnemy,handler,texture));
+				handler.addObject(new RocketEnemy(r.nextInt(745),-32,ID.RocketEnemy,handler,texture,game));
 				rocketEnemyTime = false;
 			}
 			if(HUD.ROCKETHEALTH<=0)
@@ -407,7 +407,7 @@ public class Spawn
 				{
 					LevelDisplay.rocketEnemyTime = 200;
 					HUD.ROCKETHEALTH = 60;
-					handler.addObject(new RocketEnemy(r.nextInt(745),-32,ID.RocketEnemy,handler,texture));
+					handler.addObject(new RocketEnemy(r.nextInt(745),-32,ID.RocketEnemy,handler,texture,game));
 					rocketTime = 400;
 				}
 				else rocketTime--;
@@ -460,7 +460,7 @@ public class Spawn
 			{
 				LevelDisplay.tankTime = 200;
 				HUD.TANKHEALTH = 60;
-				handler.addObject(new TankEnemy(r.nextInt(700)+20,-32,ID.TankEnemy,handler,texture));
+				handler.addObject(new TankEnemy(r.nextInt(700)+20,-32,ID.TankEnemy,handler,texture,game));
 				tankspawn = false;
 			}
 			if(HUD.TANKHEALTH<=0)
@@ -468,7 +468,7 @@ public class Spawn
 				if(tankTime<=0)
 				{
 					LevelDisplay.tankTime = 200;
-					handler.addObject(new TankEnemy(r.nextInt(700)+20,-32,ID.TankEnemy,handler,texture));
+					handler.addObject(new TankEnemy(r.nextInt(700)+20,-32,ID.TankEnemy,handler,texture,game));
 					HUD.TANKHEALTH = 60;
 					tankTime = 450;
 				}
@@ -478,7 +478,7 @@ public class Spawn
 			{
 				LevelDisplay.boomerangTime = 200;
 				HUD.BOOMERANGHEALTH = 40;
-				handler.addObject(new BoomerangEnemy(r.nextInt(720)+20,-32,ID.BoomerangEnemy,handler,texture,r.nextInt(10)+7));
+				handler.addObject(new BoomerangEnemy(r.nextInt(720)+20,-32,ID.BoomerangEnemy,handler,texture,r.nextInt(10)+7,game));
 				boomerangEnemyTime = false;
 			}
 			if(HUD.BOOMERANGHEALTH<=0)
@@ -486,7 +486,7 @@ public class Spawn
 				if(boomerangTime<=0)
 				{
 					LevelDisplay.boomerangTime = 200;
-					handler.addObject(new BoomerangEnemy(r.nextInt(720)+20,-32,ID.BoomerangEnemy,handler,texture,r.nextInt(8)+4));
+					handler.addObject(new BoomerangEnemy(r.nextInt(720)+20,-32,ID.BoomerangEnemy,handler,texture,r.nextInt(8)+4,game));
 					HUD.BOOMERANGHEALTH = 40;
 					boomerangTime = 250;
 				}
@@ -553,7 +553,7 @@ public class Spawn
 			{
 				LevelDisplay.shieldTime = 200;
 				HUD.SHIELDENEMYHEALTH = 40;
-				handler.addObject(new ShieldEnemy(r.nextInt(720)+20,-32,ID.ShieldEnemy,handler,texture));
+				handler.addObject(new ShieldEnemy(r.nextInt(720)+20,-32,ID.ShieldEnemy,handler,texture,game));
 				shieldEnemyTime = false;
 			}
 			if(HUD.SHIELDENEMYHEALTH<=0)
@@ -561,7 +561,7 @@ public class Spawn
 				if(shieldEnemy<=0)
 				{
 					LevelDisplay.shieldTime = 200;
-					handler.addObject(new ShieldEnemy(r.nextInt(720)+20,-32,ID.ShieldEnemy,handler,texture));
+					handler.addObject(new ShieldEnemy(r.nextInt(720)+20,-32,ID.ShieldEnemy,handler,texture,game));
 					HUD.SHIELDENEMYHEALTH = 40;
 					shieldEnemy = 250;
 				}
@@ -585,7 +585,7 @@ public class Spawn
 		if(game.isBossFight4 && !bossMade4)
 		{
 			//make the boss here
-			handler.addObject(new Level4Boss(Game.WIDTH/2-100,-40,ID.Level4Boss,texture,handler,10));
+			handler.addObject(new Level4Boss(Game.WIDTH/2-100,-40,ID.Level4Boss,texture,handler,10,game));
 			bossMade4 = true;
 		}
 		if(game.isBossFight4)

@@ -119,51 +119,51 @@ public class BabyDragon extends GameObject
 
 				}
 			}
-			if(object.id == ID.Bullet)
-			{
-				if(getRect().intersects(object.getRect()))
-				{
-					HUD.BABYDRAGONHEALTH-=3;
-					handler.removeObject(object);
-					if(HUD.BABYDRAGONHEALTH<=0)
-					{
-						HUD.BABYDRAGONHEALTH = 0;
-						HUD.SCORE+=400;
-						handler.removeObject(this);
-						Spawn.spawnbabyDragon = false;
-					}
-				}
-			}
-			if(object.id == ID.ShotgunBullet)
-			{
-				if(getRect().intersects(object.getRect()))
-				{
-					HUD.BABYDRAGONHEALTH-=1;
-					handler.removeObject(object);
-					if(HUD.BABYDRAGONHEALTH<=0)
-					{
-						HUD.BABYDRAGONHEALTH = 0;
-						HUD.SCORE+=400;
-						handler.removeObject(this);
-						Spawn.spawnbabyDragon = false;
-					}
-				}
-			}
-			if(object.id == ID.DoubleBullet)
-			{
-				if(getRect().intersects(object.getRect()))
-				{
-					HUD.BABYDRAGONHEALTH-=2;
-					handler.removeObject(object);
-					if(HUD.BABYDRAGONHEALTH<=0)
-					{
-						HUD.BABYDRAGONHEALTH = 0;
-						HUD.SCORE+=400;
-						handler.removeObject(this);
-						Spawn.spawnbabyDragon = false;
-					}
-				}
-			}
+//			if(object.id == ID.Bullet)
+//			{
+//				if(getRect().intersects(object.getRect()))
+//				{
+//					HUD.BABYDRAGONHEALTH-=3;
+//					handler.removeObject(object);
+//					if(HUD.BABYDRAGONHEALTH<=0)
+//					{
+//						HUD.BABYDRAGONHEALTH = 0;
+//						HUD.SCORE+=400;
+//						handler.removeObject(this);
+//						Spawn.spawnbabyDragon = false;
+//					}
+//				}
+//			}
+//			if(object.id == ID.ShotgunBullet)
+//			{
+//				if(getRect().intersects(object.getRect()))
+//				{
+//					HUD.BABYDRAGONHEALTH-=1;
+//					handler.removeObject(object);
+//					if(HUD.BABYDRAGONHEALTH<=0)
+//					{
+//						HUD.BABYDRAGONHEALTH = 0;
+//						HUD.SCORE+=400;
+//						handler.removeObject(this);
+//						Spawn.spawnbabyDragon = false;
+//					}
+//				}
+//			}
+//			if(object.id == ID.DoubleBullet)
+//			{
+//				if(getRect().intersects(object.getRect()))
+//				{
+//					HUD.BABYDRAGONHEALTH-=2;
+//					handler.removeObject(object);
+//					if(HUD.BABYDRAGONHEALTH<=0)
+//					{
+//						HUD.BABYDRAGONHEALTH = 0;
+//						HUD.SCORE+=400;
+//						handler.removeObject(this);
+//						Spawn.spawnbabyDragon = false;
+//					}
+//				}
+//			}
 		}
 	}
 }

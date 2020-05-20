@@ -29,6 +29,10 @@ public class HUD
 	public static int TANKHEALTH = 80;
 	public static int BOOMERANGHEALTH = 40;
 	public static int SHIELDENEMYHEALTH = 40;
+	public static int PISTOLRELOAD;
+	public static int DUALRELOAD;
+	public static int SHOTGUNRELOAD;
+	public static int SNIPERRELOAD;
  	private Color lightPurple = new Color(141, 112, 255);
 	public Color deepPink = new Color(255,20,147);
 	private Color limeChiffon = new Color(255,250,205);
@@ -98,27 +102,30 @@ public class HUD
 		TANKHEALTH = (int)Game.restrict(TANKHEALTH, 0, TANKHEALTH+(sector/4));
 		BOOMERANGHEALTH = (int)Game.restrict(BOOMERANGHEALTH, 0, BOOMERANGHEALTH+(sector/4));
 		SHIELDENEMYHEALTH = (int)Game.restrict(SHIELDENEMYHEALTH, 0, SHIELDENEMYHEALTH+(sector));
+		PISTOLRELOAD = (int)Game.restrict(PISTOLRELOAD, 0, PISTOLRELOAD+(sector));
+		DUALRELOAD = (int)Game.restrict(DUALRELOAD, 0,DUALRELOAD+(sector/5));
+		SHOTGUNRELOAD = (int)Game.restrict(SHOTGUNRELOAD, 0,SHOTGUNRELOAD+(sector/5));
 		if(game.gameState == game.STATE.MENU)
 		{
 			HEALTH = 100;
 			LEVEL1BOSSHEALTH = 200;
 		}
-		if(game.isBossFight)
-		{
-			LEVEL1BOSSHEALTH-=1;
-		}
-		
-		if(game.isBossFight2)
-		{
-			LEVEL2BOSSHEALTH-=2;
-		}
-		if(game.isBossFight3)
-		{
-			LEVEL3BOSSHEALTH-=2;
-		}
+//		if(game.isBossFight)
+//		{
+//			LEVEL1BOSSHEALTH-=1;
+//		}
+//		
+//		if(game.isBossFight2)
+//		{
+//			LEVEL2BOSSHEALTH-=2;
+//		}
+//		if(game.isBossFight3)
+//		{
+//			LEVEL3BOSSHEALTH-=2;
+//		}
 		if(game.isBossFight4)
 		{
-			LEVEL4BOSSHEALTH-=2;
+			LEVEL4BOSSHEALTH-=5;
 		}
 		if(SCORE>=HIGHSCORE)
 		{
@@ -270,16 +277,16 @@ public class HUD
 			if(SplitEnemy1.show && THROWERHEALTH<=25 && !(SPLITHEALTH1<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, 25+sector/4, 10);
+				g.fillRect((int)SplitEnemy1.x-10, (int)SplitEnemy1.y-25, 25+sector/4, 10);
 				g.setColor(Color.YELLOW);
-				g.fillRect((int)SplitEnemy1.x-1, (int)SplitEnemy1.y-15, SPLITHEALTH1, 10);
+				g.fillRect((int)SplitEnemy1.x-10, (int)SplitEnemy1.y-25, SPLITHEALTH1, 10);
 			}
 			if(SplitEnemy2.show && THROWERHEALTH<=25 && !(SPLITHEALTH2<=0))
 			{
 				g.setColor(Color.GRAY);
-				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, 25+sector/4, 10);
+				g.fillRect((int)SplitEnemy2.x-10, (int)SplitEnemy2.y-25, 25+sector/4, 10);
 				g.setColor(Color.YELLOW);
-				g.fillRect((int)SplitEnemy2.x-1, (int)SplitEnemy2.y-15, SPLITHEALTH2, 10);
+				g.fillRect((int)SplitEnemy2.x-10, (int)SplitEnemy2.y-25, SPLITHEALTH2, 10);
 			}
 		}
 		if(Game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && game.isBossFight2)
@@ -453,6 +460,35 @@ public class HUD
 				else
 					g.drawString(LEVEL1BOSSHEALTH+"",728,43);
 			}
+		}
+		
+		if(game.upgrades.isPistol)
+		{
+			g.setColor(Color.GRAY);
+			g.fillRect((int)game.player.x+4,(int)game.player.y,(int)(16*1.8)+sector/6,5);
+			g.setColor(limeChiffon);
+			g.fillRect((int)game.player.x+4,(int)game.player.y, (int)(PISTOLRELOAD*1.8),5);
+		}
+		else if(game.upgrades.isDualPistol)
+		{
+			g.setColor(Color.GRAY);
+			g.fillRect((int)game.player.x+4,(int)game.player.y,30+sector/6,5);
+			g.setColor(limeChiffon);
+			g.fillRect((int)game.player.x+4,(int)game.player.y,DUALRELOAD,5);
+		}
+		else if(game.upgrades.isShotgun)
+		{
+			g.setColor(Color.GRAY);
+			g.fillRect((int)game.player.x+2,(int)game.player.y,(int)(50/1.5)+sector/6,5);
+			g.setColor(limeChiffon);
+			g.fillRect((int)game.player.x+2,(int)game.player.y, (int)(SHOTGUNRELOAD/1.5),5);
+		}
+		else if(game.upgrades.isSniper)
+		{
+			g.setColor(Color.GRAY);
+			g.fillRect((int)game.player.x+2,(int)game.player.y,(int)(100/3)+sector/6,5);
+			g.setColor(limeChiffon);
+			g.fillRect((int)game.player.x+2,(int)game.player.y, (int)(SNIPERRELOAD/3),5);
 		}
 	}
 }

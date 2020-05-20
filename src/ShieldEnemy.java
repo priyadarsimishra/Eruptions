@@ -25,9 +25,10 @@ public class ShieldEnemy extends GameObject
 	public static boolean startDamage = false;
 	public static boolean once = false;
 	private int fireRate = 30;
+	private Game game;
 	/* This is the constructor for the shield Enemy
 	 * and it requires the same parameter as other game objects */
-	public ShieldEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture) 
+	public ShieldEnemy(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -35,6 +36,7 @@ public class ShieldEnemy extends GameObject
 		this.id = id;
 		this.handler = handler;
 		this.texture = texture;
+		this.game = game;
 	}
 	/* This creates a rectangle around the shield Enemy 
 	 * which is used to check collision with the objects */
@@ -107,8 +109,68 @@ public class ShieldEnemy extends GameObject
 			{
 				if(getRect().intersects(obj.getRect()) && startDamage)
 				{
-					HUD.SHIELDENEMYHEALTH-=8;
+					if(game.upgrades.isSniper) HUD.SHIELDENEMYHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.SHIELDENEMYHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.SHIELDENEMYHEALTH-=1;
+					else HUD.SHIELDENEMYHEALTH-=4;
 					isHit = true;
+					handler.removeObject(obj);
+					if(HUD.SHIELDENEMYHEALTH<=0)
+					{
+						once = false;
+						startDamage = false;
+						HUD.SHIELDENEMYHEALTH = 0;
+						HUD.SCORE+=250;
+						handler.removeObject(this);
+					}
+				}
+			}
+			if(obj.id == ID.Bullet)
+			{
+				if(getRect().intersects(obj.getRect()) && startDamage)
+				{
+					if(game.upgrades.isSniper) HUD.SHIELDENEMYHEALTH-=15;
+					else if(game.upgrades.isDualPistol) HUD.SHIELDENEMYHEALTH-=4;
+					else if(game.upgrades.isShotgun) HUD.SHIELDENEMYHEALTH-=1;
+					else HUD.SHIELDENEMYHEALTH-=3;
+					handler.removeObject(obj);
+					if(HUD.SHIELDENEMYHEALTH<=0)
+					{
+						once = false;
+						startDamage = false;
+						HUD.SHIELDENEMYHEALTH = 0;
+						HUD.SCORE+=250;
+						handler.removeObject(this);
+					}
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()) && startDamage)
+				{
+					if(game.upgrades.isSniper) HUD.SHIELDENEMYHEALTH-=12;
+					else if(game.upgrades.isDualPistol) HUD.SHIELDENEMYHEALTH-=5;
+					else if(game.upgrades.isShotgun) HUD.SHIELDENEMYHEALTH-=1;
+					else HUD.SHIELDENEMYHEALTH-=4;
+					handler.removeObject(obj);
+					if(HUD.SHIELDENEMYHEALTH<=0)
+					{
+						once = false;
+						startDamage = false;
+						HUD.SHIELDENEMYHEALTH = 0;
+						HUD.SCORE+=250;
+						handler.removeObject(this);
+					}
+				}
+			}
+			if(obj.id == ID.DoubleBullet)
+			{
+				if(getRect().intersects(obj.getRect()) && startDamage)
+				{
+					if(game.upgrades.isSniper) HUD.SHIELDENEMYHEALTH-=10;
+					else if(game.upgrades.isDualPistol) HUD.SHIELDENEMYHEALTH-=2;
+					else if(game.upgrades.isShotgun) HUD.SHIELDENEMYHEALTH-=1;
+					else HUD.SHIELDENEMYHEALTH-=3;
 					handler.removeObject(obj);
 					if(HUD.SHIELDENEMYHEALTH<=0)
 					{

@@ -26,9 +26,10 @@ public class ExploderEnemy extends GameObject
 	private ImageIcon icon;
 	private int imageExplosionTime = 0;
 	private double speed;
+	private Game game;
 	/* This is the constructor for the Exploder Enemy
 	 * and it requires the same parameter as other game objects */
-	public ExploderEnemy(double x,double y,ID id,ObjectHandler handler,SpriteTextures texture, double speed)
+	public ExploderEnemy(double x,double y,ID id,ObjectHandler handler,SpriteTextures texture, double speed, Game game)
 	{
 		super(x,y,id);
 		this.x = x;
@@ -37,6 +38,7 @@ public class ExploderEnemy extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 		this.speed = speed;
+		this.game = game;
 	}
 	/* This creates a rectangle around the Exploder Enemy 
 	 * which is used to check collision with the player */
@@ -70,9 +72,12 @@ public class ExploderEnemy extends GameObject
 			GameObject obj = handler.object.get(i);
 			if(obj.id == ID.DoubleBullet)
 			{
-				if(getRect().intersects(obj.getRect()))
+				if(getRect().intersects(obj.getRect()) && !(game.gameState == game.STATE.LEVEL4))
 				{
-					HUD.EXPLODERHEALTH-=5;
+					if(game.upgrades.isSniper) HUD.EXPLODERHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.EXPLODERHEALTH-=4;
+					else if(game.upgrades.isShotgun) HUD.EXPLODERHEALTH-=5;
+					else HUD.EXPLODERHEALTH-=5;
 					handler.removeObject(obj);
 					if(HUD.EXPLODERHEALTH<=0)
 					{
@@ -83,9 +88,12 @@ public class ExploderEnemy extends GameObject
 			}
 			if(obj.id == ID.ShotgunBullet)
 			{
-				if(getRect().intersects(obj.getRect()))
+				if(getRect().intersects(obj.getRect()) && Game.gameState == Game.STATE.LEVEL4)
 				{
-					HUD.EXPLODERHEALTH-=4;
+					if(game.upgrades.isSniper) HUD.EXPLODERHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.EXPLODERHEALTH-=3;
+					else if(game.upgrades.isShotgun) HUD.EXPLODERHEALTH-=6;
+					else HUD.EXPLODERHEALTH-=8;
 					handler.removeObject(obj);
 					isExplode = true;
 					
@@ -95,6 +103,55 @@ public class ExploderEnemy extends GameObject
 						handler.removeObject(this);
 						HUD.SCORE+=200;
 						Level4Boss.isAlive = false;
+					}
+				}
+			}
+			if(obj.id == ID.ShotgunBullet)
+			{
+				if(getRect().intersects(obj.getRect()) && !(game.gameState == game.STATE.LEVEL4))
+				{
+					if(game.upgrades.isSniper) HUD.EXPLODERHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.EXPLODERHEALTH-=6;
+					else if(game.upgrades.isShotgun) HUD.EXPLODERHEALTH-=5;
+					else HUD.EXPLODERHEALTH-=3;
+					handler.removeObject(obj);
+					if(HUD.EXPLODERHEALTH<=0)
+					{
+						handler.removeObject(this);
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.Bullet)
+			{
+				if(getRect().intersects(obj.getRect()) && !(game.gameState == game.STATE.LEVEL4))
+				{
+					if(game.upgrades.isSniper) HUD.EXPLODERHEALTH-=10;
+					else if(game.upgrades.isDualPistol) HUD.EXPLODERHEALTH-=3;
+					else if(game.upgrades.isShotgun) HUD.EXPLODERHEALTH-=5;
+					else HUD.EXPLODERHEALTH-=6;
+					handler.removeObject(obj);
+					if(HUD.EXPLODERHEALTH<=0)
+					{
+						handler.removeObject(this);
+						HUD.SCORE+=200;
+					}
+				}
+			}
+			if(obj.id == ID.ExplosiveBullet)
+			{
+				if(getRect().intersects(obj.getRect()) && !(game.gameState == game.STATE.LEVEL4))
+				{
+					isExplode = true;
+					if(game.upgrades.isSniper) HUD.EXPLODERHEALTH-=20;
+					else if(game.upgrades.isDualPistol) HUD.EXPLODERHEALTH-=2;
+					else if(game.upgrades.isShotgun) HUD.EXPLODERHEALTH-=3;
+					else HUD.EXPLODERHEALTH-=6;
+					handler.removeObject(obj);
+					if(HUD.EXPLODERHEALTH<=0)
+					{
+						handler.removeObject(this);
+						HUD.SCORE+=200;
 					}
 				}
 			}

@@ -11,9 +11,11 @@ public class Bullet extends GameObject
 	private ID id;
 	private ObjectHandler handler;
 	private SpriteTextures texture;
+	private Game game;
+	int reload = 200;
 	/* The constructor initializes the variables for this object depending on 
 	 * what was passed in */
-	public Bullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel) 
+	public Bullet(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture, double yVel,Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -22,12 +24,15 @@ public class Bullet extends GameObject
 		this.handler = handler;
 		this.texture = texture;
 		this.yVel = yVel;
+		this.game = game;
 	}
 	/* This creates a rectangle around the bullet  
 	 * which is used to check collision with enemies */
 	public Rectangle getRect() 
 	{	
-		return new Rectangle((int)x+4,(int)y,12,20);
+		if(game.player.shotgunShoot) return new Rectangle((int)x-2,(int)y,5,8);
+		else if(game.player.sniperShoot) return new Rectangle((int)x-2,(int)y,15,15);
+		else return new Rectangle((int)x+4,(int)y,12,20);
 	}
 	/* This method is called 60 times per second and 
 	 * it makes the bullet go up and it also adds
@@ -38,8 +43,10 @@ public class Bullet extends GameObject
 	{
 		y+=yVel;
 		if(y<=-36)
+		{
 			handler.removeObject(this);
-		//checkCollision();
+			reload = 200;
+		}
 	}
 //	/* This method checks collision with enemies*/
 //	public void checkCollision()
@@ -62,7 +69,9 @@ public class Bullet extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		g.drawImage(texture.bullet,(int)x,(int)y,20,20,null);
+		if(game.player.shotgunShoot) g.drawImage(texture.bullet,(int)x-2,(int)y,5,8,null);
+		else if(game.player.sniperShoot) g.drawImage(texture.bullet,(int)x-2,(int)y,15,15,null);
+		else g.drawImage(texture.bullet,(int)x,(int)y,20,20,null);
 	}
 	/* These two methods are not needed(yet) but since 
 	 * this class extends the abstract class GameObject we 

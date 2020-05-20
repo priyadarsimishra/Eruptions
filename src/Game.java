@@ -26,11 +26,13 @@ public class Game extends Canvas implements Runnable
 	private Image level2;
 	private Image level3;
 	private Image level4;
+	private Image gameComplete;
 	private Image background;
 	private ImageIcon icon;
 	private ImageIcon lev2Icon;
 	private ImageIcon lev3Icon;
 	private ImageIcon lev4Icon;
+	private ImageIcon gameCompleteIcon;
 	private Image menuImage;
 	private ImageIcon menuIcon;
 	public BufferedImage level1Display;
@@ -49,6 +51,7 @@ public class Game extends Canvas implements Runnable
 	private Menu menu;
 	private LevelDisplay levelDisplay;
 	public Upgrades upgrades;
+	public Customize customize;
 	private int gunStop = 0;
 	public static int level1pause = 0;
 	public static int level2pause = 0;
@@ -67,9 +70,9 @@ public class Game extends Canvas implements Runnable
 	private int explosiveBulletCount = 0;
 	private int doubleBulletCount = 0;
 	private int shotgunBulletCount = 0;
-	public int bossFight = 200;
-	public int bossFight2 = 200;
-	public int bossFight3 = 200;
+	public int bossFight = 1500;
+	public int bossFight2 = 10500;
+	public int bossFight3 = 20000;
 	public int bossFight4 = 200;
 	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
@@ -85,6 +88,11 @@ public class Game extends Canvas implements Runnable
 	public boolean setHighScore = false;
 	public static String stateholder = "";
 	private PlayerInfo playerInfo = null;
+	public int pistolReload = 0;
+	public int dualReload = 0;
+	public int shotgunReload = 0;
+	public int sniperReload = 0;
+	boolean check = true;
 	/* This enumeration holds constants for the State of the game */
 	public enum STATE
 	{
@@ -101,6 +109,7 @@ public class Game extends Canvas implements Runnable
 		UPGRADES,
 		CUSTOMIZE,
 		DEADSCREEN,
+		GAMECOMPLETE,
 	};
 	public static STATE gameState = STATE.NAMEPANEL;
 	/* In the constructor we make our JFrame */ 
@@ -119,8 +128,6 @@ public class Game extends Canvas implements Runnable
 		try
 		{
 			spritesheet = loader.loadImage("/SpriteSheet.png");
-			//story = loader.loadImage("/Story.png");
-			level4Old = loader.loadImage("/LEVEL4.png");
 			level1Display = loader.loadImage("/Level1Display.png");
 			level2Display = loader.loadImage("/Level2Display.png");
 			level3Display = loader.loadImage("/Level3Display.png");
@@ -130,6 +137,8 @@ public class Game extends Canvas implements Runnable
 		{
 			e.printStackTrace();
 		}
+		gameCompleteIcon = new ImageIcon(this.getClass().getResource("/GameCompleteBackground.png"));
+		gameComplete = gameCompleteIcon.getImage();
 		icon = new ImageIcon(this.getClass().getResource("/background.gif"));
 		storyIcon = new ImageIcon(this.getClass().getResource("/Story.gif"));
 		menuIcon = new ImageIcon(this.getClass().getResource("/Menu.gif"));
@@ -149,9 +158,12 @@ public class Game extends Canvas implements Runnable
 		menu = new Menu(this,handler,texture,playerInfo);
 		addMouseListener(menu);
 		addMouseMotionListener(menu);
-		upgrades = new Upgrades(handler,texture);
+		upgrades = new Upgrades(handler,texture,this);
 		addMouseListener(upgrades);
 		addMouseMotionListener(upgrades);
+		customize = new Customize(handler,texture,this);	
+		addMouseListener(customize);
+		addMouseMotionListener(customize);
 		spawner = new Spawn(handler,hud,this,texture);
 		hud = new HUD(this,menu);
 		levelDisplay = new LevelDisplay(this);
@@ -225,12 +237,6 @@ public class Game extends Canvas implements Runnable
 				updates = 0;
 			}
 		}
-//		try {
-//			Thread.sleep(1);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		stop();
 	}
 	/* This method updates 60 times per second
@@ -248,13 +254,6 @@ public class Game extends Canvas implements Runnable
 			level2Complete = 0;
 			level3Complete = 0;
 			level4Complete = 0;
-			//edit here for testing
-//			bossFight = 200;
-//			bossFight2 = 2000;
-//			bossFight3 = 200;
-//			bossFight4 = 2000;
-			//edit here for testing
-			//setHighScore = false;
 			level1pause = 0;
 			level2pause = 0;
 			level3pause = 0;
@@ -263,6 +262,12 @@ public class Game extends Canvas implements Runnable
 			isBossFight2 = false;
 			isBossFight3 = false;
 			isBossFight4 = false;
+			check = true;
+			pistolReload = 0;
+			dualReload = 0;
+			//
+			isLevel3Complete = true;	
+			//	
 			HUD.LEVEL1BOSSHEALTH = 200;
 			HUD.LEVEL2BOSSHEALTH = 500;
 			HUD.LEVEL3BOSSHEALTH = 550;
@@ -285,14 +290,9 @@ public class Game extends Canvas implements Runnable
 			hud.display2 = 150;
 			hud.displaylev3 = 150;
 			hud.displaylev4 = 150;
-			/* Change here when level progress has been implemented */
-//			isLevel1Complete = true;
-//			isLevel2Complete = true;
-//			isLevel3Complete = true;
-			/* Change here when level progress has been implemented */
 			player.changeSpeed = false;
 			player.changeBack = 20;
-			player.shoot = false;
+			player.pistolShoot = false;
 			player.doubleShoot = false;
 			player.bombPic = false;
 			player.particle = false;
@@ -341,10 +341,14 @@ public class Game extends Canvas implements Runnable
 			spawner.boomerangEnemyTime = true;
 			upgrades.box1Row1Cost = 1000;
 			upgrades.box2Row1Cost = 2000;
-			upgrades.isWaterBullet = false;
+			upgrades.isBullet = false;
 			upgrades.isSplitBullet = false;
 			upgrades.isDualPistolBullet = false;
 			upgrades.isShotgunBullet = false;
+			upgrades.isPistol = false;
+			upgrades.isShotgun = false;
+			upgrades.isDualPistol = false;
+			upgrades.isSniper = false;
 			RocketEnemy.bulletShow = true;
 			ThrowerEnemy.giveInfo = true;
 			ShieldEnemy.once = false;
@@ -353,16 +357,11 @@ public class Game extends Canvas implements Runnable
 			Rocket.destroyed = false;
 			Level4Boss.makeOne = false;
 			Level4Boss.isAlive = false;
+			
 		}		
 		else if(gameState == STATE.LEVEL1)
 		{
 			HUD.LEVEL = 1;
-			//might need to change
-//			if(!setHighScore)
-//			{
-//				HUD.HIGHSCORE = 0;
-//				setHighScore = true;
-//			}
 			if((level1Complete < bossFight) && !isBossFight)
 			{
 				if(hud.HEALTH<=0)
@@ -375,7 +374,6 @@ public class Game extends Canvas implements Runnable
 					bossDisplay = 0;
 					isBossFight = false;
 					HUD.LEVEL1BOSSHEALTH = 200;
-					//setHighScore = false;
 				}
 				else
 				{
@@ -400,6 +398,16 @@ public class Game extends Canvas implements Runnable
 					isBossFight = true;
 					handler.clearAll();
 					level1pause = 0;
+					bossDisplay = 0;
+					HUD.UNDERGROUNDHEALTH = 20;
+					upgrades.isPistol = false;
+					upgrades.isDualPistol = false;
+					upgrades.isShotgun = false;
+					upgrades.isSniper = false;
+					player.pistolShoot = false;
+					player.doubleShoot = false;
+					player.shotgunShoot = false;
+					player.sniperShoot = false;
 				}
 			}
 			if(isBossFight && bossDisplay>=500)
@@ -414,7 +422,6 @@ public class Game extends Canvas implements Runnable
 					HUD.LEVEL1BOSSHEALTH = 200;
 					isBossFight = false;
 					bossDisplay = 0;
-					//setHighScore = false;
 				}
 				else 
 				{
@@ -429,7 +436,7 @@ public class Game extends Canvas implements Runnable
 							if(player.doubleShoot)
 								player.doubleShoot = false;
 							else
-								player.shoot = false;							
+								player.pistolShoot = false;							
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -456,11 +463,6 @@ public class Game extends Canvas implements Runnable
 			HUD.LEVEL = 2;
 			if((level2Complete<bossFight2) && !(isBossFight2))
 			{
-//				if(!setHighScore)
-//				{
-//					HUD.HIGHSCORE = 0;
-//					setHighScore = true;
-//				}
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
@@ -479,7 +481,6 @@ public class Game extends Canvas implements Runnable
 					UnderGroundEnemy.show = false;
 					Spawn.undergroundenemyShow = true;
 					Spawn.wizardspawn = false;
-					//setHighScore = false;
 				}
 				else
 				{
@@ -490,15 +491,80 @@ public class Game extends Canvas implements Runnable
 						player.update();
 						handler.update();
 						spawner.update();
+						if(upgrades.isPistol)
+						{
+							if(pistolReload>=16)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								pistolReload++;
+								HUD.PISTOLRELOAD++;
+								
+							}
+						}
+						if(upgrades.isDualPistol)
+						{
+							if(dualReload>=30)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								HUD.DUALRELOAD++;
+								dualReload++;
+							}
+						}
+						if(upgrades.isShotgun)
+						{
+							if(shotgunReload>=50)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								shotgunReload++;
+								HUD.SHOTGUNRELOAD++;
+							}
+						}
+						if(upgrades.isSniper)
+						{
+							if(sniperReload>=100)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								sniperReload++;
+								HUD.SNIPERRELOAD++;
+							}
+						}
 						if(gunStop>=50 && !isShooting)
 						{
 							if(player.doubleShoot)
 								player.doubleShoot = false;
-							else
-								player.shoot = false;							
+							else if(player.pistolShoot)
+								player.pistolShoot = false;	
 							gunStop = 0;
 						}
 						else gunStop++;	
+						if(shotgunReload == 30 && !isShooting)
+						{
+							if(player.shotgunShoot)
+								player.shotgunShoot = false;
+							else
+								player.sniperShoot = false;
+						}
+						if(sniperReload == 100 && !isShooting)
+						{
+							if(player.sniperShoot)
+								player.sniperShoot = false;
+						}
 					}
 					else
 					{
@@ -515,6 +581,15 @@ public class Game extends Canvas implements Runnable
 					isBossFight2 = true;
 					handler.clearAll();
 					level2pause = 0;
+					bossDisplay2 = 0;
+					upgrades.isPistol = false;
+					upgrades.isDualPistol = false;
+					upgrades.isShotgun = false;
+					upgrades.isSniper = false;
+					player.pistolShoot = false;
+					player.doubleShoot = false;
+					player.shotgunShoot = false;
+					player.sniperShoot = false;
 				}
 			}
 			if(isBossFight2 && bossDisplay2>=200)
@@ -537,7 +612,6 @@ public class Game extends Canvas implements Runnable
 					UnderGroundEnemy.show = false;
 					Spawn.undergroundenemyShow = true;
 					Spawn.wizardspawn = false;
-					//setHighScore = 0;
 				}
 				else
 				{
@@ -547,12 +621,13 @@ public class Game extends Canvas implements Runnable
 						player.update();
 						hud.update();
 						spawner.update();
-						if(gunStop>=100 && !isShooting)
+						
+						if(gunStop>=50 && !isShooting)
 						{
 							if(player.doubleShoot)
 								player.doubleShoot = false;
 							else
-								player.shoot = false;							
+								player.pistolShoot = false;							
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -597,15 +672,78 @@ public class Game extends Canvas implements Runnable
 						handler.update();
 						player.update();
 						spawner.update();
+						if(upgrades.isPistol)
+						{
+							if(pistolReload>=16)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								pistolReload++;
+								HUD.PISTOLRELOAD++;
+								
+							}
+						}
+						if(upgrades.isDualPistol)
+						{
+							if(dualReload>=30)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								HUD.DUALRELOAD++;
+								dualReload++;
+							}
+						}
+						if(upgrades.isShotgun)
+						{
+							if(shotgunReload>=50)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								shotgunReload++;
+								HUD.SHOTGUNRELOAD++;
+							}
+						}
+						if(upgrades.isSniper)
+						{
+							if(sniperReload>=100)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								sniperReload++;
+								HUD.SNIPERRELOAD++;
+							}
+						}
 						if(gunStop>=50 && !isShooting)
 						{
 							if(player.doubleShoot)
 								player.doubleShoot = false;
 							else
-								player.shoot = false;							
+								player.pistolShoot = false;							
 							gunStop = 0;
 						}
 						else gunStop++;	
+						if(shotgunReload == 30 && !isShooting)
+						{
+							if(player.shotgunShoot)
+								player.shotgunShoot = false;
+						}
+						if(sniperReload == 100 && !isShooting)
+						{
+							if(player.sniperShoot)
+								player.sniperShoot = false;
+						}
 					}
 					else
 					{
@@ -622,6 +760,15 @@ public class Game extends Canvas implements Runnable
 					isBossFight3 = true;
 					handler.clearAll();
 					level3pause = 0;
+					bossDisplay3 = 0;
+					upgrades.isPistol = false;
+					upgrades.isDualPistol = false;
+					upgrades.isShotgun = false;
+					upgrades.isSniper = false;
+					player.pistolShoot = false;
+					player.doubleShoot = false;
+					player.shotgunShoot = false;
+					player.sniperShoot = false;
  				}
 			}
 			if(isBossFight3 && bossDisplay3>=200)
@@ -650,7 +797,7 @@ public class Game extends Canvas implements Runnable
 							if(player.doubleShoot)
 								player.doubleShoot = false;
 							else
-								player.shoot = false;
+								player.pistolShoot = false;
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -697,15 +844,80 @@ public class Game extends Canvas implements Runnable
 						handler.update();
 						player.update();
 						spawner.update();
+						if(upgrades.isPistol)
+						{
+							if(pistolReload>=16)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								pistolReload++;
+								HUD.PISTOLRELOAD++;
+								
+							}
+						}
+						if(upgrades.isDualPistol)
+						{
+							if(dualReload>=30)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								HUD.DUALRELOAD++;
+								dualReload++;
+							}
+						}
+						if(upgrades.isShotgun)
+						{
+							if(shotgunReload>=50)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								shotgunReload++;
+								HUD.SHOTGUNRELOAD++;
+							}
+						}
+						if(upgrades.isSniper)
+						{
+							if(sniperReload>=100)
+							{
+								check = true;
+							}
+							else
+							{
+								check = false;
+								sniperReload++;
+								HUD.SNIPERRELOAD++;
+							}
+						}
 						if(gunStop>=50 && !isShooting)
 						{
 							if(player.doubleShoot)
 								player.doubleShoot = false;
 							else
-								player.shoot = false;
+								player.pistolShoot = false;
 							gunStop = 0;
 						}
 						else gunStop++;	
+						if(shotgunReload == 30 && !isShooting)
+						{
+							if(player.shotgunShoot)
+								player.shotgunShoot = false;
+							else
+								player.sniperShoot = false;
+						}
+						if(sniperReload == 100 && !isShooting)
+						{
+							if(player.sniperShoot)
+								player.sniperShoot = false;
+						}
 					}
 					else
 					{
@@ -722,6 +934,15 @@ public class Game extends Canvas implements Runnable
 					isBossFight4 = true;
 					handler.clearAll();
 					level4pause = 0;
+					bossDisplay4 = 0;
+					upgrades.isPistol = false;
+					upgrades.isDualPistol = false;
+					upgrades.isShotgun = false;
+					upgrades.isSniper = false;
+					player.pistolShoot = false;
+					player.doubleShoot = false;
+					player.shotgunShoot = false;
+					player.sniperShoot = false;
 				}
 			}
 			if(isBossFight4 && bossDisplay4>=200)
@@ -752,7 +973,7 @@ public class Game extends Canvas implements Runnable
 							if(player.doubleShoot)
 								player.doubleShoot = false;
 							else
-								player.shoot = false;
+								player.shotgunShoot = false;
 							gunStop = 0;
 						}
 						else gunStop++;	
@@ -773,6 +994,10 @@ public class Game extends Canvas implements Runnable
 					handler.update();
 				}
 			}
+		}
+		else if(gameState == STATE.GAMECOMPLETE)
+		{
+			player.update();
 		}
 		else if(gameState == STATE.DEADSCREEN)
 		{
@@ -796,8 +1021,6 @@ public class Game extends Canvas implements Runnable
 		///////////////////////////////Everything under is drawing
 		if(gameState == STATE.MENU)
 		{
-//			g.setColor(Color.ORANGE);
-//			g.fillRect(0, 0, Game.WIDTH,Game.HEIGHT);
 			g.drawImage(menuImage,0,0,WIDTH,HEIGHT,null);
 			menu.render(g);
 		}
@@ -810,8 +1033,9 @@ public class Game extends Canvas implements Runnable
 		else if(gameState == STATE.CUSTOMIZE)
 		{
 			g.setColor(Color.PINK);
-			g.fillRect(0,0, WIDTH,HEIGHT);
+			g.fillRect(0,0, WIDTH, HEIGHT);
 			menu.render(g);
+			customize.render(g);
 		}
 		else if(gameState == STATE.HELP)
 		{
@@ -965,6 +1189,13 @@ public class Game extends Canvas implements Runnable
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			upgrades.render(g);
 		}
+		else if(gameState == STATE.GAMECOMPLETE)
+		{
+			g.drawImage(gameComplete,0,0,WIDTH,HEIGHT,null);
+			player.render(g);
+			levelDisplay.render(g);
+			menu.render(g);
+		}
 		else if(gameState == STATE.DEADSCREEN)
 		{
 			g.setColor(Color.RED);
@@ -1031,57 +1262,473 @@ public class Game extends Canvas implements Runnable
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL1 && isBossFight && bulletCount < player.bucketCount)
 		{
-			player.shoot = true;
+			player.pistolShoot = true;
 			handler.addObject(new WaterBullet(player.getX()+9,player.getY()-25,ID.WaterBullet,handler,texture,-15));			
 			bulletCount++;
 		}
-		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2 && !isBossFight2)
+		if(key == KeyEvent.VK_SPACE && !isShooting && gameState == STATE.LEVEL2 && !isBossFight2 && check)
 		{
-			player.shoot = true;
+			//testing for shop here
 			isShooting = true;
-			if(upgrades.isDualPistolBullet) handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
-			else if(upgrades.isSplitBullet) handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
-			else if(upgrades.isShotgunBullet) handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
-			else handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
-		}//shoot bullets
+			if(upgrades.isShotgun) 
+			{
+				player.shotgunShoot = true;
+				player.doubleShoot = false;
+				player.sniperShoot = false;
+				player.pistolShoot = false;
+			}
+			else if(upgrades.isDualPistol)
+			{
+				player.shotgunShoot = false;
+				player.doubleShoot = true;
+				player.sniperShoot = false;
+				player.pistolShoot = false;
+			}
+			else if(upgrades.isSniper)
+			{
+				player.shotgunShoot = false;
+				player.doubleShoot = false;
+				player.sniperShoot = true;
+				player.pistolShoot = false;
+			}
+			else
+			{
+				upgrades.isPistol = true;
+				upgrades.isBullet = true;
+				player.shotgunShoot = false;
+				player.doubleShoot = false;
+				player.sniperShoot = false;
+				player.pistolShoot = true;
+			}
+			//bullets
+			/* ******** pistol bullets ******** */
+			if(upgrades.isDualPistolBullet && player.pistolShoot) 
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+9,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isSplitBullet && player.pistolShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+			}
+			else if(upgrades.isShotgunBullet && player.pistolShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+9,player.getY()-25,ID.ShotgunBullet,handler,texture,-12,this));
+			}
+			else if(player.pistolShoot)
+			{
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+			}
+			/* ******** dual pistols bullets ******* */
+			if(upgrades.isDualPistolBullet && player.doubleShoot) 
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isSplitBullet && player.doubleShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()-5,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+				handler.addObject(new DoubleBullet(player.getX()+22,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+			}
+			else if(upgrades.isShotgunBullet && player.doubleShoot) 
+			{
+				//edit make 5 each side
+				handler.addObject(new ShotgunBullet(player.getX()-5,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
+				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
+
+			}
+			else if(player.doubleShoot)
+			{
+				handler.addObject(new Bullet(player.getX()-5,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+				handler.addObject(new Bullet(player.getX()+22,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+			}
+			/* ******** shotgun bullets ******** */
+			if(upgrades.isDualPistolBullet && player.shotgunShoot) 
+			{
+				//edit this after class
+				handler.addObject(new ExplosiveBullet(player.getX()+4,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24, this));
+				handler.addObject(new ExplosiveBullet(player.getX()+10,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+16,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+28,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+			}
+			else if(upgrades.isSplitBullet && player.shotgunShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+8,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+				handler.addObject(new DoubleBullet(player.getX()+16,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+				handler.addObject(new DoubleBullet(player.getX()+24,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+			}
+			else if(upgrades.isShotgunBullet && player.shotgunShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+4,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+10,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+			}
+			else if(player.shotgunShoot)
+			{
+				handler.addObject(new Bullet(player.getX()+4,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+10,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+16,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+22,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+28,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+			}
+			/* ******** sniper bullets ******** */
+			if(upgrades.isDualPistolBullet && player.sniperShoot) 
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+9,player.getY()-25,ID.ExplosiveBullet,handler,texture,-20,this));
+			}
+			else if(upgrades.isSplitBullet && player.sniperShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-20,this));
+			}
+			else if(upgrades.isShotgunBullet && player.sniperShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+9,player.getY()-20,ID.ShotgunBullet,handler,texture,-20,this));
+			}
+			else if(player.sniperShoot)
+			{
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-20,this));
+			}
+			//Reload
+			if(upgrades.isPistol)
+			{
+				pistolReload = 0;
+				HUD.PISTOLRELOAD = 0;
+			}
+			else if(upgrades.isDualPistol)
+			{
+				dualReload = 0;
+				HUD.DUALRELOAD = 0;
+			}
+			else if(upgrades.isShotgun)
+			{
+				shotgunReload = 0;
+				HUD.SHOTGUNRELOAD = 0;
+			}
+			else if(upgrades.isSniper)
+			{
+				sniperReload = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
+		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2 && isBossFight2 && doubleBulletCount < player.keyCount)
 		{
-			player.shoot = true;
-			handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+			upgrades.isBullet = false;
+			upgrades.isDualPistolBullet = false;
+			upgrades.isShotgunBullet = false;
+			upgrades.isSplitBullet = false;
+			player.pistolShoot =false;
+			player.shotgunShoot = false;
+			player.sniperShoot = false;
+			player.doubleShoot = false;
+			player.pistolShoot = true;
+			handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
 			doubleBulletCount++;
 		}
-		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3 && !isShooting && !isBossFight3)
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3 && !isShooting && !isBossFight3 && check)
 		{
-			player.shoot = true;
 			isShooting = true;
-			if(upgrades.isDualPistolBullet) handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
-			else if(upgrades.isWaterBullet) handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15));
-			else if(upgrades.isShotgunBullet) handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
-			else handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
-			//handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12));
+			if(upgrades.isShotgun) 
+			{
+				player.shotgunShoot = true;
+				player.doubleShoot = false;
+				player.sniperShoot = false;
+				player.pistolShoot = false;
+			}
+			else if(upgrades.isDualPistol)
+			{
+				player.shotgunShoot = false;
+				player.doubleShoot = true;
+				player.sniperShoot = false;
+				player.pistolShoot = false;
+			}
+			else if(upgrades.isSniper)
+			{
+				player.shotgunShoot = false;
+				player.doubleShoot = false;
+				player.sniperShoot = true;
+				player.pistolShoot = false;
+			}
+			else
+			{
+				upgrades.isPistol = true;
+				upgrades.isSplitBullet = true;
+				player.shotgunShoot = false;
+				player.doubleShoot = false;
+				player.sniperShoot = false;
+				player.pistolShoot = true;
+			}
+			//bullet
+			/* ******** Pistol bullets ******** */
+			if(upgrades.isDualPistolBullet && player.pistolShoot) 
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+9,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isBullet && player.pistolShoot) 
+			{
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isShotgunBullet && player.pistolShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+9,player.getY()-25,ID.ShotgunBullet,handler,texture,-12,this));
+			}
+			else if(player.pistolShoot)
+			{
+				handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+			}
+			/* ******** DualPistol Bullets ******** */
+			if(upgrades.isDualPistolBullet && player.doubleShoot) 
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isSplitBullet && player.doubleShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()-2,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+				handler.addObject(new DoubleBullet(player.getX()+26,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+			}
+			else if(upgrades.isShotgunBullet && player.doubleShoot) 
+			{
+				//edit make 5 each side
+				handler.addObject(new ShotgunBullet(player.getX()-5,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
+				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
+			}
+			else if(player.doubleShoot)
+			{
+				handler.addObject(new Bullet(player.getX()-5,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+				handler.addObject(new Bullet(player.getX()+22,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+			}
+			/* ******** shotgun bullets ******** */
+			if(upgrades.isDualPistolBullet && player.shotgunShoot) 
+			{
+				//edit this after class
+				handler.addObject(new ExplosiveBullet(player.getX()+4,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+10,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+16,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+28,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+			}
+			else if(upgrades.isSplitBullet && player.shotgunShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+8,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+				handler.addObject(new DoubleBullet(player.getX()+16,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+				handler.addObject(new DoubleBullet(player.getX()+24,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+			}
+			else if(upgrades.isShotgunBullet && player.shotgunShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+4,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+10,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+			}
+			else if(player.shotgunShoot)
+			{
+				handler.addObject(new Bullet(player.getX()+4,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+10,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+16,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+22,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+28,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+			}
+			/* ******** sniper bullets ******** */
+			if(upgrades.isDualPistolBullet && player.sniperShoot) 
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+9,player.getY()-25,ID.ExplosiveBullet,handler,texture,20,this));
+			}
+			else if(upgrades.isSplitBullet && player.sniperShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-20,this));
+			}
+			else if(upgrades.isShotgunBullet && player.sniperShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+9,player.getY()-20,ID.ShotgunBullet,handler,texture,-20,this));
+			}
+			else if(player.sniperShoot)
+			{
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-20,this));
+			}
+			//Reload
+			if(upgrades.isPistol)
+			{
+				pistolReload = 0;
+				HUD.PISTOLRELOAD = 0;
+			}
+			else if(upgrades.isDualPistol)
+			{
+				dualReload = 0;
+				HUD.DUALRELOAD = 0;
+			}
+			else if(upgrades.isShotgun)
+			{
+				shotgunReload = 0;
+				HUD.SHOTGUNRELOAD = 0;
+			}
+			else if(upgrades.isSniper)
+			{
+				sniperReload = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3 && isBossFight3 && explosiveBulletCount < player.eggCount)
 		{
 			player.doubleShoot = true;
-			handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
-			handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
+			handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
 			explosiveBulletCount++;
 		}
-		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL4 && !isShooting && !isBossFight4)
+		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL4 && !isShooting && !isBossFight4 && check)
 		{
-			player.doubleShoot = true;
 			isShooting = true;
-			handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));
-			handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15));		
+			if(upgrades.isShotgun) 
+			{
+				player.shotgunShoot = true;
+				player.doubleShoot = false;
+				player.sniperShoot = false;
+				player.pistolShoot = false;
+			}
+			else if(upgrades.isPistol)
+			{
+				player.shotgunShoot = false;
+				player.doubleShoot = false;
+				player.sniperShoot = false;
+				player.pistolShoot = true;
+			}
+			else if(upgrades.isSniper)
+			{
+				player.shotgunShoot = false;
+				player.doubleShoot = false;
+				player.sniperShoot = true;
+				player.pistolShoot = false;
+			}
+			else
+			{
+				upgrades.isDualPistol = true;
+				upgrades.isDualPistolBullet = true;
+				player.shotgunShoot = false;
+				player.doubleShoot = true;
+				player.sniperShoot = false;
+				player.pistolShoot = false;
+			}
+			//bullet
+			/* ******** Pistol bullets ******** */
+			if(upgrades.isBullet && player.pistolShoot) 
+			{
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isSplitBullet && player.pistolShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+			}
+			else if(upgrades.isShotgunBullet && player.pistolShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+9,player.getY()-25,ID.ShotgunBullet,handler,texture,-12,this));
+			}
+			else if(player.pistolShoot)
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+9,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			}
+			/* ******** DualPistol Bullets ******** */
+			if(upgrades.isBullet && player.doubleShoot) 
+			{ 
+				handler.addObject(new Bullet(player.getX()-5,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+				handler.addObject(new Bullet(player.getX()+22,player.getY()-25,ID.Bullet,handler,texture,-15,this));
+			}
+			else if(upgrades.isSplitBullet && player.doubleShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()-2,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+				handler.addObject(new DoubleBullet(player.getX()+26,player.getY()-25,ID.DoubleBullet,handler,texture,-12,this));
+			}
+			else if(upgrades.isShotgunBullet && player.doubleShoot) 
+			{
+				//edit make 5 each side
+				handler.addObject(new ShotgunBullet(player.getX()-5,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
+				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
+			}
+			else if(player.doubleShoot)
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()-5,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-15,this));
+			}
+			/* ******** shotgun bullets ******** */
+			if(upgrades.isBullet && player.shotgunShoot) 
+			{
+				//edit this after class
+				handler.addObject(new Bullet(player.getX()+4,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+10,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+16,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+22,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+				handler.addObject(new Bullet(player.getX()+28,player.getY()-25,ID.Bullet,handler,texture,-24,this));
+			}
+			else if(upgrades.isSplitBullet && player.shotgunShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+8,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+				handler.addObject(new DoubleBullet(player.getX()+16,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+				handler.addObject(new DoubleBullet(player.getX()+24,player.getY()-25,ID.DoubleBullet,handler,texture,-24,this));
+			}
+			else if(upgrades.isShotgunBullet && player.shotgunShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+4,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+10,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+				handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-24,this));
+			}
+			else if(player.shotgunShoot)
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+4,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+10,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+16,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+22,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+				handler.addObject(new ExplosiveBullet(player.getX()+28,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
+			}
+			/* ******** sniper bullets ******** */
+			if(upgrades.isBullet && player.sniperShoot) 
+			{
+				handler.addObject(new Bullet(player.getX()+9,player.getY()-25,ID.Bullet,handler,texture,-20,this));
+			}
+			else if(upgrades.isSplitBullet && player.sniperShoot) 
+			{
+				handler.addObject(new DoubleBullet(player.getX()+9,player.getY()-25,ID.DoubleBullet,handler,texture,-20,this));
+			}
+			else if(upgrades.isShotgunBullet && player.sniperShoot) 
+			{
+				handler.addObject(new ShotgunBullet(player.getX()+9,player.getY()-20,ID.ShotgunBullet,handler,texture,-20,this));
+			}
+			else if(player.sniperShoot)
+			{
+				handler.addObject(new ExplosiveBullet(player.getX()+9,player.getY()-25,ID.ExplosiveBullet,handler,texture,-20,this));
+			}
+			//Reload
+			if(upgrades.isPistol)
+			{
+				pistolReload = 0;
+				HUD.PISTOLRELOAD = 0;
+			}
+			else if(upgrades.isDualPistol)
+			{
+				dualReload = 0;
+				HUD.DUALRELOAD = 0;
+			}
+			else if(upgrades.isShotgun)
+			{
+				shotgunReload = 0;
+				HUD.SHOTGUNRELOAD = 0;
+			}
+			else if(upgrades.isSniper)
+			{
+				sniperReload = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
 		}
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL4 && isBossFight4 && shotgunBulletCount < player.crateCount)
 		{
-			player.shoot = true;
-			handler.addObject(new ShotgunBullet(player.getX()+4,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
-			handler.addObject(new ShotgunBullet(player.getX()+10,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
-			handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
-			handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
-			handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-12));
+			player.shotgunShoot = true;
+			handler.addObject(new ShotgunBullet(player.getX()+4,player.getY()-20,ID.ShotgunBullet,handler,texture,-12,this));
+			handler.addObject(new ShotgunBullet(player.getX()+10,player.getY()-20,ID.ShotgunBullet,handler,texture,-12,this));
+			handler.addObject(new ShotgunBullet(player.getX()+16,player.getY()-20,ID.ShotgunBullet,handler,texture,-12,this));
+			handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-20,ID.ShotgunBullet,handler,texture,-12,this));
+			handler.addObject(new ShotgunBullet(player.getX()+28,player.getY()-20,ID.ShotgunBullet,handler,texture,-12,this));
 			shotgunBulletCount++;
 		}
 		if(key == KeyEvent.VK_SHIFT && (gameState == STATE.LEVEL1 || gameState == STATE.LEVEL2 || gameState == STATE.LEVEL3 || gameState == STATE.LEVEL4) && (level1pause>=500 || level2pause>=500 || level3pause>=500 || level4pause>=500) && (!isBossFight || !isBossFight2 || !isBossFight3 || !isBossFight4) && !(HUD.LEVEL1BOSSHEALTH<=0 || HUD.LEVEL2BOSSHEALTH<=0 || HUD.LEVEL3BOSSHEALTH<=0 || HUD.LEVEL4BOSSHEALTH<=0))
@@ -1137,6 +1784,7 @@ public class Game extends Canvas implements Runnable
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL2)
 		{		
 			isShooting = false;
+//			reload = 10;
 		}//shoot bullets
 		if(key == KeyEvent.VK_SPACE && gameState == STATE.LEVEL3)
 		{		
@@ -1184,17 +1832,5 @@ public class Game extends Canvas implements Runnable
 		game.setMaximumSize(new Dimension(WIDTH,HEIGHT));
 		game.setMinimumSize(new Dimension(WIDTH,HEIGHT));
 		game.setBackground(Color.ORANGE);
-		/*g.drawString("Hello", 20, 20);
-		
-		//game.setVisible(false);
-		JFrame frame = new JFrame(TITLE);
-		frame.add(game);
-		frame.pack();
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		game.start();*/
 	}
 }
