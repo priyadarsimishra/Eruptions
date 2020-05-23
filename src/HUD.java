@@ -29,10 +29,12 @@ public class HUD
 	public static int TANKHEALTH = 80;
 	public static int BOOMERANGHEALTH = 40;
 	public static int SHIELDENEMYHEALTH = 40;
-	public static int PISTOLRELOAD;
-	public static int DUALRELOAD;
-	public static int SHOTGUNRELOAD;
-	public static int SNIPERRELOAD;
+	public static int PISTOLRELOAD = 16;
+	public static int DUALRELOAD = 30;
+	public static int SHOTGUNRELOAD = 50;
+	public static int SNIPERRELOAD = 100;
+	public static int SHIELDHEALTH = 8;
+	public static int SCOREBOOST = 4000;
  	private Color lightPurple = new Color(141, 112, 255);
 	public Color deepPink = new Color(255,20,147);
 	private Color limeChiffon = new Color(255,250,205);
@@ -67,6 +69,7 @@ public class HUD
 	private ObjectHandler handler;
 	private SpriteTextures texture;
 	private BabyDragon bd;
+	public static boolean getTotal = true;
 	/* This class needs game instance and a menu instance
 	 * which is done through this constructor */
 	public HUD(Game game,Menu menu)
@@ -75,7 +78,6 @@ public class HUD
 		this.menu = menu;
 		handler = new ObjectHandler();
 		texture = new SpriteTextures(game);
-		bd = new BabyDragon((int)Level3Boss.spawnX,(int)Level3Boss.spawnY,ID.BabyDragon,handler,texture);
 	}
 	/* This method is also called 60 times per second 
 	 * and it changes greenValue which is the color of the health bar and 
@@ -105,6 +107,16 @@ public class HUD
 		PISTOLRELOAD = (int)Game.restrict(PISTOLRELOAD, 0, PISTOLRELOAD+(sector));
 		DUALRELOAD = (int)Game.restrict(DUALRELOAD, 0,DUALRELOAD+(sector/5));
 		SHOTGUNRELOAD = (int)Game.restrict(SHOTGUNRELOAD, 0,SHOTGUNRELOAD+(sector/5));
+		SHIELDHEALTH = (int)Game.restrict(SHIELDHEALTH, 0,SHIELDHEALTH+sector);
+		SCOREBOOST = (int)Game.restrict(SCOREBOOST, 0,SCOREBOOST+sector/2);
+//		if(getTotal) 
+//		{
+//			System.out.println(Game.NAME);
+//			TOTALSCORE = fileUtils.getTotalScoreForAPlayer(Game.NAME);
+//			
+//			getTotal = false;
+//		}
+
 		if(game.gameState == game.STATE.MENU)
 		{
 			HEALTH = 100;
@@ -123,10 +135,10 @@ public class HUD
 //		{
 //			LEVEL3BOSSHEALTH-=2;
 //		}
-		if(game.isBossFight4)
-		{
-			LEVEL4BOSSHEALTH-=5;
-		}
+//		if(game.isBossFight4)
+//		{
+//			LEVEL4BOSSHEALTH-=5;
+//		}
 		if(SCORE>=HIGHSCORE)
 		{
 			HIGHSCORE = SCORE;
@@ -134,16 +146,17 @@ public class HUD
 		// LEVEL 1 END PAGE
 		if(LEVEL1BOSSHEALTH<=0 && !addScore)
 		{
-			SCORE+=1000;
+			if(game.upgrades.isScoreBoost) SCORE+=2000;
+			else SCORE+=1000;
 			addScore = true;
 		}
 		if(SCORE == COUNT && HUD.LEVEL1BOSSHEALTH<=0)
 		{
 			stopScore = true;
 		}
-		if(!stoptotalScore && (LEVEL1BOSSHEALTH<=0 || LEVEL2BOSSHEALTH<=0))
+		if(!stoptotalScore && (LEVEL1BOSSHEALTH<=0 || LEVEL2BOSSHEALTH<=0 || LEVEL3BOSSHEALTH<=0 || LEVEL4BOSSHEALTH<=0))
 		{
-			TOTALSCORE = fileUtils.getTotalScoreForAPlayer(game.NAME);
+//			TOTALSCORE = fileUtils.getTotalScoreForAPlayer(game.NAME);
 			TOTALSCORE+=SCORE;
 			stoptotalScore = true;
 		}
@@ -160,7 +173,8 @@ public class HUD
 		//LEVEL 2 END PAGE
 		if(LEVEL2BOSSHEALTH<=0 && !addScore2)
 		{
-			SCORE+=1000;
+			if(game.upgrades.isScoreBoost) SCORE+=2000;
+			else SCORE+=1000;
 			addScore2 = true;
 		}
 		if(SCORE == COUNT && HUD.LEVEL2BOSSHEALTH<=0)
@@ -184,7 +198,8 @@ public class HUD
 		//LEVEL 3 END PAGE
 		if(LEVEL3BOSSHEALTH<=0 && !addScore3)
 		{
-			SCORE+=1000;
+			if(game.upgrades.isScoreBoost) SCORE+=2000;
+			else SCORE+=1000;
 			addScore3 = true;
 		}
 		if(SCORE == COUNT && HUD.LEVEL3BOSSHEALTH<=0)
@@ -208,7 +223,8 @@ public class HUD
 		//LEVEL 4 END PAGE
 		if(LEVEL4BOSSHEALTH<=0 && !addScore4)
 		{
-			SCORE+=3000;
+			if(game.upgrades.isScoreBoost) SCORE+=6000;
+			else SCORE+=3000;
 			addScore4 = true;
 		}
 		if(SCORE == COUNT && HUD.LEVEL4BOSSHEALTH<=0)
@@ -406,6 +422,7 @@ public class HUD
 		{
 			g.drawString("Score: "+SCORE,5,85);
 			g.drawString("Level: "+LEVEL,5,110);
+			
 		}
 		else if(LEVEL2BOSSHEALTH > 0 && Game.gameState == Game.STATE.LEVEL2)
 		{
@@ -439,6 +456,29 @@ public class HUD
 			else
 				g.drawString(HEALTH+"%",160,43);	
 		}
+		if(game.player.shieldMade && HUD.SHIELDHEALTH>0 && game.upgrades.isShield)
+		{
+			g.setColor(Color.WHITE);
+			g.drawRect(142,66,65+sector,21);
+			g.setColor(Color.GRAY);
+			g.fillRect(142,66,64+sector,20);
+			g.setColor(aqua);
+			g.fillRect(142,66,SHIELDHEALTH*8,20);
+		}
+		else if(HUD.SHIELDHEALTH<=0)
+		{
+			game.player.shieldMade = false;
+		}
+		
+		if(game.upgrades.isScoreBoost)
+		{
+			g.setColor(Color.WHITE);
+			g.drawRect(112,93,101+sector,21);
+			g.setColor(Color.GRAY);
+			g.fillRect(112,93,100+sector,20);
+			g.setColor(Color.YELLOW);
+			g.fillRect(112,93,SCOREBOOST/40,20);
+		}
 		if(LEVEL3BOSSHEALTH<=0)
 			LEVEL3BOSSHEALTH = 0;
 		if(LEVEL4BOSSHEALTH<=0)
@@ -464,6 +504,7 @@ public class HUD
 		
 		if(game.upgrades.isPistol)
 		{
+			//System.out.println("PistolGun Relaod: "+PISTOLRELOAD);
 			g.setColor(Color.GRAY);
 			g.fillRect((int)game.player.x+4,(int)game.player.y,(int)(16*1.8)+sector/6,5);
 			g.setColor(limeChiffon);
@@ -471,6 +512,7 @@ public class HUD
 		}
 		else if(game.upgrades.isDualPistol)
 		{
+			//System.out.println("DualGun Relaod: "+DUALRELOAD);
 			g.setColor(Color.GRAY);
 			g.fillRect((int)game.player.x+4,(int)game.player.y,30+sector/6,5);
 			g.setColor(limeChiffon);
@@ -478,6 +520,7 @@ public class HUD
 		}
 		else if(game.upgrades.isShotgun)
 		{
+			//System.out.println("ShotGun Relaod: "+SHOTGUNRELOAD);
 			g.setColor(Color.GRAY);
 			g.fillRect((int)game.player.x+2,(int)game.player.y,(int)(50/1.5)+sector/6,5);
 			g.setColor(limeChiffon);
@@ -485,6 +528,7 @@ public class HUD
 		}
 		else if(game.upgrades.isSniper)
 		{
+			//System.out.println("SniperGun Relaod: "+SNIPERRELOAD);
 			g.setColor(Color.GRAY);
 			g.fillRect((int)game.player.x+2,(int)game.player.y,(int)(100/3)+sector/6,5);
 			g.setColor(limeChiffon);

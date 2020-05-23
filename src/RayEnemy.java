@@ -121,7 +121,8 @@ public class RayEnemy extends GameObject
 						handler.removeObject(this);
 						if(stopScore)
 						{
-							HUD.SCORE+=350;
+							if(game.upgrades.isScoreBoost) HUD.SCORE+=700;
+							else HUD.SCORE+=350;
 							stopScore = false;
 						}
  						System.out.println("Score after: "+HUD.SCORE);
@@ -143,7 +144,8 @@ public class RayEnemy extends GameObject
 					{
 						HUD.RAYHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=350;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=700;
+						else HUD.SCORE+=350;
 					}
 				}
 			}
@@ -161,7 +163,8 @@ public class RayEnemy extends GameObject
 						HUD.RAYHEALTH = 0;
 
 						handler.removeObject(this);
-						HUD.SCORE+=350;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=700;
+						else HUD.SCORE+=350;
 					}
 				}
 			}
@@ -178,7 +181,8 @@ public class RayEnemy extends GameObject
 					{
 						HUD.RAYHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=350;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=700;
+						else HUD.SCORE+=350;
 					}
 				}
 			}

@@ -98,7 +98,8 @@ public class UnderGroundEnemy extends GameObject
 					if(HUD.UNDERGROUNDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=500;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1000;
+						else HUD.SCORE+=500;
 					}
 				}
 			}
@@ -119,7 +120,8 @@ public class UnderGroundEnemy extends GameObject
 					if(HUD.UNDERGROUNDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=500;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1000;
+						else HUD.SCORE+=500;
 					}
 				}
 			}
@@ -141,7 +143,8 @@ public class UnderGroundEnemy extends GameObject
 					if(HUD.UNDERGROUNDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=500;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1000;
+						else HUD.SCORE+=500;
 					}
 				}
 			}
@@ -162,7 +165,8 @@ public class UnderGroundEnemy extends GameObject
 					if(HUD.UNDERGROUNDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=500;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1000;
+						else HUD.SCORE+=500;
 					}
 				}
 			}

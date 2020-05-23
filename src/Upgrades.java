@@ -18,8 +18,12 @@ public class Upgrades extends MouseAdapter
 	private Game game;
 	public Color skyBlue = new Color(0,191,255);
 	public Color springGreen = new Color(0,255,127);
+	public Color mistyRose = new Color(255,228,225);
+	public Color gold = new Color(255,215,0);
 	private Image shield;
 	private ImageIcon shieldIcon;
+	private Image coinLogo;
+	private ImageIcon coinLogoIcon;
 	private boolean backButton = false;
 	public int redTime = 2;
 	public boolean SquareRED = false;
@@ -35,11 +39,15 @@ public class Upgrades extends MouseAdapter
 	public boolean secondRow3SquareClicked = false;
 	public boolean thirdRow3SquareClicked = false;
 	public boolean fourthRow3SquareClicked = false;
+	//boolean for display
+	public boolean notEnoughMoney = false;
+	public boolean highHealth = false;
+	public boolean alreadyClickedRow1 = false;
 	//other
 	public int box1Row1Cost = 1000;
 	public int box2Row1Cost = 2000;
-	public int box3Row1Cost = 500;
-	public int box4Row1Cost = 1000;
+	public int box3Row1Cost = 1000;
+	public int box4Row1Cost = 1500;
 	//bullets
 	//waterBullet
 	public int box1Row2Cost = 500;
@@ -58,6 +66,9 @@ public class Upgrades extends MouseAdapter
 	public int box3Row3Cost = 1500;
 	//sniper
 	public int box4Row3Cost = 2000;
+	
+	public boolean isShield = false;
+	public boolean isScoreBoost = false;
 	
 	public boolean isBullet = false;
 	public boolean isSplitBullet = false;
@@ -91,19 +102,23 @@ public class Upgrades extends MouseAdapter
 	{
 		shieldIcon = new ImageIcon(getClass().getResource("/ShieldLogo.png"));
 		shield = shieldIcon.getImage();
-		g.setColor(Color.BLACK);
+		coinLogoIcon = new ImageIcon(getClass().getResource("/CoinLogo.png"));
+		coinLogo = coinLogoIcon.getImage();
+		g.setColor(mistyRose);
 		Font shopFont = new Font("Superpower Synonym",Font.BOLD,160);
 		g.setFont(shopFont);
+        ((Graphics2D)g).setStroke(new BasicStroke(2));
 		g.drawString("UPGRADES",60,125);
-		Font backButtonFont = new Font("Arial",Font.BOLD,48);
+		Font backButtonFont = new Font("Roboto",Font.BOLD,48);
 		g.setFont(backButtonFont);
-		g.drawString("Score: "+HUD.SCORE, 5, 180);
-		g.setColor(Color.BLACK);
+		g.setColor(Color.WHITE);
+		g.drawString("SCORE: "+HUD.SCORE, 5, 180);
+		g.setColor(Color.YELLOW);
 		if(backButton) g.fillRect(330, 720, 150, 50);
 		else g.drawRect(330, 720, 150, 50);
-		if(backButton) g.setColor(Color.WHITE);
-		else g.setColor(Color.BLACK);
-		g.drawString("BACK", 335, 760);
+		if(backButton) g.setColor(Color.RED);
+		else g.setColor(Color.YELLOW);
+		g.drawString("BACK", 340, 760);
 		
 		g.setColor(Color.BLACK);
 		Font upgradeName = new Font("HEALTH",Font.BOLD,48);
@@ -118,6 +133,7 @@ public class Upgrades extends MouseAdapter
 		g.drawImage(shield,490, 200, 110, 110,null);
 		//put picture of upgrade
 		g.fillRect(660, 200, 110, 110);
+		g.drawImage(coinLogo,660, 200, 110, 110,null);
 		//put picture of upgrade
 		//2nd row
 		g.fillRect(150, 380, 110, 110);
@@ -157,7 +173,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(150, 200, 111, 111);
 		if(secondRow1SquareClicked) g.setColor(Color.BLACK);
 		else g.setColor(Color.WHITE);
@@ -175,7 +191,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(Color.YELLOW);
 		g.drawRect(320, 200, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.drawString("Refill Health",332,328);
@@ -188,8 +204,11 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(490, 200, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.drawString("Shield",520,328);
+		g.drawString("Cost: "+box3Row1Cost,509, 345);
 		//put text under upgrade here
 		//4th square: Row 
 		if(fourthRow1SquareClicked) 
@@ -199,8 +218,11 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(660, 200, 111, 111);
+		g.setColor(Color.YELLOW);
+		g.drawString("Score Boost",672,328);
+		g.drawString("Cost: "+box4Row1Cost,674, 345);
 		//put text under upgrade here
 		//2nd row outline
 		//1st Square: Row 2
@@ -211,7 +233,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(150, 380, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -226,7 +248,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(320, 380, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -241,7 +263,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(490, 380, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -256,7 +278,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(660, 380, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -272,7 +294,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(150, 560, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -287,7 +309,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(320, 560, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -302,7 +324,7 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(490, 560, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
@@ -317,12 +339,41 @@ public class Upgrades extends MouseAdapter
        		else
        			g.setColor(springGreen); 
        	}
-        else g.setColor(skyBlue);
+        else g.setColor(gold);
 		g.drawRect(660, 560, 111, 111);
 		g.setColor(Color.YELLOW);
 		g.setFont(itemFont);
 		g.drawString("Sniper",690,688);
 		g.drawString("Cost: "+box4Row3Cost,675, 706);
+		
+		g.setColor(new Color(255,160,122));
+		Font errorMessageFont = new Font("Roboto",Font.BOLD,18);
+		g.setFont(errorMessageFont);
+		if(notEnoughMoney)
+		{
+			g.drawString("You do", 32, 240);
+			g.drawString("not have", 22,260);
+			g.drawString("enough money!",4, 280);
+		}
+		if(highHealth)
+		{
+			if(HUD.HEALTH == 100)
+			{
+				g.drawString("You have", 36, 240);
+				g.drawString("full health!", 32,260);
+			}
+			else if(HUD.HEALTH > 70 && HUD.HEALTH<100)
+			{
+				g.drawString("Your health",23,240);
+				g.drawString("is high!", 35, 260);
+			}
+		}
+		if(alreadyClickedRow1)
+		{
+			g.drawString("You are already",15,240);
+			g.drawString("equipped",35,260);
+			g.drawString("with this item",25,280);
+		}
 		//put text under upgrade here
 	}
 	/* This method is part of MouseListener and this
@@ -334,13 +385,37 @@ public class Upgrades extends MouseAdapter
 		if(contains(mx,my,330, 720, 150, 50) && Game.gameState == Game.STATE.UPGRADES)
 		{
 			if(Game.stateholder.equalsIgnoreCase("Level1")) 
+			{
 				Game.gameState = Game.STATE.LEVEL1;
+				HUD.DUALRELOAD = 0;
+				HUD.PISTOLRELOAD = 0;
+				HUD.SHOTGUNRELOAD = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
 			if(Game.stateholder.equalsIgnoreCase("Level2"))
+			{
 				Game.gameState = Game.STATE.LEVEL2;
+				HUD.DUALRELOAD = 0;
+				HUD.PISTOLRELOAD = 0;
+				HUD.SHOTGUNRELOAD = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
 			if(Game.stateholder.equalsIgnoreCase("Level3"))
+			{
 				Game.gameState = Game.STATE.LEVEL3;
+				HUD.DUALRELOAD = 0;
+				HUD.PISTOLRELOAD = 0;
+				HUD.SHOTGUNRELOAD = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
 			if(Game.stateholder.equalsIgnoreCase("Level4"))
+			{
 				Game.gameState = Game.STATE.LEVEL4;
+				HUD.DUALRELOAD = 0;
+				HUD.PISTOLRELOAD = 0;
+				HUD.SHOTGUNRELOAD = 0;
+				HUD.SNIPERRELOAD = 0;
+			}
 		}
 		if(Game.gameState == Game.STATE.UPGRADES)
 		{
@@ -356,41 +431,81 @@ public class Upgrades extends MouseAdapter
 						box1Row1Cost+=500;
 					}
 					else if(HUD.HEALTH>70)
+					{
 						SquareRED = true;
+						highHealth = true;
+					}
 				}
 				else
+				{
 					SquareRED = true;
+					notEnoughMoney = true;
+				}
 			}
 			if(contains(mx,my,320, 200, 111, 111) && !secondRow1SquareClicked)
 			{
 				secondRow1SquareClicked = true;
-				if(HUD.SCORE>=box2Row1Cost)
+				if(HUD.HEALTH == 100)
 				{
-					HUD.HEALTH = 100;
-					HUD.SCORE-=box2Row1Cost;
-					box2Row1Cost+=500;
+					SquareRED = true;
+					highHealth = true;
 				}
-				else SquareRED = true;
+				else
+				{
+					if(HUD.SCORE>=box2Row1Cost)
+					{
+						HUD.HEALTH = 100;
+						HUD.SCORE-=box2Row1Cost;
+						box2Row1Cost+=500;
+					}
+					else 
+					{
+						SquareRED = true;
+						notEnoughMoney = true;
+					}
+				}
 			}
 			if(contains(mx,my,490, 200, 111, 111) && !thirdRow1SquareClicked)
 			{
 				thirdRow1SquareClicked = true;
-				if(HUD.SCORE>=box3Row1Cost)
+				if(!isShield)
 				{
-					//Here is where you put the impact of the upgrade
-					HUD.SCORE-=box3Row1Cost;
-					box3Row1Cost+=500;
+					if(HUD.SCORE>=box3Row1Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isShield = true;
+						HUD.SCORE-=box3Row1Cost;
+						box3Row1Cost+=500;
+					}
+					else 
+					{
+						SquareRED = true;
+						notEnoughMoney = true;
+					}
 				}
 				else SquareRED = true;
+			}
+			else if(contains(mx,my,490, 200, 111, 111) && thirdRow1SquareClicked)
+			{
+				alreadyClickedRow1 = true;
 			}
 			if(contains(mx,my,660, 200, 111, 111) && !fourthRow1SquareClicked)
 			{
 				fourthRow1SquareClicked = true;
-				if(HUD.SCORE>=box4Row1Cost)
+				if(!isScoreBoost)
 				{
-					//Here is where you put the impact of the upgrade
-					HUD.SCORE-=box4Row1Cost;
-					box4Row1Cost+=500;
+					if(HUD.SCORE>=box4Row1Cost)
+					{
+						//Here is where you put the impact of the upgrade
+						isScoreBoost = true;
+						HUD.SCORE-=box4Row1Cost;
+						box4Row1Cost+=500;
+					}
+					else 
+					{
+						SquareRED = true;
+						notEnoughMoney = true;
+					}
 				}
 				else SquareRED = true;
 			}
@@ -551,27 +666,37 @@ public class Upgrades extends MouseAdapter
 	{
 		if(firstRow1SquareClicked)
 		{
-			firstRow1SquareClicked = false;		
+			firstRow1SquareClicked = false;	
+			if(notEnoughMoney) notEnoughMoney = false;
+			if(highHealth) highHealth = false;
 			if(SquareRED)
 				SquareRED = false;
 		}
 		if(secondRow1SquareClicked)
 		{
 			secondRow1SquareClicked = false;
+			if(notEnoughMoney) notEnoughMoney = false;
+			if(highHealth) highHealth = false;
 			if(SquareRED)
 				SquareRED = false;
 		}
 		if(thirdRow1SquareClicked)
 		{
 			thirdRow1SquareClicked = false;
+			if(notEnoughMoney) notEnoughMoney = false;
 			if(SquareRED)
 				SquareRED = false;
 		}
 		if(fourthRow1SquareClicked)
 		{
 			fourthRow1SquareClicked = false;
+			if(notEnoughMoney) notEnoughMoney = false;
 			if(SquareRED)
 				SquareRED = false;
+		}
+		if(alreadyClickedRow1)
+		{
+			alreadyClickedRow1 = false;
 		}
 		if(firstRow2SquareClicked)
 		{

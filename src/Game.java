@@ -28,13 +28,17 @@ public class Game extends Canvas implements Runnable
 	private Image level4;
 	private Image gameComplete;
 	private Image background;
+	private Image customizeBackground;
 	private ImageIcon icon;
 	private ImageIcon lev2Icon;
 	private ImageIcon lev3Icon;
 	private ImageIcon lev4Icon;
 	private ImageIcon gameCompleteIcon;
+	private ImageIcon customizeBackgroundIcon;
 	private Image menuImage;
+	private Image upgradeImage;
 	private ImageIcon menuIcon;
+	private ImageIcon upgradeImageIcon;
 	public BufferedImage level1Display;
 	public BufferedImage level2Display;
 	public BufferedImage level3Display;
@@ -70,20 +74,20 @@ public class Game extends Canvas implements Runnable
 	private int explosiveBulletCount = 0;
 	private int doubleBulletCount = 0;
 	private int shotgunBulletCount = 0;
-	public int bossFight = 1500;
-	public int bossFight2 = 10500;
-	public int bossFight3 = 20000;
-	public int bossFight4 = 200;
+	public int bossFight = 2000;
+	public int bossFight2 = 2000;
+	public int bossFight3 = 2000;
+	public int bossFight4 = 2000;
 	private boolean [] keyDown = new boolean[2];
 	public boolean isBossFight = false;
 	public boolean isBossFight2 = false;
 	public boolean isBossFight3 = false;
 	public boolean isBossFight4 = false;
 	private boolean isShooting = false;
-	public boolean isLevel1Complete = false;
-	public boolean isLevel2Complete = false;
-	public boolean isLevel3Complete = false;
-	public boolean isLevel4Complete = false;
+	public boolean isLevel1Complete;
+	public boolean isLevel2Complete;
+	public boolean isLevel3Complete;
+	public boolean isLevel4Complete;
 	public static final STATE STATE = null;
 	public boolean setHighScore = false;
 	public static String stateholder = "";
@@ -137,9 +141,12 @@ public class Game extends Canvas implements Runnable
 		{
 			e.printStackTrace();
 		}
-		gameCompleteIcon = new ImageIcon(this.getClass().getResource("/GameCompleteBackground.png"));
+		gameCompleteIcon = new ImageIcon(this.getClass().getResource("/GameCompleteBackground.gif"));
+		customizeBackgroundIcon = new ImageIcon(this.getClass().getResource("/Customize.jpg"));
+		customizeBackground = customizeBackgroundIcon.getImage();
 		gameComplete = gameCompleteIcon.getImage();
 		icon = new ImageIcon(this.getClass().getResource("/background.gif"));
+		upgradeImageIcon = new ImageIcon(this.getClass().getResource("/Upgrades.jpg"));
 		storyIcon = new ImageIcon(this.getClass().getResource("/Story.gif"));
 		menuIcon = new ImageIcon(this.getClass().getResource("/Menu.gif"));
 		lev2Icon = new ImageIcon(this.getClass().getResource("LEVEL2.gif"));
@@ -149,6 +156,7 @@ public class Game extends Canvas implements Runnable
 		level3 = lev3Icon.getImage();
 		level4 = lev4Icon.getImage();
 		story = storyIcon.getImage();
+		upgradeImage = upgradeImageIcon.getImage();
 		addKeyListener(new KeyMovement(this));
 		background = icon.getImage();
 		menuImage = menuIcon.getImage();
@@ -214,15 +222,9 @@ public class Game extends Canvas implements Runnable
 			long now = System.nanoTime();
 			catchUp += (now-lastTime)/ns;
 			lastTime = now;
-			while(catchUp >=1)
+			while(catchUp>=1)
 			{
 				update();
-//				try {
-//					Thread.sleep(1);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 				updates++;
 				catchUp--;
 				
@@ -236,6 +238,15 @@ public class Game extends Canvas implements Runnable
 				FPS = 0;
 				updates = 0;
 			}
+			
+//			try
+//			{
+//				thread.sleep(1);
+//			}
+//			catch(Exception e)
+//			{
+//				e.printStackTrace();
+//			}
 		}
 		stop();
 	}
@@ -265,16 +276,15 @@ public class Game extends Canvas implements Runnable
 			check = true;
 			pistolReload = 0;
 			dualReload = 0;
-			//
-			isLevel3Complete = true;	
-			//	
+			shotgunReload = 0;
+			sniperReload = 0;
 			HUD.LEVEL1BOSSHEALTH = 200;
 			HUD.LEVEL2BOSSHEALTH = 500;
 			HUD.LEVEL3BOSSHEALTH = 550;
 			HUD.LEVEL4BOSSHEALTH = 570;
 			HUD.SCORE = 0;
 			HUD.COUNT= 0;
-			HUD.LEVEL = 0;
+			//HUD.LEVEL = 0;
 			HUD.UNDERGROUNDHEALTH = 1;
 			HUD.WIZARDHEALTH = 1;
 			HUD.THROWERHEALTH = 1;
@@ -299,6 +309,13 @@ public class Game extends Canvas implements Runnable
 			player.explosionPic = false;
 			hud.addScore = false;
 			menu.storeScoreStop = false;
+			menu.storeScoreStop2 = false;
+			menu.storeScoreStop3 = false;
+			menu.storeScoreStop4 = false;
+			menu.storeScoreStop5 = false;
+			menu.storeScoreStop6 = false;
+			menu.storeScoreStop7 = false;
+			menu.storeScoreStop8 = false;
 			hud.stopScore = false;
 			hud.stopScore2 = false;
 			hud.stopScorelev3  = false;
@@ -341,6 +358,9 @@ public class Game extends Canvas implements Runnable
 			spawner.boomerangEnemyTime = true;
 			upgrades.box1Row1Cost = 1000;
 			upgrades.box2Row1Cost = 2000;
+			upgrades.box3Row1Cost = 1000;
+			upgrades.box4Row1Cost = 1500;
+			upgrades.isShield = false;
 			upgrades.isBullet = false;
 			upgrades.isSplitBullet = false;
 			upgrades.isDualPistolBullet = false;
@@ -349,6 +369,11 @@ public class Game extends Canvas implements Runnable
 			upgrades.isShotgun = false;
 			upgrades.isDualPistol = false;
 			upgrades.isSniper = false;
+			upgrades.isScoreBoost = false;
+			Player.playerMoved = false;
+			player.x = 385;
+			player.y = 695;
+			player.changeSpeed = false;
 			RocketEnemy.bulletShow = true;
 			ThrowerEnemy.giveInfo = true;
 			ShieldEnemy.once = false;
@@ -357,7 +382,6 @@ public class Game extends Canvas implements Runnable
 			Rocket.destroyed = false;
 			Level4Boss.makeOne = false;
 			Level4Boss.isAlive = false;
-			
 		}		
 		else if(gameState == STATE.LEVEL1)
 		{
@@ -367,11 +391,13 @@ public class Game extends Canvas implements Runnable
 				if(hud.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					hud.update();
 					level1pause = 0;
 					player.x = 385;
 					level1Complete = 0;
 					bossDisplay = 0;
+					HUD.SHIELDHEALTH = 0;
 					isBossFight = false;
 					HUD.LEVEL1BOSSHEALTH = 200;
 				}
@@ -399,6 +425,8 @@ public class Game extends Canvas implements Runnable
 					handler.clearAll();
 					level1pause = 0;
 					bossDisplay = 0;
+					upgrades.isShield = false;
+					player.shieldMade = false;
 					HUD.UNDERGROUNDHEALTH = 20;
 					upgrades.isPistol = false;
 					upgrades.isDualPistol = false;
@@ -415,6 +443,7 @@ public class Game extends Canvas implements Runnable
 				if(hud.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					hud.update();
 					level1pause = 0;
 					player.x = 385;
@@ -449,6 +478,7 @@ public class Game extends Canvas implements Runnable
 				if(HUD.LEVEL1BOSSHEALTH<=0)
 				{
 					isLevel1Complete = true;
+					menu.levelChange = false;
 					HUD.LEVEL1BOSSHEALTH = 0;
 					handler.clearAll();
 					hud.update();
@@ -466,6 +496,7 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					hud.update();
 					handler.clearAll();
 					level2pause = 0;
@@ -477,6 +508,8 @@ public class Game extends Canvas implements Runnable
 					HUD.WIZARDHEALTH = 25;
 					HUD.THROWERHEALTH = 50;
 					HUD.SPLITHEALTH1 = 25;
+					HUD.LEVEL2BOSSHEALTH = 500;
+					HUD.SHIELDHEALTH = 0;
 					HUD.SPLITHEALTH2 = 25;
 					UnderGroundEnemy.show = false;
 					Spawn.undergroundenemyShow = true;
@@ -582,6 +615,8 @@ public class Game extends Canvas implements Runnable
 					handler.clearAll();
 					level2pause = 0;
 					bossDisplay2 = 0;
+					upgrades.isShield = false;
+					player.shieldMade = false;
 					upgrades.isPistol = false;
 					upgrades.isDualPistol = false;
 					upgrades.isShotgun = false;
@@ -597,17 +632,20 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					hud.update();
 					handler.clearAll();
 					level2pause = 0;
 					level2Complete = 0;
 					isBossFight2 = false;
 					player.x = 385;
+					HUD.LEVEL2BOSSHEALTH = 500;
 					bossDisplay2 = 0;
 					HUD.UNDERGROUNDHEALTH = 25;
 					HUD.WIZARDHEALTH = 25;
 					HUD.THROWERHEALTH = 50;
 					HUD.SPLITHEALTH1 = 25;
+					HUD.SHIELDHEALTH = 0;
 					HUD.SPLITHEALTH2 = 25;
 					UnderGroundEnemy.show = false;
 					Spawn.undergroundenemyShow = true;
@@ -639,8 +677,9 @@ public class Game extends Canvas implements Runnable
 					if(HUD.LEVEL2BOSSHEALTH<=0)
 					{
 						isLevel2Complete = true;
-						HUD.LEVEL2BOSSHEALTH = 0;
+						menu.levelChange = false;
 						handler.clearAll();
+						HUD.LEVEL2BOSSHEALTH = 0;
 						hud.update();
 						menu.update();
 						handler.update();
@@ -656,12 +695,15 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					handler.clearAll();
 					hud.update();
+					HUD.LEVEL3BOSSHEALTH = 550;
 					level3pause = 0;
 					isBossFight3 = false;
 					bossDisplay3 = 0;
 					level3Complete = 0;
+					HUD.SHIELDHEALTH = 0;
 					HUD.EXPLODERHEALTH = 20;
 				}
 				else
@@ -765,10 +807,13 @@ public class Game extends Canvas implements Runnable
 					upgrades.isDualPistol = false;
 					upgrades.isShotgun = false;
 					upgrades.isSniper = false;
+					upgrades.isShield = false;
+					player.shieldMade = false;
 					player.pistolShoot = false;
 					player.doubleShoot = false;
 					player.shotgunShoot = false;
 					player.sniperShoot = false;
+					HUD.SHIELDHEALTH = 0;
  				}
 			}
 			if(isBossFight3 && bossDisplay3>=200)
@@ -776,8 +821,11 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					handler.clearAll();
 					hud.update();
+					HUD.LEVEL3BOSSHEALTH = 550;
+					HUD.SHIELDHEALTH = 0;
 					level3pause = 0;
 					isBossFight3 = false;
 					level3Complete = 0;
@@ -811,6 +859,7 @@ public class Game extends Canvas implements Runnable
 				if(HUD.LEVEL3BOSSHEALTH<=0)
 				{
 					isLevel3Complete = true;
+					menu.levelChange = false;
 					HUD.LEVEL3BOSSHEALTH = 0;
 					handler.clearAll();
 					hud.update();
@@ -827,7 +876,9 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH <=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					level4Complete = 0;
+					HUD.SHIELDHEALTH = 0;
 					level4pause = 0;
 					bossDisplay4 = 0;
 					handler.clearAll();
@@ -910,8 +961,6 @@ public class Game extends Canvas implements Runnable
 						{
 							if(player.shotgunShoot)
 								player.shotgunShoot = false;
-							else
-								player.sniperShoot = false;
 						}
 						if(sniperReload == 100 && !isShooting)
 						{
@@ -935,6 +984,8 @@ public class Game extends Canvas implements Runnable
 					handler.clearAll();
 					level4pause = 0;
 					bossDisplay4 = 0;
+					upgrades.isShield = false;
+					player.shieldMade = false;
 					upgrades.isPistol = false;
 					upgrades.isDualPistol = false;
 					upgrades.isShotgun = false;
@@ -950,7 +1001,10 @@ public class Game extends Canvas implements Runnable
 				if(HUD.HEALTH<=0)
 				{
 					gameState = STATE.DEADSCREEN;
+					menu.levelChange = true;
 					handler.clearAll();
+					HUD.LEVEL4BOSSHEALTH = 570;
+					HUD.SHIELDHEALTH = 0;
 					hud.update();
 					level4pause = 0;
 					isBossFight4 = false;
@@ -987,6 +1041,7 @@ public class Game extends Canvas implements Runnable
 				if(HUD.LEVEL4BOSSHEALTH<=0)
 				{
 					isLevel4Complete = true;
+					menu.levelChange = false;
 					HUD.LEVEL4BOSSHEALTH = 0;
 					handler.clearAll();
 					hud.update();
@@ -1032,8 +1087,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.CUSTOMIZE)
 		{
-			g.setColor(Color.PINK);
-			g.fillRect(0,0, WIDTH, HEIGHT);
+			g.drawImage(customizeBackground,0,0,WIDTH,HEIGHT,null);
 			menu.render(g);
 			customize.render(g);
 		}
@@ -1185,8 +1239,7 @@ public class Game extends Canvas implements Runnable
 		}
 		else if(gameState == STATE.UPGRADES)
 		{
-			g.setColor(menu.coral);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
+			g.drawImage(upgradeImage,0,0,WIDTH,HEIGHT,null);
 			upgrades.render(g);
 		}
 		else if(gameState == STATE.GAMECOMPLETE)

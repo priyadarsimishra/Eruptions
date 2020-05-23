@@ -105,7 +105,8 @@ public class SplitEnemy2 extends GameObject
 					{
 						handler.removeObject(this);
 						ThrowerEnemy.giveInfo = false;
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -119,7 +120,8 @@ public class SplitEnemy2 extends GameObject
 					{
 						handler.removeObject(this);
 						ThrowerEnemy.giveInfo = false;
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -134,7 +136,8 @@ public class SplitEnemy2 extends GameObject
 					{
 						handler.removeObject(this);
 						ThrowerEnemy.giveInfo = false;
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -148,7 +151,8 @@ public class SplitEnemy2 extends GameObject
 					{
 						handler.removeObject(this);
 						ThrowerEnemy.giveInfo = false;
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}

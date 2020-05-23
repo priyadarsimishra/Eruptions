@@ -431,7 +431,7 @@ public class Spawn
 			{
 				LevelDisplay.dragonTime = 200;
 				HUD.BABYDRAGONHEALTH = 15;
-				handler.addObject(new BabyDragon((int)Level3Boss.spawnX,(int)Level3Boss.spawnY,ID.BabyDragon,handler,texture));
+				handler.addObject(new BabyDragon((int)Level3Boss.spawnX,(int)Level3Boss.spawnY,ID.BabyDragon,handler,texture,game));
 				spawnbabyDragon = false;
 			}
 			if(rayBulletTime<=0)

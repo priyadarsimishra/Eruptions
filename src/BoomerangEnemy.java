@@ -128,7 +128,8 @@ public class BoomerangEnemy extends GameObject
 					if(HUD.BOOMERANGHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -144,7 +145,8 @@ public class BoomerangEnemy extends GameObject
 					if(HUD.BOOMERANGHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -160,7 +162,8 @@ public class BoomerangEnemy extends GameObject
 					if(HUD.BOOMERANGHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -175,7 +178,8 @@ public class BoomerangEnemy extends GameObject
 					if(HUD.BOOMERANGHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}

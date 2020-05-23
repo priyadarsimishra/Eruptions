@@ -109,7 +109,8 @@ public class Wizard extends GameObject
 					if(HUD.WIZARDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=600;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1200;
+						else HUD.SCORE+=600;
 					}
 				}
 			}
@@ -125,7 +126,8 @@ public class Wizard extends GameObject
 					if(HUD.WIZARDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=600;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1200;
+						else HUD.SCORE+=600;
 					}
 				}
 			}
@@ -141,7 +143,8 @@ public class Wizard extends GameObject
 					if(HUD.WIZARDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=600;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1200;
+						else HUD.SCORE+=600;
 					}
 				}
 			}
@@ -158,7 +161,8 @@ public class Wizard extends GameObject
 					if(HUD.WIZARDHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=600;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=1200;
+						else HUD.SCORE+=600;
 					}
 				}
 			}

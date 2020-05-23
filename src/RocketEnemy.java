@@ -84,7 +84,8 @@ public class RocketEnemy extends GameObject
 					{
 						HUD.ROCKETHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=150;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=300;
+						else HUD.SCORE+=150;
 					}
 				}
 			}
@@ -101,7 +102,8 @@ public class RocketEnemy extends GameObject
 					{
 						HUD.ROCKETHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=150;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=300;
+						else HUD.SCORE+=150;
 					}
 				}
 			}
@@ -118,7 +120,8 @@ public class RocketEnemy extends GameObject
 					{
 						HUD.ROCKETHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=150;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=300;
+						else HUD.SCORE+=150;
 					}
 				}
 			}
@@ -136,7 +139,8 @@ public class RocketEnemy extends GameObject
 					{
 						HUD.ROCKETHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=150;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=300;
+						else HUD.SCORE+=150;
 					}
 				}
 			}

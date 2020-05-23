@@ -25,9 +25,10 @@ public class BabyDragon extends GameObject
 	private int imageExplosionTime = 0;
 	private double colX = 0;
 	private double colY = 0;
+	private Game game;
 	/* This is the constructor for the Baby Dragon
 	 * and it requires the same parameter as other game objects */
-	public BabyDragon(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture) 
+	public BabyDragon(double x, double y, ID id,ObjectHandler handler,SpriteTextures texture,Game game) 
 	{
 		super(x, y, id);
 		this.x = x;
@@ -112,7 +113,8 @@ public class BabyDragon extends GameObject
 					if(HUD.BABYDRAGONHEALTH<=0)
 					{
 						HUD.BABYDRAGONHEALTH = 0;
-						HUD.SCORE+=400;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=800;
+						else HUD.SCORE+=400;
 						handler.removeObject(this);
 						Spawn.spawnbabyDragon = false;
 					}

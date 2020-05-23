@@ -114,7 +114,8 @@ public class TankEnemy extends GameObject
 					if(HUD.TANKHEALTH<=0)
 					{
 						HUD.TANKHEALTH = 0;
-						HUD.SCORE+=450;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=900;
+						else HUD.SCORE+=450;
 						handler.removeObject(this);
 					}
 				}
@@ -131,7 +132,8 @@ public class TankEnemy extends GameObject
 					if(HUD.TANKHEALTH<=0)
 					{
 						HUD.TANKHEALTH = 0;
-						HUD.SCORE+=450;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=900;
+						else HUD.SCORE+=450;
 						handler.removeObject(this);
 					}
 				}
@@ -148,7 +150,8 @@ public class TankEnemy extends GameObject
 					if(HUD.TANKHEALTH<=0)
 					{
 						HUD.TANKHEALTH = 0;
-						HUD.SCORE+=450;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=900;
+						else HUD.SCORE+=450;
 						handler.removeObject(this);
 					}
 				}
@@ -165,7 +168,8 @@ public class TankEnemy extends GameObject
 					if(HUD.TANKHEALTH<=0)
 					{
 						HUD.TANKHEALTH = 0;
-						HUD.SCORE+=450;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=900;
+						else HUD.SCORE+=450;
 						handler.removeObject(this);
 					}
 				}

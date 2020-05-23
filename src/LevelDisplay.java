@@ -82,13 +82,26 @@ public class LevelDisplay
 				Font newFont = new Font("Arial",Font.BOLD,64);
 				g.setFont(newFont);
 				g.setColor(springGreen);
-				if((int)Level1Boss.x+80+200>=Game.WIDTH)
+				if(game.upgrades.isScoreBoost)
 				{
-					g.drawString("+1000",(int)Level1Boss.x-20,Game.HEIGHT/2+20);
+					if((int)Level1Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+2000",(int)Level1Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+2000",(int)Level1Boss.x+80,(int)Level1Boss.y+200);
+					scoreTime--;
 				}
-				else				
-					g.drawString("+1000",(int)Level1Boss.x+80,(int)Level1Boss.y+200);
-				scoreTime--;
+				else
+				{
+					if((int)Level1Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+1000",(int)Level1Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+1000",(int)Level1Boss.x+80,(int)Level1Boss.y+200);
+					scoreTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL2 && !(game.level2pause>=500) && !game.isBossFight2)
@@ -128,44 +141,92 @@ public class LevelDisplay
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(wizardTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(skyBlue);
-				g.drawString("+600", (int)Wizard.x, (int)Wizard.y);
-				wizardTime--;
+				if(wizardTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+1200", (int)Wizard.x, (int)Wizard.y);
+					wizardTime--;
+				}
+			}
+			else
+			{
+				if(wizardTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+600", (int)Wizard.x, (int)Wizard.y);
+					wizardTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && HUD.UNDERGROUNDHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(underTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(Color.GREEN);
-				g.drawString("+500", (int)UnderGroundEnemy.x, (int)UnderGroundEnemy.y);
-				underTime--;
+				if(underTime>0)
+				{
+					g.setColor(Color.GREEN);
+					g.drawString("+1000", (int)UnderGroundEnemy.x, (int)UnderGroundEnemy.y);
+					underTime--;
+				}
+			}
+			else
+			{
+				if(underTime>0)
+				{
+					g.setColor(Color.GREEN);
+					g.drawString("+500", (int)UnderGroundEnemy.x, (int)UnderGroundEnemy.y);
+					underTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && HUD.SPLITHEALTH1<=0 && HUD.THROWERHEALTH<=25)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(split1Time>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(springGreen);
-				g.drawString("+200", (int)SplitEnemy1.x, (int)SplitEnemy1.y);
-				split1Time--;
+				if(split1Time>0)
+				{
+					g.setColor(springGreen);
+					g.drawString("+400", (int)SplitEnemy1.x, (int)SplitEnemy1.y);
+					split1Time--;
+				}
+			}
+			else
+			{
+				if(split1Time>0)
+				{
+					g.setColor(springGreen);
+					g.drawString("+200", (int)SplitEnemy1.x, (int)SplitEnemy1.y);
+					split1Time--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.level2pause>=500 && HUD.SPLITHEALTH2<=0 && HUD.THROWERHEALTH<=25)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(split2Time>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(springGreen);
-				g.drawString("+200", (int)SplitEnemy2.x, (int)SplitEnemy2.y);
-				split2Time--;
+				if(split2Time>0)
+				{
+					g.setColor(springGreen);
+					g.drawString("+400", (int)SplitEnemy2.x, (int)SplitEnemy2.y);
+					split2Time--;
+				}
+			}
+			else
+			{
+				if(split2Time>0)
+				{
+					g.setColor(springGreen);
+					g.drawString("+200", (int)SplitEnemy2.x, (int)SplitEnemy2.y);
+					split2Time--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL2 && game.isBossFight2 && HUD.LEVEL2BOSSHEALTH>0 && game.bossDisplay2<200)
@@ -198,46 +259,95 @@ public class LevelDisplay
 				Font newFont = new Font("Arial",Font.BOLD,64);
 				g.setFont(newFont);
 				g.setColor(springGreen);
-				if((int)Level2Boss.x+80+200>=Game.WIDTH)
+				if(game.upgrades.isScoreBoost)
 				{
-					g.drawString("+1000",(int)Level2Boss.x-20,Game.HEIGHT/2+20);
+					if((int)Level2Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+2000",(int)Level2Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+2000",(int)Level2Boss.x+80,(int)Level2Boss.y+200);
+					scoreTime2--;
 				}
-				else				
-					g.drawString("+1000",(int)Level2Boss.x+80,(int)Level2Boss.y+200);
-				scoreTime2--;
+				else
+				{
+					if((int)Level2Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+1000",(int)Level2Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+1000",(int)Level2Boss.x+80,(int)Level2Boss.y+200);
+					scoreTime2--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL3 && game.level3pause>=500 && HUD.EXPLODERHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(exploderTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(springGreen);
-				g.drawString("+200", (int)ExploderEnemy.x, (int)ExploderEnemy.y);
-				exploderTime--;
+				if(exploderTime>0)
+				{
+					g.setColor(springGreen);
+					g.drawString("+400", (int)ExploderEnemy.x, (int)ExploderEnemy.y);
+					exploderTime--;
+				}
+			}
+			else
+			{
+				if(exploderTime>0)
+				{
+					g.setColor(springGreen);
+					g.drawString("+200", (int)ExploderEnemy.x, (int)ExploderEnemy.y);
+					exploderTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL3 && game.level3pause>=500 && HUD.RAYHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(rayEnemyTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(skyBlue);
-				g.drawString("+350", (int)RayEnemy.x, (int)RayEnemy.y);
-				rayEnemyTime--;
+				if(rayEnemyTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+700", (int)RayEnemy.x, (int)RayEnemy.y);
+					rayEnemyTime--;
+				}
+			}
+			else
+			{
+				if(rayEnemyTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+350", (int)RayEnemy.x, (int)RayEnemy.y);
+					rayEnemyTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL3 && game.level3pause>=500 && HUD.ROCKETHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(rocketEnemyTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(Color.BLUE);
-				g.drawString("+150", (int)RocketEnemy.x, (int)RocketEnemy.y);
-				rocketEnemyTime--;
+				if(rocketEnemyTime>0)
+				{
+					g.setColor(Color.BLUE);
+					g.drawString("+300", (int)RocketEnemy.x, (int)RocketEnemy.y);
+					rocketEnemyTime--;
+				}
+			}
+			else
+			{
+				if(rocketEnemyTime>0)
+				{
+					g.setColor(Color.BLUE);
+					g.drawString("+150", (int)RocketEnemy.x, (int)RocketEnemy.y);
+					rocketEnemyTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL3 && game.isBossFight3 && HUD.LEVEL3BOSSHEALTH>0 && game.bossDisplay3<200)
@@ -262,11 +372,23 @@ public class LevelDisplay
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(dragonTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(azure);
-				g.drawString("+400", (int)BabyDragon.x, (int)BabyDragon.y);
-				dragonTime--;
+				if(dragonTime>0)
+				{
+					g.setColor(azure);
+					g.drawString("+800", (int)BabyDragon.x, (int)BabyDragon.y);
+					dragonTime--;
+				}
+			}
+			else
+			{
+				if(dragonTime>0)
+				{
+					g.setColor(azure);
+					g.drawString("+400", (int)BabyDragon.x, (int)BabyDragon.y);
+					dragonTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0 )
@@ -283,46 +405,95 @@ public class LevelDisplay
 				Font newFont = new Font("Arial",Font.BOLD,64);
 				g.setFont(newFont);
 				g.setColor(springGreen);
-				if((int)Level3Boss.x+80+200>=Game.WIDTH)
+				if(game.upgrades.isScoreBoost)
 				{
-					g.drawString("+1000",(int)Level3Boss.x-20,Game.HEIGHT/2+20);
+					if((int)Level3Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+2000",(int)Level3Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+2000",(int)Level3Boss.x+80,(int)Level3Boss.y+200);
+					scoreTime3--;
 				}
-				else				
-					g.drawString("+1000",(int)Level3Boss.x+80,(int)Level3Boss.y+200);
-				scoreTime3--;
+				else
+				{
+					if((int)Level3Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+1000",(int)Level3Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+1000",(int)Level3Boss.x+80,(int)Level3Boss.y+200);
+					scoreTime3--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL4 && game.level4pause>=500 && HUD.TANKHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(tankTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(skyBlue);
-				g.drawString("+450", (int)TankEnemy.x, (int)TankEnemy.y);
-				tankTime--;
+				if(tankTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+900", (int)TankEnemy.x, (int)TankEnemy.y);
+					tankTime--;
+				}
+			}
+			else
+			{
+				if(tankTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+450", (int)TankEnemy.x, (int)TankEnemy.y);
+					tankTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL4 && game.level4pause>=500 && HUD.BOOMERANGHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(boomerangTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(lime);
-				g.drawString("+200", (int)BoomerangEnemy.x, (int)BoomerangEnemy.y);
-				boomerangTime--;
+				if(boomerangTime>0)
+				{
+					g.setColor(lime);
+					g.drawString("+400", (int)BoomerangEnemy.x, (int)BoomerangEnemy.y);
+					boomerangTime--;
+				}
+			}
+			else
+			{
+				if(boomerangTime>0)
+				{
+					g.setColor(lime);
+					g.drawString("+200", (int)BoomerangEnemy.x, (int)BoomerangEnemy.y);
+					boomerangTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL4 && game.level4pause>=500 && HUD.SHIELDENEMYHEALTH<=0)
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(shieldTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(darkMagenta);
-				g.drawString("+250", (int)ShieldEnemy.x+3, (int)ShieldEnemy.y);
-				shieldTime--;
+				if(shieldTime>0)
+				{
+					g.setColor(darkMagenta);
+					g.drawString("+500", (int)ShieldEnemy.x+3, (int)ShieldEnemy.y);
+					shieldTime--;
+				}
+			}
+			else
+			{
+				if(shieldTime>0)
+				{
+					g.setColor(darkMagenta);
+					g.drawString("+250", (int)ShieldEnemy.x+3, (int)ShieldEnemy.y);
+					shieldTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL4 && game.isBossFight4 && HUD.LEVEL4BOSSHEALTH>0 && game.bossDisplay4<200)
@@ -344,11 +515,23 @@ public class LevelDisplay
 		{
 			Font scoreFont = new Font("Arial",Font.BOLD,24);
 			g.setFont(scoreFont);
-			if(exploderTime>0)
+			if(game.upgrades.isScoreBoost)
 			{
-				g.setColor(skyBlue);
-				g.drawString("+200", (int)ExploderEnemy.x, (int)ExploderEnemy.y);
-				exploderTime--;
+				if(exploderTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+400", (int)ExploderEnemy.x, (int)ExploderEnemy.y);
+					exploderTime--;
+				}
+			}
+			else
+			{
+				if(exploderTime>0)
+				{
+					g.setColor(skyBlue);
+					g.drawString("+200", (int)ExploderEnemy.x, (int)ExploderEnemy.y);
+					exploderTime--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0)
@@ -365,13 +548,26 @@ public class LevelDisplay
 				Font newFont = new Font("Arial",Font.BOLD,64);
 				g.setFont(newFont);
 				g.setColor(springGreen);
-				if((int)Level3Boss.x+80+200>=Game.WIDTH)
+				if(game.upgrades.isScoreBoost)
 				{
-					g.drawString("+3000",(int)Level4Boss.x-20,Game.HEIGHT/2+20);
+					if((int)Level3Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+6000",(int)Level4Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+6000",(int)Level4Boss.x+80,(int)Level4Boss.y+200);
+					scoreTime4--;
 				}
-				else				
-					g.drawString("+3000",(int)Level4Boss.x+80,(int)Level4Boss.y+200);
-				scoreTime4--;
+				else
+				{
+					if((int)Level3Boss.x+80+200>=Game.WIDTH)
+					{
+						g.drawString("+3000",(int)Level4Boss.x-20,Game.HEIGHT/2+20);
+					}
+					else				
+						g.drawString("+3000",(int)Level4Boss.x+80,(int)Level4Boss.y+200);
+					scoreTime4--;
+				}
 			}
 		}
 		if(game.gameState == game.STATE.GAMECOMPLETE && Player.playerMoved)

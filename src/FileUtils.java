@@ -72,7 +72,6 @@ public class FileUtils
 				{
 					has =false;
 				}
-				
 			}
 			ois.close();
 			fis.close();
@@ -152,10 +151,10 @@ public class FileUtils
 		
 		if(playerList != null && playerList.size() >0) 
 		{
-			for(PlayerInfo player1 : playerList) {
+			for(PlayerInfo player1 : playerList) 
+			{
 				if(player1.getPlayerName().equalsIgnoreCase(playerName)) 
 				{
-					
 					totalScore = player1.getTotalScore();
 				}
 			}

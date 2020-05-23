@@ -82,7 +82,8 @@ public class ExploderEnemy extends GameObject
 					if(HUD.EXPLODERHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -101,7 +102,8 @@ public class ExploderEnemy extends GameObject
 					{
 						HUD.EXPLODERHEALTH = 0;
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;						
 						Level4Boss.isAlive = false;
 					}
 				}
@@ -118,7 +120,8 @@ public class ExploderEnemy extends GameObject
 					if(HUD.EXPLODERHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -134,7 +137,8 @@ public class ExploderEnemy extends GameObject
 					if(HUD.EXPLODERHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}
@@ -151,7 +155,8 @@ public class ExploderEnemy extends GameObject
 					if(HUD.EXPLODERHEALTH<=0)
 					{
 						handler.removeObject(this);
-						HUD.SCORE+=200;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=400;
+						else HUD.SCORE+=200;
 					}
 				}
 			}

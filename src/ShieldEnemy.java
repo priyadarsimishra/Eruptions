@@ -120,7 +120,8 @@ public class ShieldEnemy extends GameObject
 						once = false;
 						startDamage = false;
 						HUD.SHIELDENEMYHEALTH = 0;
-						HUD.SCORE+=250;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=500;
+						else HUD.SCORE+=250;
 						handler.removeObject(this);
 					}
 				}
@@ -139,7 +140,8 @@ public class ShieldEnemy extends GameObject
 						once = false;
 						startDamage = false;
 						HUD.SHIELDENEMYHEALTH = 0;
-						HUD.SCORE+=250;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=500;
+						else HUD.SCORE+=250;
 						handler.removeObject(this);
 					}
 				}
@@ -158,7 +160,8 @@ public class ShieldEnemy extends GameObject
 						once = false;
 						startDamage = false;
 						HUD.SHIELDENEMYHEALTH = 0;
-						HUD.SCORE+=250;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=500;
+						else HUD.SCORE+=250;
 						handler.removeObject(this);
 					}
 				}
@@ -177,7 +180,8 @@ public class ShieldEnemy extends GameObject
 						once = false;
 						startDamage = false;
 						HUD.SHIELDENEMYHEALTH = 0;
-						HUD.SCORE+=250;
+						if(game.upgrades.isScoreBoost) HUD.SCORE+=500;
+						else HUD.SCORE+=250;
 						handler.removeObject(this);
 					}
 				}

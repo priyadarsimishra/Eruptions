@@ -3,6 +3,7 @@
 public enum ID 
 {
 	Player,
+	PlayerShield,
 	BronzeCoin,
 	SilverCoin,
 	GoldCoin,
