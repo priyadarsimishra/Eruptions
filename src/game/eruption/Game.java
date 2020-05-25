@@ -126,9 +126,10 @@ public class Game extends Canvas implements Runnable
 	/* In the constructor we make our JFrame */ 
 	public Game()
 	{
-		NamePanel np = new NamePanel(this);
 		SoundPlayer.load();
 		SoundPlayer.getMusic("game_music").loop();
+		NamePanel np = new NamePanel(this);
+
 //		SoundPlayer.load();
 	}
 	/* This method gets all our images that we need in the game
@@ -248,7 +249,7 @@ public class Game extends Canvas implements Runnable
 			if(System.currentTimeMillis() - timerCheck>1000)
 			{
 				timerCheck+=1000;
-				System.out.println("Updates: "+updates+", FPS: "+FPS);			
+				//System.out.println("Updates: "+updates+", FPS: "+FPS);			
 				FPS = 0;
 				updates = 0;
 			}
@@ -1398,7 +1399,6 @@ public class Game extends Canvas implements Runnable
 			}
 			else if(upgrades.isShotgunBullet && player.doubleShoot) 
 			{
-				//edit make 5 each side
 				SoundPlayer.getSound("dualpistol_shoot").play();
 				handler.addObject(new ShotgunBullet(player.getX()-5,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
 				handler.addObject(new ShotgunBullet(player.getX()+22,player.getY()-25,ID.ShotgunBullet,handler,texture,-15,this));
@@ -1413,7 +1413,6 @@ public class Game extends Canvas implements Runnable
 			/* ******** shotgun bullets ******** */
 			if(upgrades.isDualPistolBullet && player.shotgunShoot) 
 			{
-				//edit this after class
 				SoundPlayer.getSound("shotgun_shoot").play();
 				handler.addObject(new ExplosiveBullet(player.getX()+4,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24, this));
 				handler.addObject(new ExplosiveBullet(player.getX()+10,player.getY()-25,ID.ExplosiveBullet,handler,texture,-24,this));
@@ -1938,7 +1937,6 @@ public class Game extends Canvas implements Runnable
 	 * and starts the game */
 	public static void main(String [] args)
 	{
-	
 		Game game = new Game();
 		game.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		game.setMaximumSize(new Dimension(WIDTH,HEIGHT));

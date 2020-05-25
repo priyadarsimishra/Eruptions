@@ -53,7 +53,7 @@ public class Boomerang extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{	
-		icon = new ImageIcon(getClass().getResource("Boomerang.gif"));
+		icon = new ImageIcon(getClass().getResource("/Boomerang.gif"));
 		boomerang = icon.getImage();
 		g.drawImage(boomerang,(int)x,(int)y,40,60,null);
 	}

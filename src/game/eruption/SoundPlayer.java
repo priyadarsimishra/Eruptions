@@ -58,6 +58,7 @@ public class SoundPlayer
 			soundmap.put("shieldenemy_shoot", new Sound("shieldenemy_shoot.wav"));
 			soundmap.put("boss_rage", new Sound("boss_rage.wav"));
 			soundmap.put("boss_damage", new Sound("boss_damage.wav"));
+			soundmap.put("mouse_clicked", new Sound("mouse_clicked.wav"));
 			musicmap.put("game_music",new Music("Unavailable.wav"));
 		}
 		catch(SlickException e)

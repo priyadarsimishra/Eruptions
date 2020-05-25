@@ -188,8 +188,6 @@ public class Level4Boss extends GameObject
 			}
 		}
 		else exploderTime--;
-//		if(HUD.EXPLODERHEALTH<=0)
-//			Spawn.exploderEnemyTime = true;
 		checkCollision();
 	}
 	/* This method also runs 60 times per second and 

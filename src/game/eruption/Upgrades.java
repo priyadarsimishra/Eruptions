@@ -361,7 +361,7 @@ public class Upgrades extends MouseAdapter
 		g.drawString("Sniper",690,688);
 		g.drawString("Cost: "+box4Row3Cost,675, 706);
 		
-		g.setColor(new Color(255,160,122));
+		g.setColor(Color.CYAN);
 		Font errorMessageFont = new Font("Roboto",Font.BOLD,18);
 		g.setFont(errorMessageFont);
 		if(notEnoughMoney)
@@ -471,6 +471,7 @@ public class Upgrades extends MouseAdapter
 		int my = e.getY();
 		if(contains(mx,my,330, 720, 150, 50) && Game.gameState == Game.STATE.UPGRADES)
 		{
+			SoundPlayer.getSound("mouse_clicked").play();
 			if(Game.stateholder.equalsIgnoreCase("Level1")) 
 			{
 				Game.gameState = Game.STATE.LEVEL1;

@@ -120,18 +120,18 @@ public class HUD
 //			LEVEL1BOSSHEALTH-=1;
 //		}
 //		
-		if(game.isBossFight2)
-		{
-			LEVEL2BOSSHEALTH-=2;
-		}
-		if(game.isBossFight3)
-		{
-			LEVEL3BOSSHEALTH-=2;
-		}
-		if(game.isBossFight4)
-		{
-			LEVEL4BOSSHEALTH-=5;
-		}
+//		if(game.isBossFight2)
+//		{
+//			LEVEL2BOSSHEALTH-=2;
+//		}
+//		if(game.isBossFight3)
+//		{
+//			LEVEL3BOSSHEALTH-=2;
+//		}
+//		if(game.isBossFight4)
+//		{
+//			LEVEL4BOSSHEALTH-=5;
+//		}
 		if(SCORE>=HIGHSCORE)
 		{
 			HIGHSCORE = SCORE;

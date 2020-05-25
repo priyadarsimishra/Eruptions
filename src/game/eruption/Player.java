@@ -415,7 +415,6 @@ public class Player extends GameObject
 			{
 				g.drawImage(freeze,(int)x-10,(int)y,60,60,null);
 			}
-			
 		}
 		else
 		{

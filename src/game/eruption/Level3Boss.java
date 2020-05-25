@@ -132,7 +132,7 @@ public class Level3Boss extends GameObject
 		explosion = icon.getImage();
 		icon2 = new ImageIcon(getClass().getResource("/fire.gif"));
 		fire = icon2.getImage();
-		icon3 = new ImageIcon(getClass().getResource("greenFire.gif"));
+		icon3 = new ImageIcon(getClass().getResource("/greenFire.gif"));
 		greenFire = icon3.getImage();
 		g.drawImage(fire,(int)x,(int)y-60,250,100,null);
 		g.drawImage(texture.Bosslevel3,(int)x,(int)y,250,250,null);

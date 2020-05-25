@@ -110,50 +110,65 @@ public class Menu extends MouseAdapter
 	{
 		int mx = e.getX();
 		int my = e.getY();
+		if(game.gameState == game.STATE.MENU)
+			SoundPlayer.getSound("mouse_clicked").play();
+		if(game.gameState == game.STATE.CUSTOMIZE)
+			SoundPlayer.getSound("mouse_clicked").play();
+		if(game.gameState == game.STATE.UPGRADES)
+			SoundPlayer.getSound("mouse_clicked").play();
 		if(contains(mx,my,Game.WIDTH/2-60,Game.HEIGHT/2,101,51) && game.gameState == game.STATE.NAMEPANEL)
 		{
 			// OK BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(contains(mx,my,game.WIDTH/2-115,game.HEIGHT/2-60,200,100) && game.gameState == game.STATE.MENU)
 		{
 			//CUSTOMIZE BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.CUSTOMIZE;
 		}
 		else if(contains(mx,my,5,700,250,75) && game.gameState == game.STATE.CUSTOMIZE)
 		{
 			//BACK BUTTON IN CUSTOMIZE
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(contains(mx, my,game.WIDTH/2-115,game.HEIGHT/2-188,200,100) && game.gameState == game.STATE.MENU)
 		{
 			// PLAY BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.SELECTLEVEL;
 		}
 		else if(contains(mx,my,game.WIDTH/2-115,game.HEIGHT/2+70,200,100) && game.gameState == game.STATE.MENU)
 		{
 			//HELP BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.HELP;
 		}
 		else if(contains(mx,my,game.WIDTH/2-120,game.HEIGHT/2+250,250,100) && game.gameState == game.STATE.HELP)
 		{
 			// BACK BUTTON in HELP
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(contains(mx,my,game.WIDTH/2-120,game.HEIGHT/2+230,250,100) && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// BACK BUTTON IN LEVEL CHOOSE
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(contains(mx,my,game.WIDTH/2-115,game.HEIGHT/2+200,200,100) && game.gameState == game.STATE.MENU)
 		{
 			// EXIT BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			System.exit(1);
 			
 		}
 		else if(contains(mx,my,50,115,261,261) && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			//LEVEL 1
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL1;
 			HUD.HIGHSCORE = 0;
 			storeScoreStop = false;
@@ -183,6 +198,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,490,115,261,261) && game.isLevel1Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 2
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL2;
 			storeScoreStop = false;
 			storeScoreStop2 = false;
@@ -219,6 +235,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,50,400, 261, 261) && game.isLevel2Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 3
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL3;	
 			storeScoreStop = false;
 			storeScoreStop2 = false;
@@ -249,6 +266,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,490, 400, 261, 261) &&  game.isLevel3Complete && game.gameState == game.STATE.SELECTLEVEL)
 		{
 			// LEVEL 4
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL4;
 			storeScoreStop = false;
 			storeScoreStop2 = false;
@@ -279,11 +297,13 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,game.WIDTH/2-370,game.HEIGHT/2+250,740,100) && game.gameState == game.STATE.DEADSCREEN)
 		{
 			//BACK TO MENU BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}		
 		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 1 
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL2;
 			storeScoreStop = false;
 			storeScoreStop2 = false;
@@ -323,6 +343,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL1 && HUD.LEVEL1BOSSHEALTH<=0)
 		{
 			// BACK TO MENU FROM END OF LEVEL 1
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 			HUD.LEVEL = 2;
 			stopScoreChange0 = false;
@@ -330,36 +351,43 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,120,160,560,200) && game.gameState == game.STATE.HELP)
 		{
 			// STORY BUTTON 
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.STORY;
 		}
 		else if(contains(mx,my,120,400,560,200) && game.gameState == game.STATE.HELP)
 		{
 			// HOW TO PLAY BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.HOWTOPLAY;
 		}
 		else if(contains(mx,my,20,120,50,120) && game.gameState == game.STATE.STORY)
 		{
 			// BACK FROM STORY BUTTON
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.HELP;
 		}
 		else if(contains(mx,my,20+680,120,50,120) && game.gameState == game.STATE.STORY)
 		{
 			// MENU BUTTON FROM STORY
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(contains(mx,my,620,720,150,50) && game.gameState == Game.STATE.HOWTOPLAY)
 		{
 			// MENU BUTTON FOR HOW TO PLAY
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(contains(mx,my,30,720,150,50) && game.gameState == Game.STATE.HOWTOPLAY)
 		{
 			// BACK BUTTON FOR HOW TO PLAY
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.HELP;
 		}
 		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 2
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL3;
 			storeScoreStop = false;
 			storeScoreStop2 = false;
@@ -397,6 +425,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,620, 290, 150, 50) && game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 3
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.LEVEL4;
 			storeScoreStop = false;
 			storeScoreStop2 = false;
@@ -435,6 +464,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL2 && HUD.LEVEL2BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 2
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 			stopScoreChange0 = false;
 			HUD.LEVEL = 3;
@@ -442,19 +472,16 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL3 && HUD.LEVEL3BOSSHEALTH<=0)
 		{
 			// END OF LEVEL 3
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 			stopScoreChange0 = false;
 			HUD.LEVEL = 4;
 		}
-//		else if(contains(mx,my,620, 490, 150, 50) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0)
-//		{
-//			// END OF LEVEL 4
-//			game.gameState = game.STATE.MENU;
-//		}
 		else if(contains(mx,my,500, 365, 250, 80) && game.gameState == game.STATE.LEVEL4 && HUD.LEVEL4BOSSHEALTH<=0)
 		{
 			// GOES TO GAME COMPLETE
 			stopScoreChange0 = false;
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.GAMECOMPLETE;
 			game.player.x = 370;
 			HUD.LEVEL = 5;
@@ -462,6 +489,7 @@ public class Menu extends MouseAdapter
 		else if(contains(mx,my,10,570,780,75) && game.gameState == game.STATE.GAMECOMPLETE && Player.playerMoved)
 		{
 			// GAME COMPLETE MENU
+			SoundPlayer.getSound("mouse_clicked").play();
 			game.gameState = game.STATE.MENU;
 		}
 		else if(game.gameState == game.STATE.DEADSCREEN && !stopScoreChange1)
@@ -504,10 +532,6 @@ public class Menu extends MouseAdapter
 			HUD.COUNT = HUD.SCORE;
 			stopScoreChange8 = true;
 		}
-//		if(stopScoreChange1 || stopScoreChange2)
-//		{
-//			storeScoreStop = false;
-//		}
 	}
 	/* This method is for adding cool effects 
 	 * when the mouse pointer is above a button */
@@ -568,8 +592,6 @@ public class Menu extends MouseAdapter
 		if(contains(mx,my,10,570,780,75) && game.gameState == game.STATE.GAMECOMPLETE && Player.playerMoved) gameCompleteMenuButton = true;
 		else gameCompleteMenuButton = false;
 	}
-	/* This is the mouseReleased method which is not in use right now */
-	public void mouseReleased(MouseEvent e) {}
 	/* This method returns a boolean and it checks if the
 	 * mouse cursor is inside the rectangle is which case
 	 * it returns true or else it returns false */
@@ -682,7 +704,7 @@ public class Menu extends MouseAdapter
 			}
 			g.drawString("Money: "+fileUtils.getTotalScoreForAPlayer(Game.NAME),3,Game.HEIGHT-30);
 			g.setColor(Color.BLACK);
-			g.drawString("Version 0.9",700,20);
+			g.drawString("Version 1.0",700,20);
 			g.drawString("Welcome "+Game.NAME+"!",5,20);
 		}
 		else if(game.gameState == game.STATE.CUSTOMIZE)
@@ -956,7 +978,6 @@ public class Menu extends MouseAdapter
 			g.drawString("450", 730, 630);
 			g.drawString("250", 730, 690);
 			g.drawString("COIN UPGRADE", 330,727);
-
 		}
 		else if(game.gameState == game.STATE.SELECTLEVEL)
 		{
@@ -1065,8 +1086,6 @@ public class Menu extends MouseAdapter
 				if(gameCompleteMenuButton) g.setColor(Color.BLACK);
 				else g.setColor(Color.WHITE);
 				g.drawString("BACK TO MENU", 200, 625);
-				
-				
 				if(playerInfo != null && !gameCompleteStoreStop && HUD.LEVEL == 5)
 				{
 					playerInfo.setPlayerName(Game.NAME);
@@ -1109,11 +1128,7 @@ public class Menu extends MouseAdapter
 			g.drawRect(0, 200, Game.WIDTH,400);
 			Font count = new Font("TimesNewRoman",Font.BOLD,40);
 			g.setFont(count);
-			
-			
-			
 			//Levels Selection
-			
 			if(HUD.LEVEL == 1)
 			{
 				if(HUD.SCORE == 0)
@@ -1230,7 +1245,6 @@ public class Menu extends MouseAdapter
 			
 			if(playerInfo != null && !storeScoreStop)
 			{
-				//System.out.println("Boolean:"+storeScoreStop);
 				playerInfo.setPlayerName(Game.NAME);
 				playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
 				playerInfo.setTotalScore(HUD.TOTALSCORE);
@@ -1293,7 +1307,6 @@ public class Menu extends MouseAdapter
 					else
 					{
 						g.drawString("SCORE: "+(HUD.COUNT-1),5,295);
-						System.out.println("HighScore: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL));
 						if(playerInfo != null)
 							g.drawString("LEVEL 1 HIGHSCORE: "+fileUtils.getHighestScore(Game.NAME,HUD.LEVEL),5,335);						
 					}
@@ -1344,7 +1357,6 @@ public class Menu extends MouseAdapter
 				g.drawLine(2, 250, Game.WIDTH-2, 250);
 				if(playerInfo != null && !storeScoreStop6 && HUD.LEVEL == 2)
 				{
-					//System.out.println("Storing the Player Score:"+HUD.HIGHSCORE+" : HUD.LEVEL : "+HUD.LEVEL);
 					playerInfo.setPlayerName(Game.NAME);
 					playerInfo.setHighestLevelScore(HUD.HIGHSCORE);
 					playerInfo.setTotalScore(HUD.TOTALSCORE);

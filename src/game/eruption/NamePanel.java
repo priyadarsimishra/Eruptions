@@ -42,14 +42,14 @@ public class NamePanel extends JFrame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.pack();
-		JLabel background = new JLabel(new ImageIcon(getClass().getResource("/HelpBackground.gif")));
+		JLabel background = new JLabel(new ImageIcon(getClass().getResource("/NamePanelImage.gif")));
 		background.setLayout(new BorderLayout());
 		background.setPreferredSize(new Dimension(800,800));
 		frame.add(background);
 		
 		label = new JLabel();
-		label.setFont(new Font("Roboto",Font.BOLD,60));
-		label.setText("Please Enter your Name");
+		label.setFont(new Font("Roboto",Font.BOLD,48));
+		label.setText("PLEASE ENTER YOUR NAME");
 		field = new JTextField("",10);
 		field.setFont(new Font("Arial",Font.BOLD,48));
 		JButton OkButton = new JButton("OK");
@@ -89,7 +89,6 @@ public class NamePanel extends JFrame
 		JPanel south = new JPanel();
 		south.setPreferredSize(new Dimension(200,500));
 		south.setBackground(new Color(0,0,0,0));
-		
 		center.add(field);
 		south.add(OkButton);
 		background.add(north,BorderLayout.NORTH);
@@ -108,6 +107,7 @@ public class NamePanel extends JFrame
 		public void actionPerformed(ActionEvent e)
 		{
 			String command = e.getActionCommand();
+			SoundPlayer.getSound("mouse_clicked").play();
 			if(command.equals("OK") && !field.getText().isEmpty())
 			{
 				Game.gameState = Game.STATE.MENU;

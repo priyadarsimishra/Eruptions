@@ -50,7 +50,6 @@ public class SplitBullet1 extends GameObject
 	 * with it's updated locations(x and y) */
 	public void render(Graphics g) 
 	{
-		//System.out.println(game.upgrades.isShotgun);
 		if(game.upgrades.isShotgun) g.drawImage(texture.doubleBullet,(int)x,(int)y,14,14,null);
 		else if(game.upgrades.isSniper) g.drawImage(texture.doubleBullet,(int)x,(int)y,15,15,null);
 		else g.drawImage(texture.doubleBullet,(int)x,(int)y,20,20,null);

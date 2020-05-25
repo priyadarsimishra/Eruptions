@@ -42,7 +42,7 @@ public class PlayerShield extends GameObject
 	 * Depending on the state it draws the shield */
 	public void render(Graphics g) 
 	{
-		shieldIcon = new ImageIcon(getClass().getResource("PlayerShield.png"));
+		shieldIcon = new ImageIcon(getClass().getResource("/PlayerShield.png"));
 		shield = shieldIcon.getImage();
 		g.drawImage(shield,(int)game.player.x-10,(int)game.player.y-30,60,30,null);
 	}

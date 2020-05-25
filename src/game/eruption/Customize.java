@@ -238,7 +238,6 @@ public class Customize extends MouseAdapter
 				g.drawString("LEVEL 4", 90, 660);
 			}
 		}
-		
         ((Graphics2D)g).setStroke(new BasicStroke(6));
         if(all) g.setColor(limeGreen);
         else g.setColor(Color.YELLOW);
@@ -251,9 +250,15 @@ public class Customize extends MouseAdapter
 		Font font = new Font("Roboto",Font.BOLD,30);
 		g.setFont(font);
 		g.setColor(Color.CYAN);
-		g.drawString("PLAYER SKINS", 53, 200);
+		g.drawString("PLAYER SKINS", 53, 160);
 		g.drawString("GUN SKINS", 520, 160);
-		
+		Font selectSkin = new Font("Roboto",Font.BOLD,18);
+		g.setFont(selectSkin);
+		g.setColor(Color.BLACK);
+		g.fillRect(90,175,140,38);
+		g.setColor(Color.CYAN);
+		g.drawString("Click to select",95,190);
+		g.drawString("Character",113,210);
 		
 		if(RedRow2) g.setColor(Color.RED);
 		else g.setColor(Color.CYAN);
